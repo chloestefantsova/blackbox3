@@ -2,3 +2,5 @@
 *.pyc
 *.o
 *.swp
+local.py
+*.sqlite3
