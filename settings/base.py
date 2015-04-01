@@ -42,6 +42,11 @@ ROOT_URLCONF = 'slr1.urls'
 WSGI_APPLICATION = 'slr1.wsgi.application'
 
 
+TEMPLATE_DIRS = (
+    os.path.join(BASE_DIR, 'templates'),
+)
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 
