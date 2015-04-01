@@ -55,9 +55,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
+STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+
+
 try:
-    from settings.local import *
+    if os.getenv('platform') == 'heroku':
+        from settings.heroku import *
+    else:
+        from settings.local import *
 except Exception, ex:
     print ex
