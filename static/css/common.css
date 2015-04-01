@@ -1,3 +1,9 @@
 html, body {
   background-image: url(../img/bg.jpg);
 }
+
+.faded1,.faded2,.faded3,
+.faded4,.faded5,.faded6,
+.faded7,.faded8,.faded9 {
+  display: none;
+}
