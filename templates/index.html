@@ -15,7 +15,7 @@
   </head>
   <body>
     <div class="menu visible-md-inline visible-lg-inline">
-      <div class="container">
+      <div class="container-fluid">
         <div class="row">
           <div class="col-xs-12 col-md-12">
             <div class="menu-button active">Home</div>
@@ -30,12 +30,12 @@
       </div>
     </div>
     <div class="menu visible-xs-inline visible-sm-inline">
-      <div class="container">
+      <div class="container-fluid">
         <div class="menu-button"><span class="glyphicon glyphicon-menu-hamburger"></span> Menu</div>
       </div>
     </div>
     <div class="menu-after"></div>
-    <div id="home" class="container">
+    <div id="home" class="container-fluid">
       <div class="row">
         <div class="col-xs-12 col-md-4">
           <!-- start slipsum code -->
@@ -58,7 +58,12 @@
 
         </div>
         <div class="col-xs-12 col-md-6">
-          <img class="faded1" src="{% static "img/bears.png" %}"/>
+          <div class="faded1">
+            <img class="visible-xs-inline" src="{% static "img/bear-xs.png" %}"/>
+            <img class="visible-sm-inline" src="{% static "img/bear-sm.png" %}"/>
+            <img class="visible-md-inline" src="{% static "img/bear-md.png" %}"/>
+            <img class="visible-lg-inline" src="{% static "img/bear-lg.png" %}"/>
+          </div>
         </div>
       </div>
     </div>
