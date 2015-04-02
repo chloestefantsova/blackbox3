@@ -1,12 +1,13 @@
 var fadeInAll = function ($el) {
     var promise = $el.find('.faded1').fadeIn('slow').promise();
-    for (var i = 2; i < 10; ++i) {
-        (function (index) {
-            promise = promiseBind(promise, function () {
-                console.log('working with .faded'+index);
-                return $el.find('.faded'+index).fadeIn('slow').promise();
-            });
-        })(i);
-    }
-    promise.then(function () { console.log('done with animations'); });
+    var continuations = new Array();
+    [1, 2, 3, 4, 5, 6, 7, 8, 9].forEach(function (i) {
+        continuations.push(function () {
+            console.log('working with .faded'+i);
+            return $el.find('.faded'+i).fadeIn('slow').promise();
+        });
+    });
+    promisePipe(promise, continuations).then(function () {
+        console.log('done with animations');
+    });
 }

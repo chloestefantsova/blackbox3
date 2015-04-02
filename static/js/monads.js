@@ -13,3 +13,10 @@ var promiseBind = function (promise, continuation) {
     });
     return res.promise();
 }
+
+var promisePipe = function (promise, continuations) {
+    continuations.forEach(function (continuation) {
+        promise = promiseBind(promise, continuation);
+    });
+    return promise;
+}
