@@ -37,8 +37,8 @@
     <div class="menu-after"></div>
     <div class="viewpoint">
 
-      <div class="screenful">
-        <div id="home" class="container">
+      <div id="home" class="screenful">
+        <div class="container">
           <div class="row">
             <div class="col-md-4">
               <!-- start slipsum code -->
@@ -74,7 +74,8 @@
     </div>
     <script>
     $(document).ready(function () {
-        animateIn($('#home'));
+        var animation = new SlrAnimation();
+        animation.animateIn($('#home'));
     });
     </script>
   </body>
