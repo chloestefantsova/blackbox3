@@ -14,19 +14,20 @@
     <script src="{% static "js/animation.js" %}"></script>
   </head>
   <body>
-    <div class="menu visible-md-inline visible-lg-inline">
+    <div class="menu">
       <div class="container">
         <div class="row">
           <div class="col-xs-12 col-md-12">
-            <div class="menu-button active" data-target="#home">Home</div>
-            <div class="menu-button" data-target="#reg">Registration</div>
+            <div class="menu-button active" data-target="#home">
+              <span class="visible-md-inline visible-lg-inline">Home</span>
+              <span class="glyphicon glyphicon-home visible-xs-inline visible-sm-inline"></span>
+            </div>
+            <div class="menu-button" data-target="#reg">
+              <span class="visible-md-inline visible-lg-inline">Registration</span>
+              <span class="glyphicon glyphicon-user visible-xs-inline visible-sm-inline"></span>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="menu visible-xs-inline visible-sm-inline">
-      <div class="container">
-        <div class="menu-button"><span class="glyphicon glyphicon-menu-hamburger"></span> Menu</div>
       </div>
     </div>
     <div class="menu-after"></div>
