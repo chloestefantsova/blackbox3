@@ -167,7 +167,12 @@
 
         $('.menu-button').click(function () {
           var target = $(this).data('target');
-          animation.moveTo(target);
+          animation.moveTo(target).then(function () {
+            for (var i = 1; i <= 9; ++i) {
+              console.log('removing .in'+i+'-fade in '+target);
+              $(target).find('.in'+i+'-fade').removeClass('in'+i+'-fade');
+            }
+          });
           $('.menu-button').removeClass('active');
           $(this).addClass('active');
         });
