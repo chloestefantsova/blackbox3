@@ -22,6 +22,9 @@ body {
   height: 100%;
 }
 
-.in.fade {
+.in0-fade,
+.in1-fade,.in2-fade,.in3-fade,
+.in4-fade,.in5-fade,.in6-fade,
+.in7-fade,.in8-fade,.in9-fade {
   opacity: 0;
 }
