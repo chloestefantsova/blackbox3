@@ -70,37 +70,78 @@
         <div class="container">
           <div class="row">
             <div class="col-md-4">
-              <h3 class="in2-fade out1-fade">Registration Form</h3>
-              <form role="form" class="in2-fade out1-fade">
-                <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Team Name"/>
+
+              <div role="tabpanel" class="in2-fade out1-fade">
+
+                <ul class="nav nav-tabs" role="tablist">
+                  <li role="presentation" class="active"><a href="#teamRegForm" aria-controls="teamRegForm" role="tab" data-toggle="tab">Team</a></li>
+                  <li role="presentation"><a href="#participantRegForm" aria-controls="participantRegForm" role="tab" data-toggle="tab">Participant</a></li>
+                </ul>
+
+                <div class="well">
+                  <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="teamRegForm">
+
+                      <form role="form">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="Team Name"/>
+                        </div>
+                        <div class="checkbox">
+                          <label>
+                            <input type="checkbox"/> Participants are school pupils
+                          </label>
+                        </div>
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="Country"/>
+                        </div>
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="School Name"/>
+                        </div>
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="Teacher Name"/>
+                        </div>
+                        <div class="form-group">
+                          <input type="email" class="form-control" placeholder="Teacher's E-Mail"/>
+                        </div>
+                        <div class="form-group">
+                          <input type="email" class="form-control" placeholder="Team Leader's E-Mail"/>
+                        </div>
+                        <div class="form-group">
+                          <textarea class="form-control" rows="3" placeholder="Physical Mail Address for Certificates"></textarea>
+                        </div>
+                        <button id="regTeamSubmitBtn" type="submit" class="btn btn-primary btn-lg">Register Team</button>
+                      </form>
+
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="participantRegForm">
+
+                      <form role="form">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="Login"/>
+                        </div>
+                        <div class="form-group">
+                          <input type="password" class="form-control" placeholder="Password"/>
+                        </div>
+                        <div class="form-group">
+                          <input type="password" class="form-control" placeholder="Password Again"/>
+                        </div>
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="Full Name"/>
+                        </div>
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="Authentication String"/>
+                        </div>
+                        <button id="regParticipantSubmitBtn" type="submit" class="btn btn-primary btn-lg">Register Participant</button>
+                      </form>
+
+                    </div>
+                  </div>
                 </div>
-                <div class="checkbox">
-                  <label>
-                    <input type="checkbox"/> Participants are school pupils
-                  </label>
-                </div>
-                <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Country"/>
-                </div>
-                <div class="form-group">
-                  <input type="text" class="form-control" placeholder="School Name"/>
-                </div>
-                <div class="form-group">
-                  <input type="text" class="form-control" placeholder="Teacher Name"/>
-                </div>
-                <div class="form-group">
-                  <input type="email" class="form-control" placeholder="Teacher's E-Mail"/>
-                </div>
-                <div class="form-group">
-                  <input type="email" class="form-control" placeholder="Team Leader's E-Mail"/>
-                </div>
-                <div class="form-group">
-                  <textarea class="form-control" rows="3" placeholder="Physical Mail Address for Certificates"></textarea>
-                </div>
-                <button id="regSubmitBtn" type="submit" class="btn btn-primary btn-lg">Register Team</button>
-              </form>
+
+              </div>
+
             </div>
+
             <div class="col-md-4">
               <div class="in1-fade">
                 <img class="visible-xs-inline" src="{% static "img/bear-reg-xs.png" %}"/>
@@ -128,7 +169,11 @@
           $(this).addClass('active');
         });
 
-        $('#regSubmitBtn').click(function (e) {
+        $('#regTeamSubmitBtn').click(function (e) {
+          e.preventDefault();
+        });
+
+        $('#regParticipantSubmitBtn').click(function (e) {
           e.preventDefault();
         });
     });
