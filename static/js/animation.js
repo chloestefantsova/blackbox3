@@ -11,11 +11,56 @@ SlrAnimation.prototype = {
     fade: {
         'in': function ($rootEl, order) {
             var selector = '.in'+order+'-fade';
-            return $rootEl.find(selector).animate({opacity: '1.0'}, 'slow').promise();
+            var $animated = $rootEl.find(selector);
+            if ($animated.length === 0) {
+                return promiseUnit();
+            }
+            var deferred = new $.Deferred();
+            $animated.velocity({opacity: '1.0'}, {
+                duration: 'slow',
+                complete: function () { deferred.resolve(); }
+            });
+            return deferred.promise();
         },
         'out': function ($rootEl, order) {
             var selector = '.out'+order+'-fade';
-            return $rootEl.find(selector).animate({opacity: '0.0'}, 'slow').promise();
+            var $animated = $rootEl.find(selector);
+            if ($animated.length === 0) {
+                return promiseUnit();
+            }
+            var deferred = new $.Deferred();
+            $animated.velocity({opacity: '0.0'}, {
+                duration: 'slow',
+                complete: function () { deferred.resolve(); }
+            });
+            return deferred.promise();
+        }
+    },
+
+    bounce: {
+        'in': function ($rootEl, order) {
+            var selector = '.in'+order+'-bounce';
+            var $animated = $rootEl.find(selector);
+            if ($animated.length === 0) {
+                return promiseUnit();
+            }
+            var deferred = new $.Deferred();
+            $animated.velocity('callout.bounce', {
+                complete: function () { deferred.resolve(); }
+            });
+            return deferred.promise();
+        },
+        'out': function ($rootEl, order) {
+            var selector = '.out'+order+'-bounce';
+            var $animated = $rootEl.find(selector);
+            if ($animated.length === 0) {
+                return promiseUnit();
+            }
+            var deferred = new $.Deferred();
+            $animated.velocity('callout.bounce', {
+                complete: function () { deferred.resolve(); }
+            });
+            return deferred.promise();
         }
     },
 
@@ -25,7 +70,7 @@ SlrAnimation.prototype = {
         [1, 2, 3, 4, 5, 6, 7, 8, 9].forEach(function (i) {
             continuations.push(function () {
                 var deferred = new $.Deferred();
-                var count = 1;
+                var count = 2;
                 var resolveOnCount = function () {
                     --count;
                     if (count == 0) {
@@ -33,6 +78,7 @@ SlrAnimation.prototype = {
                     }
                 };
                 self.fade[type]($rootEl, i).then(resolveOnCount);
+                self.bounce[type]($rootEl, i).then(resolveOnCount);
                 return deferred.promise();
             });
         });

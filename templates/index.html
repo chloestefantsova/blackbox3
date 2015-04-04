@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="{% static "css/menu.css" %}"/>
     <script src="{% static "js/jquery-2.1.3.min.js" %}"></script>
     <script src="{% static "js/bootstrap.min.js" %}"></script>
+    <script src="{% static "js/velocity.min.js" %}"></script>
+    <script src="{% static "js/velocity.ui.min.js" %}"></script>
     <script src="{% static "js/monads.js" %}"></script>
     <script src="{% static "js/animation.js" %}"></script>
   </head>
@@ -72,7 +74,7 @@
           <div class="row">
             <div class="col-md-5">
 
-              <div role="tabpanel">
+              <div role="tabpanel" class="in1-fade in9-bounce">
 
                 <ul class="nav nav-tabs" role="tablist">
                   <li role="presentation" class="active"><a href="#teamRegForm" aria-controls="teamRegForm" role="tab" data-toggle="tab">Team</a></li>
@@ -144,7 +146,7 @@
             </div>
 
             <div class="col-md-6 col-md-offset-1">
-              <div class="in1-fade">
+              <div class="in2-fade">
                 <img class="visible-xs-inline" src="{% static "img/bear-reg-xs.png" %}"/>
                 <img class="visible-sm-inline" src="{% static "img/bear-reg-sm.png" %}"/>
                 <img class="visible-md-inline" src="{% static "img/bear-reg-md.png" %}"/>
