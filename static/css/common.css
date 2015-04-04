@@ -28,3 +28,18 @@ body {
 .in7-fade,.in8-fade,.in9-fade {
   opacity: 0;
 }
+
+.btn {
+  background-image: url(../img/1.jpg);
+  border-color: #961615;
+}
+
+.btn:hover,.btn:focus {
+  background-image: url(../img/2.jpg);
+  border-color: #961615;
+}
+
+.btn:active {
+  background-image: url(../img/3.jpg);
+  border-color: #961615;
+}

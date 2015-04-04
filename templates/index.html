@@ -98,7 +98,7 @@
                 <div class="form-group">
                   <textarea class="form-control" rows="3" placeholder="Physical Mail Address for Certificates"></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">Register Team</button>
+                <button id="regSubmitBtn" type="submit" class="btn btn-primary btn-lg">Register Team</button>
               </form>
             </div>
             <div class="col-md-4">
@@ -126,6 +126,10 @@
           animation.moveTo(target);
           $('.menu-button').removeClass('active');
           $(this).addClass('active');
+        });
+
+        $('#regSubmitBtn').click(function (e) {
+          e.preventDefault();
         });
     });
     </script>
