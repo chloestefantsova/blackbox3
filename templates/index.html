@@ -66,12 +66,60 @@
         </div>
       </div>
 
+      <div id="reg" class="screenful">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-4">
+              <h3 class="in2-fade out1-fade">Registration Form</h3>
+              <form role="form" class="in2-fade out1-fade">
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Team Name"/>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox"/> Participants are school pupils
+                  </label>
+                </div>
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Country"/>
+                </div>
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="School Name"/>
+                </div>
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Teacher Name"/>
+                </div>
+                <div class="form-group">
+                  <input type="email" class="form-control" placeholder="Teacher's E-Mail"/>
+                </div>
+                <div class="form-group">
+                  <input type="email" class="form-control" placeholder="Team Leader's E-Mail"/>
+                </div>
+                <div class="form-group">
+                  <textarea class="form-control" rows="3" placeholder="Physical Mail Address for Certificates"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Register Team</button>
+              </form>
+            </div>
+            <div class="col-md-4">
+              <div class="in1-fade">
+                <img class="visible-xs-inline" src="{% static "img/bear-reg-xs.png" %}"/>
+                <img class="visible-sm-inline" src="{% static "img/bear-reg-sm.png" %}"/>
+                <img class="visible-md-inline" src="{% static "img/bear-reg-md.png" %}"/>
+                <img class="visible-lg-inline" src="{% static "img/bear-reg-lg.png" %}"/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
     <script>
     $(document).ready(function () {
         var animation = new SlrAnimation('#home');
         animation.animateIn($('#home'));
         animation.putGeo('#reg', -1, 0);
+        $('#reg').css({left: $(window).width(), top: 0});
 
         $('.menu-button').click(function () {
           var target = $(this).data('target');

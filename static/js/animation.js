@@ -1,6 +1,6 @@
 var SlrAnimation = function (homeName) {
-    this.left = 0;
-    this.top = 0;
+    this.x = 0;
+    this.y = 0;
     this.geo = {};
     this.name = homeName;
     this.putGeo(homeName, 0, 0);
@@ -59,12 +59,19 @@ SlrAnimation.prototype = {
             var screensY = this.geo[name][1];
             var destX = screensX * $(window).width();
             var destY = screensY * $(window).height();
+            var deltaX = destX - this.x;
+            var deltaY = destY - this.y;
             return promisePipe(this.animateOut($(this.name)), [
                     function () {
-                        return $('.screenful').animate({left: destX, top: destY}, 'slow').promise();
+                        return $('.screenful').animate({
+                            left: '+='+deltaX,
+                            top: '+='+deltaY
+                        }, 'slow').promise();
                     },
                     function () {
                         self.name = name;
+                        self.x = destX;
+                        self.y = destY;
                         return self.animateIn($(self.name));
                     }
             ]);
