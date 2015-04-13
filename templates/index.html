@@ -1,9 +1,10 @@
 {% load static from staticfiles %}
+{% load trans from i18n %}
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8"/>
-    <title>School CTF 2014</title>
+    <title>School CTF Spring 2015</title>
     <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}"/>
     <link rel="stylesheet" href="{% static "css/bootstrap-theme.min.css" %}"/>
     <link rel="stylesheet" href="{% static "css/common.css" %}"/>
@@ -21,11 +22,11 @@
         <div class="row">
           <div class="col-xs-12 col-md-12">
             <div class="menu-button active" data-target="#home">
-              <span class="visible-md-inline visible-lg-inline">Home</span>
+              <span class="visible-md-inline visible-lg-inline">{% trans "Home" context "menu bar" %}</span>
               <span class="glyphicon glyphicon-home visible-xs-inline visible-sm-inline"></span>
             </div>
             <div class="menu-button" data-target="#reg">
-              <span class="visible-md-inline visible-lg-inline">Registration</span>
+              <span class="visible-md-inline visible-lg-inline">{% trans "Registration" %}</span>
               <span class="glyphicon glyphicon-user visible-xs-inline visible-sm-inline"></span>
             </div>
           </div>
@@ -77,8 +78,12 @@
               <div role="tabpanel" class="in1-fade in9-bounce">
 
                 <ul class="nav nav-tabs" role="tablist">
-                  <li role="presentation" class="active"><a href="#teamRegForm" aria-controls="teamRegForm" role="tab" data-toggle="tab">Team</a></li>
-                  <li role="presentation"><a href="#participantRegForm" aria-controls="participantRegForm" role="tab" data-toggle="tab">Participant</a></li>
+                  <li role="presentation" class="active">
+                    <a href="#teamRegForm" aria-controls="teamRegForm" role="tab" data-toggle="tab">{% trans "Team" %}</a>
+                  </li>
+                  <li role="presentation">
+                    <a href="#participantRegForm" aria-controls="participantRegForm" role="tab" data-toggle="tab">{% trans "Participant" %}</a>
+                  </li>
                 </ul>
 
                 <div class="well">
@@ -87,32 +92,32 @@
 
                       <form role="form">
                         <div class="form-group">
-                          <input type="text" class="form-control" placeholder="Team Name"/>
+                          <input type="text" class="form-control" placeholder="{% trans "Team Name" %}"/>
                         </div>
                         <div class="checkbox">
                           <label>
-                            <input type="checkbox"/> Participants are school pupils
+                            <input type="checkbox"/> {% trans "Participants are school pupils" %}
                           </label>
                         </div>
                         <div class="form-group">
-                          <input type="text" class="form-control" placeholder="Country"/>
+                          <input type="text" class="form-control" placeholder="{% trans "Country" %}"/>
                         </div>
                         <div class="form-group">
-                          <input type="text" class="form-control" placeholder="School Name"/>
+                          <input type="text" class="form-control" placeholder="{% trans "School Name" %}"/>
                         </div>
                         <div class="form-group">
-                          <input type="text" class="form-control" placeholder="Teacher Name"/>
+                          <input type="text" class="form-control" placeholder="{% trans "Teacher Name" %}"/>
                         </div>
                         <div class="form-group">
-                          <input type="email" class="form-control" placeholder="Teacher's E-Mail"/>
+                          <input type="email" class="form-control" placeholder="{% trans "Teacher's E-Mail" %}"/>
                         </div>
                         <div class="form-group">
-                          <input type="email" class="form-control" placeholder="Team Leader's E-Mail"/>
+                          <input type="email" class="form-control" placeholder="{% trans "Team Leader's E-Mail" %}"/>
                         </div>
                         <div class="form-group">
-                          <textarea class="form-control" rows="3" placeholder="Physical Mail Address for Certificates"></textarea>
+                          <textarea class="form-control" rows="3" placeholder="{% trans "Physical Mail Address for Certificates" %}"></textarea>
                         </div>
-                        <button id="regTeamSubmitBtn" type="submit" class="btn btn-primary btn-lg">Register Team</button>
+                        <button id="regTeamSubmitBtn" type="submit" class="btn btn-primary btn-lg">{% trans "Register Team" %}</button>
                       </form>
 
                     </div>
@@ -120,21 +125,21 @@
 
                       <form role="form">
                         <div class="form-group">
-                          <input type="text" class="form-control" placeholder="Login"/>
+                          <input type="text" class="form-control" placeholder="{% trans "Login" %}"/>
                         </div>
                         <div class="form-group">
-                          <input type="password" class="form-control" placeholder="Password"/>
+                          <input type="password" class="form-control" placeholder="{% trans "Password" %}"/>
                         </div>
                         <div class="form-group">
-                          <input type="password" class="form-control" placeholder="Password Again"/>
+                          <input type="password" class="form-control" placeholder="{% trans "Password Again" %}"/>
                         </div>
                         <div class="form-group">
-                          <input type="text" class="form-control" placeholder="Full Name"/>
+                          <input type="text" class="form-control" placeholder="{% trans "Full Name" %}"/>
                         </div>
                         <div class="form-group">
-                          <input type="text" class="form-control" placeholder="Authentication String"/>
+                          <input type="text" class="form-control" placeholder="{% trans "Authentication String" %}"/>
                         </div>
-                        <button id="regParticipantSubmitBtn" type="submit" class="btn btn-primary btn-lg">Register Participant</button>
+                        <button id="regParticipantSubmitBtn" type="submit" class="btn btn-primary btn-lg">{% trans "Register Participant" %}</button>
                       </form>
 
                     </div>
