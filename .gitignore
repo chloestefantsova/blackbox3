@@ -5,3 +5,4 @@
 local.py
 *.sqlite3
 staticfiles
+*.mo

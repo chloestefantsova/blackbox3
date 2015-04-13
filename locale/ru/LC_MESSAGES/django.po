@@ -1,0 +1,105 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-04-14 00:49+0600\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: settings/base.py:69
+msgid "Russian"
+msgstr "Русский"
+
+#: settings/base.py:70
+msgid "English"
+msgstr "Английский"
+
+#: templates/index.html:25
+msgctxt "menu bar"
+msgid "Home"
+msgstr "Главная"
+
+#: templates/index.html:29
+msgid "Registration"
+msgstr "Регистрация"
+
+#: templates/index.html:82
+msgid "Team"
+msgstr "Команда"
+
+#: templates/index.html:85
+msgid "Participant"
+msgstr "Участник"
+
+#: templates/index.html:95
+msgid "Team Name"
+msgstr "Название команды"
+
+#: templates/index.html:99
+msgid "Participants are school pupils"
+msgstr "Все участники — школьники"
+
+#: templates/index.html:103
+msgid "Country"
+msgstr "Страна"
+
+#: templates/index.html:106
+msgid "School Name"
+msgstr "Название школы"
+
+#: templates/index.html:109
+msgid "Teacher Name"
+msgstr "ФИО учителя (тренера)"
+
+#: templates/index.html:112
+msgid "Teacher's E-Mail"
+msgstr "Адрес электронной почты учителя (тренера)"
+
+#: templates/index.html:115
+msgid "Team Leader's E-Mail"
+msgstr "Адрес электронной почты капитана"
+
+#: templates/index.html:118
+msgid "Physical Mail Address for Certificates"
+msgstr "Адрес для отправки бумажной версии сертификатов и дипломов"
+
+#: templates/index.html:120
+msgid "Register Team"
+msgstr "Зарегистрировать команду"
+
+#: templates/index.html:128
+msgid "Login"
+msgstr "Логин"
+
+#: templates/index.html:131
+msgid "Password"
+msgstr "Пароль"
+
+#: templates/index.html:134
+msgid "Password Again"
+msgstr "Ещё раз пароль"
+
+#: templates/index.html:137
+msgid "Full Name"
+msgstr "ФИО участника"
+
+#: templates/index.html:140
+msgid "Authentication String"
+msgstr "Строка аутентификации"
+
+#: templates/index.html:142
+msgid "Register Participant"
+msgstr "Зарегистрировать участника"
