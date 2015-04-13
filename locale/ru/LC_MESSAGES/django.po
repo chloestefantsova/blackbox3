@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-14 00:49+0600\n"
+"POT-Creation-Date: 2015-04-14 01:55+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,70 +36,132 @@ msgstr "Главная"
 msgid "Registration"
 msgstr "Регистрация"
 
-#: templates/index.html:82
+#: templates/index.html:43
+msgid "What is School CTF?"
+msgstr "Что такое School CTF?"
+
+#: templates/index.html:44
+msgid ""
+"The computer security competition for school pupils School CTF is hosted by "
+"the SiBears team annually since 2010. One can find the archive of tasks, "
+"walkthroughs, and other supporting materials at the archives page."
+msgstr ""
+"Соревнования по защите компьютерной информации для школьников School CTF "
+"команда SiBears проводит ежегодно с 2010 года. С архивом задач, разборов и "
+"материалов предыдущих School CTF можно ознакомиться на специальной странице."
+
+#: templates/index.html:45
+msgid ""
+"School CTF traditionally takes place in autumn, but in 2014 School CTF was "
+"postponed to the spring semester."
+msgstr ""
+"School CTF традиционно проводится осенью, но в 2014 году School "
+"CTF был перенесён на весенний семестр."
+
+#: templates/index.html:46
+msgid ""
+"School CTF Spring 2015 takes place at April 25th, 2015. It starts at 12:00 p."
+"m., Tomsk time (GMT+6), and ends at 5:00 p.m., Tomsk time (GMT+6). You may "
+"add the event to your Google calendar not to forget it."
+msgstr ""
+"School CTF Spring 2015 пройдёт 25 апреля 2015 года. Начало — в 12:00 по Томску (GMT"
+"+6), окончание — в 17:00 по Томску (GMT+6). Чтобы не пропустить "
+"соревнование, можно добавить его в свой Google-календарь."
+
+#: templates/index.html:47
+msgid "Is School CTF just for school pupils?"
+msgstr "School CTF — только для школьников?"
+
+#: templates/index.html:48
+msgid ""
+"Any team is welcome, not just that comprised of school pupils. The ratings "
+"are calculated separately for school teams and for all teams."
+msgstr ""
+"К участию приглашаются любые команды, не только школьные. Рейтинг "
+"вычисляется отдельно для школьных команд и отдельно — для всех участвующих "
+"команд."
+
+#: templates/index.html:49
+msgid "What do I need to participate?"
+msgstr "Что нужно для участия?"
+
+#: templates/index.html:50
+msgid ""
+"A team of one to seven persons, internet access and five hours of spare time."
+msgstr ""
+"Команда от одного до семи человек, доступ в интернет и пять часов "
+"свободного времени."
+
+#: templates/index.html:71
 msgid "Team"
 msgstr "Команда"
 
-#: templates/index.html:85
+#: templates/index.html:74
 msgid "Participant"
 msgstr "Участник"
 
-#: templates/index.html:95
+#: templates/index.html:84
 msgid "Team Name"
 msgstr "Название команды"
 
-#: templates/index.html:99
+#: templates/index.html:88
 msgid "Participants are school pupils"
 msgstr "Все участники — школьники"
 
-#: templates/index.html:103
+#: templates/index.html:92
 msgid "Country"
 msgstr "Страна"
 
-#: templates/index.html:106
+#: templates/index.html:95
 msgid "School Name"
 msgstr "Название школы"
 
-#: templates/index.html:109
+#: templates/index.html:98
 msgid "Teacher Name"
 msgstr "ФИО учителя (тренера)"
 
-#: templates/index.html:112
+#: templates/index.html:101
 msgid "Teacher's E-Mail"
 msgstr "Адрес электронной почты учителя (тренера)"
 
-#: templates/index.html:115
+#: templates/index.html:104
 msgid "Team Leader's E-Mail"
 msgstr "Адрес электронной почты капитана"
 
-#: templates/index.html:118
+#: templates/index.html:107
 msgid "Physical Mail Address for Certificates"
 msgstr "Адрес для отправки бумажной версии сертификатов и дипломов"
 
-#: templates/index.html:120
+#: templates/index.html:109
 msgid "Register Team"
 msgstr "Зарегистрировать команду"
 
-#: templates/index.html:128
+#: templates/index.html:117
 msgid "Login"
 msgstr "Логин"
 
-#: templates/index.html:131
+#: templates/index.html:120
 msgid "Password"
 msgstr "Пароль"
 
-#: templates/index.html:134
+#: templates/index.html:123
 msgid "Password Again"
 msgstr "Ещё раз пароль"
 
-#: templates/index.html:137
+#: templates/index.html:126
 msgid "Full Name"
 msgstr "ФИО участника"
 
-#: templates/index.html:140
+#: templates/index.html:129
 msgid "Authentication String"
 msgstr "Строка аутентификации"
 
-#: templates/index.html:142
+#: templates/index.html:131
 msgid "Register Participant"
 msgstr "Зарегистрировать участника"
+
+#~ msgid "Why School CTF Spring 2015?"
+#~ msgstr "Почему School CTF Spring 2015?"
+
+#~ msgid "When does School CTF Spring 2015 take place?"
+#~ msgstr "Когда состоится School CTF Spring 2015?"
