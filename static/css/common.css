@@ -54,3 +54,12 @@ body {
 .tab-pane {
   position: relative;
 }
+
+.copyright {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 10;
+  margin: 0;
+  padding: 10px;
+}
