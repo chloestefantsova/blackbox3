@@ -8,8 +8,8 @@ from reg.models import Team
 class TeamSerializer(ModelSerializer):
 
     def validate(self, data):
+        error_dict = {}
         if 'is_school' in data and data['is_school']:
-            error_dict = {}
             if 'school_name' not in data or not data['school_name'].strip():
                 error_dict['school_name'] = [_('The field is required for school teams')]
             if 'teacher_name' not in data or not data['teacher_name'].strip():
