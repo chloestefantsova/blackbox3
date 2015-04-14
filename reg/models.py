@@ -2,8 +2,13 @@ import string
 import random
 
 from django.db import models
+from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.core.mail import send_mail
+from django.utils.translation import ugettext as _
+from django.template.loader import render_to_string
+from django.conf import settings
 
 
 class Team(models.Model):
@@ -33,3 +38,17 @@ class Member(models.Model):
         if self.pk is None:
             self.created_at = timezone.now()
         super(Member, self).save(*args, **kwargs)
+
+
+def welcome_team(sender, instance, **kwargs):
+    if kwargs['created']:
+        recipients = [instance.leader_email]
+        if instance.teacher_email:
+            recipients.append(instance.teacher_email)
+        send_mail(_('Welcome to School CTF Spring 2015, %s!') % instance.name,
+                  render_to_string('welcome-team-email.txt',
+                                   { 'auth_string': instance.auth_string }),
+                  'School CTF Jury <%s>' % settings.EMAIL_HOST_USER,
+                  recipients,
+                  fail_silently=True)
+post_save.connect(welcome_team, sender=Team)

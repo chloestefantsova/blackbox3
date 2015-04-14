@@ -1,0 +1,17 @@
+(Прокрутите вниз, чтобы прочитать письмо на русском. Scroll down for the letter in Russian.)
+
+
+Dear {{ full_name }},
+
+Welcome to School CTF Spring 2015! You are registered as a part of {{ team_name }} team.
+
+Regards,
+School CTF Jury
+
+
+Добро пожаловать, {{ full_name }}!
+
+Вы зарегистрированы как участник команды {{ team_name }} на School CTF Spring 2015.
+
+С уважением,
+Жюри School CTF
