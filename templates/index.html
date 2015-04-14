@@ -176,23 +176,24 @@
           $(this).addClass('active');
         });
 
+        var regTeamForm = new Form('#regTeamForm');
+
         $('#regTeamSubmitBtn').click(function (e) {
           e.preventDefault();
-          var form = new Form('#regTeamForm');
           $.ajax({
             method: 'POST',
             url: '{% url "teams" %}',
             dataType: 'json',
-            data: form.getJson(),
+            data: regTeamForm.getJson(),
             success: function () {
-              form.hideErrors();
+              regTeamForm.hideErrors();
               animation.fadeElementOut('#regTeamForm').then(function () {
                 $('#afterTeamRegMsg').css('display', 'inline-block');
                 animation.fadeElementIn('#afterTeamRegMsg');
               });
             },
             error: function (xhr, stat, err) {
-              form.showErrors(JSON.parse(xhr.responseText));
+              regTeamForm.showErrors(JSON.parse(xhr.responseText));
             }
           });
         });

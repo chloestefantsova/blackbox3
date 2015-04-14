@@ -1,5 +1,15 @@
 var Form = function (selector) {
     this.$el = $(selector);
+    var valToCheckedProp = function ($checkboxEl) {
+        $checkboxEl.val($checkboxEl.prop('checked'));
+    }
+    var $checkboxes = this.$el.find('input[type=checkbox]');
+    $checkboxes.each(function (index, el) {
+        valToCheckedProp($(el));
+    });
+    $checkboxes.click(function (el) {
+        valToCheckedProp($(this));
+    });
 }
 
 Form.prototype = {
@@ -15,7 +25,7 @@ Form.prototype = {
 
     showErrors: function (errDict) {
         this.$el.find('.help-block').remove();
-        this.$el.find('input').each(function (index, el) {
+        this.$el.find('input,textarea').each(function (index, el) {
             var $el = $(el);
             if ($el.attr('name') in errDict) {
                 $el.parent().addClass('has-error');

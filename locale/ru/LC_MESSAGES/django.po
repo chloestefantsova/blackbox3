@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-14 14:11+0600\n"
+"POT-Creation-Date: 2015-04-14 15:08+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,6 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: api/serializers.py:14 api/serializers.py:16 api/serializers.py:18
+#: api/serializers.py:20
+msgid "The field is required for school teams"
+msgstr "Это поле должно быть заполнено школьными командами"
 
 #: settings/base.py:69
 msgid "Russian"
@@ -145,7 +150,8 @@ msgid ""
 msgstr ""
 "Вы зарегистрировали команду. На адрес капитана команды и учителя (если был "
 "указан) выслано письмо со строкой аутентификации. Передайте эту строку "
-"членам команды для завершения регистрации. Капитан команды тоже должен зарегистрироваться как участник команды."
+"членам команды для завершения регистрации. Капитан команды тоже должен "
+"зарегистрироваться как участник команды."
 
 #: templates/index.html:123
 msgid "Login"
