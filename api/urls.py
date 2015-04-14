@@ -4,5 +4,5 @@ from api.views import TeamAPIView
 
 
 urlpatterns = patterns('',
-    url(r'^teams/$', TeamAPIView.as_view()),
+    url(r'^teams/$', TeamAPIView.as_view(), name='teams'),
 )

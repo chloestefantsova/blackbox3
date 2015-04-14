@@ -13,6 +13,7 @@
     <script src="{% static "js/bootstrap.min.js" %}"></script>
     <script src="{% static "js/velocity.min.js" %}"></script>
     <script src="{% static "js/velocity.ui.min.js" %}"></script>
+    <script src="{% static "js/forms.js" %}"></script>
     <script src="{% static "js/monads.js" %}"></script>
     <script src="{% static "js/animation.js" %}"></script>
   </head>
@@ -81,40 +82,43 @@
                   <div class="tab-content">
                     <div role="tabpanel" class="tab-pane active" id="teamRegForm">
 
-                      <form role="form">
+                      <form id="regTeamForm" role="form">
                         <div class="form-group">
-                          <input type="text" class="form-control" placeholder="{% trans "Team Name" %}"/>
+                          <input name="name" type="text" class="form-control" placeholder="{% trans "Team Name" %}"/>
                         </div>
                         <div class="checkbox">
                           <label>
-                            <input type="checkbox"/> {% trans "Participants are school pupils" %}
+                            <input name="is_school" type="checkbox"/> {% trans "Participants are school pupils" %}
                           </label>
                         </div>
                         <div class="form-group">
-                          <input type="text" class="form-control" placeholder="{% trans "Country" %}"/>
+                          <input name="country" type="text" class="form-control" placeholder="{% trans "Country" %}"/>
                         </div>
                         <div class="form-group">
-                          <input type="text" class="form-control" placeholder="{% trans "School Name" %}"/>
+                          <input name="school_name" type="text" class="form-control" placeholder="{% trans "School Name" %}"/>
                         </div>
                         <div class="form-group">
-                          <input type="text" class="form-control" placeholder="{% trans "Teacher Name" %}"/>
+                          <input name="teacher_name" type="text" class="form-control" placeholder="{% trans "Teacher Name" %}"/>
                         </div>
                         <div class="form-group">
-                          <input type="email" class="form-control" placeholder="{% trans "Teacher's E-Mail" %}"/>
+                          <input name="teacher_email" type="email" class="form-control" placeholder="{% trans "Teacher's E-Mail" %}"/>
                         </div>
                         <div class="form-group">
-                          <input type="email" class="form-control" placeholder="{% trans "Team Leader's E-Mail" %}"/>
+                          <input name="leader_email" type="email" class="form-control" placeholder="{% trans "Team Leader's E-Mail" %}"/>
                         </div>
                         <div class="form-group">
-                          <textarea class="form-control" rows="3" placeholder="{% trans "Physical Mail Address for Certificates" %}"></textarea>
+                          <textarea name="address" class="form-control" rows="3" placeholder="{% trans "Physical Mail Address for Certificates" %}"></textarea>
                         </div>
                         <button id="regTeamSubmitBtn" type="submit" class="btn btn-primary btn-lg">{% trans "Register Team" %}</button>
                       </form>
+                      <div id="afterTeamRegMsg" class="in0-fade overlapping">
+                        <p>{% trans "You've successfully registered a team. An authentication string has been sent to the team leader's email and the teacher's email (if any). You should pass this string to the participants you want to register as your team members. Note that team leader should also register as a team member." %}
+                      </div>
 
                     </div>
                     <div role="tabpanel" class="tab-pane" id="participantRegForm">
 
-                      <form role="form">
+                      <form id="regParticipantForm" role="form">
                         <div class="form-group">
                           <input type="text" class="form-control" placeholder="{% trans "Login" %}"/>
                         </div>
@@ -165,7 +169,6 @@
           var target = $(this).data('target');
           animation.moveTo(target).then(function () {
             for (var i = 1; i <= 9; ++i) {
-              console.log('removing .in'+i+'-fade in '+target);
               $(target).find('.in'+i+'-fade').removeClass('in'+i+'-fade');
             }
           });
@@ -175,6 +178,23 @@
 
         $('#regTeamSubmitBtn').click(function (e) {
           e.preventDefault();
+          var form = new Form('#regTeamForm');
+          $.ajax({
+            method: 'POST',
+            url: '{% url "teams" %}',
+            dataType: 'json',
+            data: form.getJson(),
+            success: function () {
+              form.hideErrors();
+              animation.fadeElementOut('#regTeamForm').then(function () {
+                $('#afterTeamRegMsg').css('display', 'inline-block');
+                animation.fadeElementIn('#afterTeamRegMsg');
+              });
+            },
+            error: function (xhr, stat, err) {
+              form.showErrors(JSON.parse(xhr.responseText));
+            }
+          });
         });
 
         $('#regParticipantSubmitBtn').click(function (e) {

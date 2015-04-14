@@ -43,3 +43,14 @@ body {
   background-image: url(../img/3.jpg);
   border-color: #961615;
 }
+
+.overlapping {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.tab-pane {
+  position: relative;
+}

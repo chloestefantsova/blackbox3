@@ -125,4 +125,22 @@ SlrAnimation.prototype = {
         return promiseUnit();
     },
 
+    fadeElementIn: function (selector) {
+        var deferred = new $.Deferred();
+        $(selector).velocity({opacity: '1.0'}, {
+            duration: 'slow',
+            complete: function () { deferred.resolve(); }
+        });
+        return deferred.promise();
+    },
+
+    fadeElementOut: function (selector) {
+        var deferred = new $.Deferred();
+        $(selector).velocity({opacity: '0'}, {
+            duration: 'slow',
+            complete: function () { deferred.resolve(); }
+        });
+        return deferred.promise();
+    },
+
 };
