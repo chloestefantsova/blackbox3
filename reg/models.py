@@ -52,3 +52,19 @@ def welcome_team(sender, instance, **kwargs):
                   recipients,
                   fail_silently=True)
 post_save.connect(welcome_team, sender=Team)
+
+
+def welcome_participant(sender, instance, **kwargs):
+    if kwargs['created']:
+        recipients = [instance.team.leader_email]
+        if instance.team.teacher_email:
+            recipients.append(instance.team.teacher_email)
+        send_mail(_('Participant %s joined team %s') % (instance.user.first_name,
+                                                        instance.team.name),
+                  render_to_string('welcome-participant-email.txt',
+                                   { 'full_name': instance.user.first_name,
+                                     'team_name': instance.team.name }),
+                  'School CTF Jury <%s>' % settings.EMAIL_HOST_USER,
+                  recipients,
+                  fail_silently=True)
+post_save.connect(welcome_participant, sender=Member)
