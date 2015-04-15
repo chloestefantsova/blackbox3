@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-14 15:28+0600\n"
+"POT-Creation-Date: 2015-04-15 16:38+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,10 +19,27 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: api/serializers.py:14 api/serializers.py:16 api/serializers.py:18
-#: api/serializers.py:20
+#: api/serializers.py:15 api/serializers.py:17 api/serializers.py:19
+#: api/serializers.py:21
 msgid "The field is required for school teams"
 msgstr "Это поле должно быть заполнено школьными командами"
+
+#: api/serializers.py:47
+msgid "Entered password values do not match."
+msgstr "Введённые пароли не совпадают."
+
+#: api/serializers.py:76
+msgid "Authentication string is unknown or is incorrectly entered."
+msgstr "Строка аутентификации не известна системе или неправильно введена."
+
+#: reg/models.py:48
+msgid "Welcome to School CTF Spring 2015, {team_name}!"
+msgstr "Добро пожаловать в School CTF Spring 2015, {team_name}!"
+
+#: reg/models.py:62
+#, python-brace-format
+msgid "Participant {full_name} joined team {team_name}"
+msgstr "Участник {full_name} присоединился к {team_name}"
 
 #: settings/base.py:69
 msgid "Russian"
@@ -71,11 +88,9 @@ msgid ""
 msgstr ""
 "School CTF Spring 2015 пройдёт 25 апреля 2015 года. Начало — в 12:00 по "
 "Томску (GMT+6), окончание — в 17:00 по Томску (GMT+6). Чтобы не пропустить "
-"соревнование, можно "
-"<a href=\"https://www.google.com/calendar/event?"
+"соревнование, можно <a href=\"https://www.google.com/calendar/event?"
 "eid=YTdpOTlqbnZ1cGZqZDFpZ2RzYWNpbGV2MW8gbTRxczJsNDBtNjI3ODhxdnNwMmg2NXBtaHNAZw&ctz=Asia/"
-"Novosibirsk\">"
-"добавить его</a> в свой Google-календарь."
+"Novosibirsk\">добавить его</a> в свой Google-календарь."
 
 #: templates/index.html:51
 msgid "Is School CTF just for school pupils?"
@@ -181,8 +196,12 @@ msgstr "Строка аутентификации"
 msgid "Register Participant"
 msgstr "Зарегистрировать участника"
 
-#~ msgid "Why School CTF Spring 2015?"
-#~ msgstr "Почему School CTF Spring 2015?"
+#: templates/index.html:143
+msgid ""
+"You are successfully registered as a School CTF Spring 2015 participant! "
+"Your team leader and teacher (if any) have been notified. Please, don't "
+"forget your password. See you later at the competition."
+msgstr "Вы зарегистрированы в качестве участника School CTF Spring 2015. Вашему капитану и учителю (если был указан) выслано сообщение об этом. Пожалуйста, не забывайте введённый пароль. До встречи на соревновании!"
 
 #~ msgid "When does School CTF Spring 2015 take place?"
 #~ msgstr "Когда состоится School CTF Spring 2015?"

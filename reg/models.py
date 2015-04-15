@@ -45,7 +45,7 @@ def welcome_team(sender, instance, **kwargs):
         recipients = [instance.leader_email]
         if instance.teacher_email:
             recipients.append(instance.teacher_email)
-        send_mail(_('Welcome to School CTF Spring 2015, %s!') % instance.name,
+        send_mail(_('Welcome to School CTF Spring 2015, {team_name}!').format(team_name=instance.name),
                   render_to_string('welcome-team-email.txt',
                                    { 'auth_string': instance.auth_string }),
                   'School CTF Jury <%s>' % settings.EMAIL_HOST_USER,
@@ -59,8 +59,8 @@ def welcome_participant(sender, instance, **kwargs):
         recipients = [instance.team.leader_email]
         if instance.team.teacher_email:
             recipients.append(instance.team.teacher_email)
-        send_mail(_('Participant %s joined team %s') % (instance.user.first_name,
-                                                        instance.team.name),
+        send_mail(_('Participant {full_name} joined team {team_name}').format(full_name=instance.user.first_name,
+                                                                              team_name=instance.team.name),
                   render_to_string('welcome-participant-email.txt',
                                    { 'full_name': instance.user.first_name,
                                      'team_name': instance.team.name }),
