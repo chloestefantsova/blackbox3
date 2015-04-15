@@ -1,8 +1,9 @@
 from django.utils.translation import ugettext as _
+from django.contrib.auth.models import User
 
-from rest_framework.serializers import ModelSerializer, ValidationError
+from rest_framework.serializers import ModelSerializer, ValidationError, RelatedField, HiddenField, CharField, Field
 
-from reg.models import Team
+from reg.models import Team, Member
 
 
 class TeamSerializer(ModelSerializer):
@@ -25,4 +26,59 @@ class TeamSerializer(ModelSerializer):
     class Meta:
         model = Team
         exclude = ('auth_string',)
+        read_only_fields = ('id', 'created_at')
+
+
+class PasswordField(Field):
+
+    def to_representation(self, obj):
+        return ''
+
+    def to_internal_value(self, data):
+        return data
+
+class UserSerializer(ModelSerializer):
+
+    password1 = PasswordField(write_only=True)
+    password2 = PasswordField(write_only=True)
+
+    def validate(self, data):
+        if data['password1'] != data['password2']:
+            raise ValidationError(_('Entered password values do not match.'))
+        return data
+
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'password1', 'password2')
+
+
+class TeamField(RelatedField):
+
+    def to_internal_value(self, data):
+        return Team.objects.get(auth_string=data)
+
+    def to_representation(self, value):
+        return value.name
+
+
+class MemberSerializer(ModelSerializer):
+
+    user = UserSerializer()
+    team = TeamField(queryset=Team.objects.all())
+
+    def create(self, validated_data):
+        user_data = validated_data.pop('user')
+        password = user_data['password1']
+        del user_data['password1']
+        del user_data['password2']
+        user = User(**user_data)
+        user.set_password(password)
+        user.save()
+        validated_data['user'] = user
+        member = Member(**validated_data)
+        member.save()
+        return member
+
+    class Meta:
+        model = Member
         read_only_fields = ('id', 'created_at')

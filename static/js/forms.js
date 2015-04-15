@@ -23,6 +23,10 @@ Form.prototype = {
         return jsonObj;
     },
 
+    getJsonString: function () {
+        return JSON.stringify(this.getJson());
+    },
+
     showErrors: function (errDict) {
         this.$el.find('.help-block').remove();
         this.$el.find('input,textarea').each(function (index, el) {

@@ -123,19 +123,19 @@
 
                       <form id="regParticipantForm" role="form">
                         <div class="form-group">
-                          <input type="text" class="form-control" placeholder="{% trans "Login" %}"/>
+                          <input name="username" type="text" class="form-control" placeholder="{% trans "Login" %}"/>
                         </div>
                         <div class="form-group">
-                          <input type="password" class="form-control" placeholder="{% trans "Password" %}"/>
+                          <input name="password1" type="password" class="form-control" placeholder="{% trans "Password" %}"/>
                         </div>
                         <div class="form-group">
-                          <input type="password" class="form-control" placeholder="{% trans "Password Again" %}"/>
+                          <input name="password2" type="password" class="form-control" placeholder="{% trans "Password Again" %}"/>
                         </div>
                         <div class="form-group">
-                          <input type="text" class="form-control" placeholder="{% trans "Full Name" %}"/>
+                          <input name="first_name" type="text" class="form-control" placeholder="{% trans "Full Name" %}"/>
                         </div>
                         <div class="form-group">
-                          <input type="text" class="form-control" placeholder="{% trans "Authentication String" %}"/>
+                          <input name="team" type="text" class="form-control" placeholder="{% trans "Authentication String" %}"/>
                         </div>
                         <button id="regParticipantSubmitBtn" type="submit" class="btn btn-primary btn-lg">{% trans "Register Participant" %}</button>
                       </form>
@@ -179,6 +179,7 @@
           $(this).addClass('active');
         });
 
+
         var regTeamForm = new Form('#regTeamForm');
 
         $('#regTeamSubmitBtn').click(function (e) {
@@ -201,8 +202,37 @@
           });
         });
 
+
+        var regParticipantForm = new Form('#regParticipantForm');
+        regParticipantForm.getJson = function () {
+          var json = Form.prototype.getJson.call(this);
+          json['user'] = {};
+          ['username', 'password1', 'password2', 'first_name'].forEach(
+              function (fieldName) {
+                if (fieldName in json) {
+                  json['user'][fieldName] = json[fieldName];
+                  delete json[fieldName];
+                }
+              }
+          );
+          return json;
+        };
+
         $('#regParticipantSubmitBtn').click(function (e) {
           e.preventDefault();
+          $.ajax({
+            method: 'POST',
+            url: '{% url "members" %}',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: regParticipantForm.getJsonString(),
+            success: function () {
+              console.log(':-)');
+            },
+            error: function () {
+              console.log(':-(');
+            },
+          });
         });
     });
     </script>
