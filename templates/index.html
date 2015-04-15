@@ -139,6 +139,9 @@
                         </div>
                         <button id="regParticipantSubmitBtn" type="submit" class="btn btn-primary btn-lg">{% trans "Register Participant" %}</button>
                       </form>
+                      <div id="afterParticipantRegMsg" class="in0-fade overlapping">
+                        <p>{% trans "You are successfully registered as a School CTF Spring 2015 participant! Your team leader and teacher (if any) have been notified. Please, don't forget your password. See you later at the competition." %}
+                      </div>
 
                     </div>
                   </div>
@@ -227,7 +230,11 @@
             contentType: 'application/json',
             data: regParticipantForm.getJsonString(),
             success: function () {
-              console.log(':-)');
+              regParticipantForm.hideErrors();
+              animation.fadeElementOut('#regParticipantForm').then(function () {
+                $('#afterParticipantRegMsg').css('display', 'inline-block');
+                animation.fadeElementIn('#afterParticipantRegMsg');
+              });
             },
             error: function (xhr, stat, err) {
               var errObj = JSON.parse(xhr.responseText);
