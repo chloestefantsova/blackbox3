@@ -44,7 +44,9 @@ class UserSerializer(ModelSerializer):
 
     def validate(self, data):
         if data['password1'] != data['password2']:
-            raise ValidationError(_('Entered password values do not match.'))
+            error_msg = _('Entered password values do not match.')
+            raise ValidationError({'password1': [error_msg],
+                                   'password2': [error_msg]})
         return data
 
     class Meta:
@@ -55,7 +57,10 @@ class UserSerializer(ModelSerializer):
 class TeamField(RelatedField):
 
     def to_internal_value(self, data):
-        return Team.objects.get(auth_string=data)
+        teams = Team.objects.filter(auth_string=data)
+        if teams.exists():
+            return teams[0]
+        return None
 
     def to_representation(self, value):
         return value.name
@@ -65,6 +70,11 @@ class MemberSerializer(ModelSerializer):
 
     user = UserSerializer()
     team = TeamField(queryset=Team.objects.all())
+
+    def validate_team(self, value):
+        if value is None:
+            raise ValidationError(_('Authentication string is unknown or is incorrectly entered.'))
+        return value
 
     def create(self, validated_data):
         user_data = validated_data.pop('user')

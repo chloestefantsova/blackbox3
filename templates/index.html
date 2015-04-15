@@ -229,8 +229,14 @@
             success: function () {
               console.log(':-)');
             },
-            error: function () {
-              console.log(':-(');
+            error: function (xhr, stat, err) {
+              var errObj = JSON.parse(xhr.responseText);
+              var userObj = errObj['user'];
+              delete errObj['user'];
+              for (var key in userObj) {
+                errObj[key] = userObj[key];
+              }
+              regParticipantForm.showErrors(errObj);
             },
           });
         });
