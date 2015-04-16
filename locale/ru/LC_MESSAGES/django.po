@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-15 16:38+0600\n"
+"POT-Creation-Date: 2015-04-16 13:57+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,11 +32,12 @@ msgstr "Введённые пароли не совпадают."
 msgid "Authentication string is unknown or is incorrectly entered."
 msgstr "Строка аутентификации не известна системе или неправильно введена."
 
-#: reg/models.py:48
+#: reg/models.py:49
+#, python-brace-format
 msgid "Welcome to School CTF Spring 2015, {team_name}!"
 msgstr "Добро пожаловать в School CTF Spring 2015, {team_name}!"
 
-#: reg/models.py:62
+#: reg/models.py:63
 #, python-brace-format
 msgid "Participant {full_name} joined team {team_name}"
 msgstr "Участник {full_name} присоединился к {team_name}"
@@ -80,13 +81,13 @@ msgstr ""
 
 #: templates/index.html:50
 msgid ""
-"School CTF Spring 2015 takes place at April 25th, 2015. It starts at 12:00 p."
+"School CTF Spring 2015 takes place at May 3rd, 2015. It starts at 12:00 p."
 "m., Tomsk time (GMT+6), and ends at 5:00 p.m., Tomsk time (GMT+6). You may "
 "<a href=\"https://www.google.com/calendar/event?"
 "eid=YTdpOTlqbnZ1cGZqZDFpZ2RzYWNpbGV2MW8gbTRxczJsNDBtNjI3ODhxdnNwMmg2NXBtaHNAZw&ctz=Asia/"
 "Novosibirsk\">add the event</a> to your Google calendar not to forget it."
 msgstr ""
-"School CTF Spring 2015 пройдёт 25 апреля 2015 года. Начало — в 12:00 по "
+"School CTF Spring 2015 пройдёт 3 мая 2015 года. Начало — в 12:00 по "
 "Томску (GMT+6), окончание — в 17:00 по Томску (GMT+6). Чтобы не пропустить "
 "соревнование, можно <a href=\"https://www.google.com/calendar/event?"
 "eid=YTdpOTlqbnZ1cGZqZDFpZ2RzYWNpbGV2MW8gbTRxczJsNDBtNjI3ODhxdnNwMmg2NXBtaHNAZw&ctz=Asia/"
@@ -201,7 +202,10 @@ msgid ""
 "You are successfully registered as a School CTF Spring 2015 participant! "
 "Your team leader and teacher (if any) have been notified. Please, don't "
 "forget your password. See you later at the competition."
-msgstr "Вы зарегистрированы в качестве участника School CTF Spring 2015. Вашему капитану и учителю (если был указан) выслано сообщение об этом. Пожалуйста, не забывайте введённый пароль. До встречи на соревновании!"
+msgstr ""
+"Вы зарегистрированы в качестве участника School CTF Spring 2015. Вашему "
+"капитану и учителю (если был указан) выслано сообщение об этом. Пожалуйста, "
+"не забывайте введённый пароль. До встречи на соревновании!"
 
 #~ msgid "When does School CTF Spring 2015 take place?"
 #~ msgstr "Когда состоится School CTF Spring 2015?"
