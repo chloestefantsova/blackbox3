@@ -25,8 +25,9 @@ class TeamSerializer(ModelSerializer):
 
     class Meta:
         model = Team
-        exclude = ('auth_string',)
-        read_only_fields = ('id', 'created_at')
+        exclude = ('id', 'auth_string',)
+        read_only_fields = ('created_at',)
+        write_only_fields = ('teacher_name', 'teacher_email', 'leader_email', 'address')
 
 
 class PasswordField(Field):
