@@ -95,7 +95,12 @@
                           </label>
                         </div>
                         <div class="form-group">
-                          <input name="country" type="text" class="form-control" placeholder="{% trans "Country" %}"/>
+                          <select name="country" class="form-control">
+                            <option disabled selected>{% trans "Country" %}<option>
+                            {% for code, name in countries %}
+                            <option value="{{ code }}">{{ name }}</option>
+                            {% endfor %}
+                          </select>
                         </div>
                         <div class="form-group">
                           <input name="school_name" type="text" class="form-control" placeholder="{% trans "School Name" %}"/>
@@ -158,6 +163,17 @@
                 <img class="visible-md-inline" src="{% static "img/bear-reg-md.png" %}"/>
                 <img class="visible-lg-inline" src="{% static "img/bear-reg-lg.png" %}"/>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="teams">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-5">
+            </div>
+            <div class="col-md-5 col-md-offset-1">
             </div>
           </div>
         </div>

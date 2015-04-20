@@ -30,6 +30,7 @@ INSTALLED_APPS = (
 
     'rest_framework',
     'django_extensions',
+    'django_countries',
 
     'reg',
     'api',

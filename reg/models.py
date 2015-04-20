@@ -10,12 +10,14 @@ from django.utils.translation import ugettext as _
 from django.template.loader import render_to_string
 from django.conf import settings
 
+from django_countries.fields import CountryField
+
 
 class Team(models.Model):
     name = models.CharField(max_length=256, unique=True, blank=False)
     is_school = models.BooleanField(null=False, blank=False, default=False)
     school_name = models.CharField(max_length=1024, null=False, blank=True)
-    country = models.CharField(max_length=256, null=False, blank=False)
+    country = CountryField()
     teacher_name = models.CharField(max_length=256, null=False, blank=True)
     teacher_email = models.EmailField(null=True, blank=True)
     leader_email = models.EmailField(null=False, blank=False)

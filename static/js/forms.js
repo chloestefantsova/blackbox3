@@ -29,7 +29,7 @@ Form.prototype = {
 
     showErrors: function (errDict) {
         this.$el.find('.help-block').remove();
-        this.$el.find('input,textarea').each(function (index, el) {
+        this.$el.find('input,textarea,select').each(function (index, el) {
             var $el = $(el);
             if ($el.attr('name') in errDict) {
                 $el.parent().addClass('has-error');
