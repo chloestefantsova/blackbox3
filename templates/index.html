@@ -16,6 +16,7 @@
     <script src="{% static "js/forms.js" %}"></script>
     <script src="{% static "js/monads.js" %}"></script>
     <script src="{% static "js/animation.js" %}"></script>
+    <script src="{% static "js/teams.js" %}"></script>
   </head>
   <body>
     <div class="menu">
@@ -29,6 +30,10 @@
             <div class="menu-button" data-target="#reg">
               <span class="visible-md-inline visible-lg-inline">{% trans "Registration" %}</span>
               <span class="glyphicon glyphicon-user visible-xs-inline visible-sm-inline"></span>
+            </div>
+            <div class="menu-button" data-target="#teams">
+              <span class="visible-md-inline visible-lg-inline">{% trans "Teams" %}</span>
+              <span class="glyphicon glyphicon-list visible-xs-inline visible-sm-inline"></span>
             </div>
           </div>
         </div>
@@ -168,6 +173,42 @@
         </div>
       </div>
 
+      <div id="teams" class="screenful">
+        <div class="container">
+          <div class="row">
+
+            <div class="col-md-5">
+              <h3 class="in1-fade">{% trans "School Teams" context "teams list" %}</h3>
+              <table id="school-teams" class="table table-condensed in1-fade">
+                <thead>
+                  <tr>
+                    <th>{% trans "Name" context "teams list" %}</th>
+                    <th>{% trans "Country" context "teams list" %}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="col-md-5 col-md-offset-1">
+              <h3 class="in2-fade">{% trans "Non-School Teams" context "teams list" %}</h3>
+              <table id="non-school-teams" class="table table-condensed in2-fade">
+                <thead>
+                  <tr>
+                    <th>{% trans "Name" context "teams list"  %}</th>
+                    <th>{% trans "Country" context "teams list" %}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
       <div id="teams">
         <div class="container">
           <div class="row">
@@ -186,6 +227,8 @@
         animation.animateIn($('#home'));
         animation.putGeo('#reg', -1, 0);
         $('#reg').css({left: $(window).width(), top: 0});
+        animation.putGeo('#teams', -2, 0);
+        $('#teams').css({left: $(window).width() * 2, top: 0});
 
         $('.menu-button').click(function () {
           var target = $(this).data('target');
@@ -262,6 +305,29 @@
               regParticipantForm.showErrors(errObj);
             },
           });
+        });
+
+        $.ajax({
+          method: 'GET',
+          url: '{% url "teams" %}',
+          dataType: 'json',
+          contentType: 'application/json',
+          success: function (data, stat, xhr) {
+            var teams = JSON.parse(xhr.responseText);
+            teams.sort(function (a, b) { return a.created_at - b.created_at; });
+            var schoolTeams = new Array();
+            var nonSchoolTeams = new Array();
+            teams.forEach(function (team) {
+              if (team.is_school) {
+                schoolTeams.push(team);
+              } else {
+                nonSchoolTeams.push(team);
+              }
+            });
+            populateTable($('#school-teams').find('tbody'), schoolTeams);
+            populateTable($('#non-school-teams').find('tbody'), nonSchoolTeams);
+          },
+          error: function () { console.log('fail'); },
         });
     });
     </script>

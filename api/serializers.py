@@ -1,12 +1,30 @@
+from datetime import datetime
+from time import mktime
+
 from django.utils.translation import ugettext as _
 from django.contrib.auth.models import User
 
-from rest_framework.serializers import ModelSerializer, ValidationError, RelatedField, HiddenField, CharField, Field
+from rest_framework.serializers import ModelSerializer, ValidationError, RelatedField, HiddenField, CharField, Field, DateTimeField, SerializerMethodField
 
 from reg.models import Team, Member
 
 
+class UnixEpochDateTimeField(DateTimeField):
+
+    def to_internal_value(self, data):
+        return datetime.fromtimestamp(float(data))
+
+    def to_representation(self, value):
+        return mktime(value.timetuple())
+
+
 class TeamSerializer(ModelSerializer):
+
+    created_at = UnixEpochDateTimeField()
+    flag = SerializerMethodField()
+
+    def get_flag(self, obj):
+        return obj.country.flag
 
     def validate(self, data):
         error_dict = {}
