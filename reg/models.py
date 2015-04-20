@@ -24,6 +24,7 @@ class Team(models.Model):
     address = models.TextField(null=False, blank=True)
     auth_string = models.CharField(max_length=32, null=False, blank=True)
     created_at = models.DateTimeField(null=False, blank=True)
+    is_hidden = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if self.pk is None:

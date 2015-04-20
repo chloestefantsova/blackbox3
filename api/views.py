@@ -10,8 +10,11 @@ class TeamAPIView(ListModelMixin,
                   CreateModelMixin,
                   GenericAPIView):
 
-    queryset = Team.objects.all()
     serializer_class = TeamSerializer
+
+    def get_queryset(self):
+        queryset = Team.objects.all()
+        return queryset.exclude(is_hidden=True)
 
     def get(self, req, *args, **kwargs):
         return self.list(req, *args, **kwargs)
