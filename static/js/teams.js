@@ -4,7 +4,7 @@ var populateTable = function ($el, teams) {
         $row.append($('<td>').text(team.name));
         if (team.flag) {
             $row.append($('<td>').append(
-                $('<img>').attr('src', team.flag)
+                $('<img>').attr('src', team.flag).attr('title', team.country)
             ));
         } else {
             $row.append($('<td>').text('N/A'));
