@@ -102,6 +102,7 @@
                         <div class="form-group">
                           <select name="country" class="form-control">
                             <option disabled selected>{% trans "Country" %}<option>
+                            <option value="">{% trans "I don't want to provide this information" %}</option>
                             {% for code, name in countries %}
                             <option value="{{ code }}">{{ name }}</option>
                             {% endfor %}

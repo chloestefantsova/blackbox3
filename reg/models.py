@@ -17,7 +17,7 @@ class Team(models.Model):
     name = models.CharField(max_length=256, unique=True, blank=False)
     is_school = models.BooleanField(null=False, blank=False, default=False)
     school_name = models.CharField(max_length=1024, null=False, blank=True)
-    country = CountryField()
+    country = CountryField(null=False, blank=True)
     teacher_name = models.CharField(max_length=256, null=False, blank=True)
     teacher_email = models.EmailField(null=True, blank=True)
     leader_email = models.EmailField(null=False, blank=False)

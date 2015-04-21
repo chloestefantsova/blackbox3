@@ -18,10 +18,19 @@ class UnixEpochDateTimeField(DateTimeField):
         return mktime(value.timetuple())
 
 
+class EmptyCountryField(CharField):
+
+    def to_representation(self, value):
+        if not value:
+            return u''
+        return unicode(value.name)
+
+
 class TeamSerializer(ModelSerializer):
 
-    created_at = UnixEpochDateTimeField()
+    created_at = UnixEpochDateTimeField(read_only=True)
     flag = SerializerMethodField()
+    country = EmptyCountryField(read_only=True)
 
     def get_flag(self, obj):
         return obj.country.flag
