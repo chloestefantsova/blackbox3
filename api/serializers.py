@@ -20,6 +20,9 @@ class UnixEpochDateTimeField(DateTimeField):
 
 class EmptyCountryField(CharField):
 
+    def to_internal_value(self, data):
+        return data
+
     def to_representation(self, value):
         if not value:
             return u''
@@ -30,7 +33,7 @@ class TeamSerializer(ModelSerializer):
 
     created_at = UnixEpochDateTimeField(read_only=True)
     flag = SerializerMethodField()
-    country = EmptyCountryField(read_only=True)
+    country = EmptyCountryField()
 
     def get_flag(self, obj):
         return obj.country.flag
