@@ -28,7 +28,9 @@ class Team(models.Model):
 
     def save(self, *args, **kwargs):
         if self.pk is None:
-            self.auth_string = ''.join([random.choice(string.lowercase + string.digits) for i in xrange(32)])
+            alphabet = string.lowercase + string.digits
+            random_letters = [random.choice(alphabet) for _ in xrange(32)]
+            self.auth_string = ''.join(random_letters)
             self.created_at = timezone.now()
         super(Team, self).save(*args, **kwargs)
 
@@ -49,12 +51,14 @@ def welcome_team(sender, instance, **kwargs):
         recipients = [instance.leader_email]
         if instance.teacher_email:
             recipients.append(instance.teacher_email)
-        send_mail(_('Welcome to School CTF Spring 2015, {team_name}!').format(team_name=instance.name),
+        subject_template = _('Welcome to School CTF Spring 2015, {team_name}!')
+        send_mail(subject_template.format(team_name=instance.name),
                   render_to_string('welcome-team-email.txt',
-                                   { 'auth_string': instance.auth_string }),
+                                   {'auth_string': instance.auth_string}),
                   'School CTF Jury <%s>' % settings.EMAIL_HOST_USER,
                   recipients,
                   fail_silently=True)
+
 post_save.connect(welcome_team, sender=Team)
 
 
@@ -63,12 +67,14 @@ def welcome_participant(sender, instance, **kwargs):
         recipients = [instance.team.leader_email]
         if instance.team.teacher_email:
             recipients.append(instance.team.teacher_email)
-        send_mail(_('Participant {full_name} joined team {team_name}').format(full_name=instance.user.first_name,
-                                                                              team_name=instance.team.name),
+        subject_template = _('Participant {full_name} joined team {team_name}')
+        send_mail(subject_template.format(full_name=instance.user.first_name,
+                                          team_name=instance.team.name),
                   render_to_string('welcome-participant-email.txt',
-                                   { 'full_name': instance.user.first_name,
-                                     'team_name': instance.team.name }),
+                                   {'full_name': instance.user.first_name,
+                                    'team_name': instance.team.name}),
                   'School CTF Jury <%s>' % settings.EMAIL_HOST_USER,
                   recipients,
                   fail_silently=True)
+
 post_save.connect(welcome_participant, sender=Member)
