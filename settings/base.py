@@ -31,6 +31,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'django_extensions',
     'django_countries',
+    'compressor',
 
     'reg',
     'api',
@@ -46,6 +47,14 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
+
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)
+
 
 ROOT_URLCONF = 'slr1.urls'
 
@@ -84,6 +93,19 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
+)
+
+COMPRESS_CSS_FILTERS = (
+    'compressor.filters.yuglify.YUglifyCSSFilter',
+)
+
+COMPRESS_JS_FILTERS = (
+    'compressor.filters.yuglify.YUglifyJSFilter',
+)
+
+COMPRESS_PRECOMPILERS = (
+    ('text/less',
+     'lessc --global-var=\'STATIC_URL="%s"\' {infile} {outfile}' % STATIC_URL),
 )
 
 

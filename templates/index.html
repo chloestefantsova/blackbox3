@@ -1,14 +1,18 @@
 {% load staticfiles %}
 {% load i18n %}
+{% load compress %}
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8"/>
     <title>School CTF Spring 2015</title>
+    {% compress css %}
     <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}"/>
     <link rel="stylesheet" href="{% static "css/bootstrap-theme.min.css" %}"/>
-    <link rel="stylesheet" href="{% static "css/common.css" %}"/>
-    <link rel="stylesheet" href="{% static "css/menu.css" %}"/>
+    <link rel="stylesheet" href="{% static "css/common.less" %}" type="text/less"/>
+    <link rel="stylesheet" href="{% static "css/menu.less" %}" type="text/less"/>
+    {% endcompress %}
+    {% compress js %}
     <script src="{% static "js/jquery-2.1.3.min.js" %}"></script>
     <script src="{% static "js/bootstrap.min.js" %}"></script>
     <script src="{% static "js/velocity.min.js" %}"></script>
@@ -17,6 +21,7 @@
     <script src="{% static "js/monads.js" %}"></script>
     <script src="{% static "js/animation.js" %}"></script>
     <script src="{% static "js/teams.js" %}"></script>
+    {% endcompress %}
   </head>
   <body>
     <div class="menu">
@@ -222,6 +227,7 @@
       </div>
 
     </div>
+    {% compress js %}
     <script>
     $(document).ready(function () {
         var animation = new SlrAnimation('#home');
@@ -332,5 +338,6 @@
         });
     });
     </script>
+    {% endcompress %}
   </body>
 </html>
