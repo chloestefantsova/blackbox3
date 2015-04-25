@@ -2,6 +2,16 @@
 
 {% block content %}
 <div class="container">
-  {{ form.as_p }}
+  <h1>Author, authenticate thyself!</h1>
+  <form role="form" method="post" action="">
+    {% csrf_token %}
+    <div class="form-group">
+      <input type="text" class="form-control" name="{{ form.username.name }}" placeholder="username"/>
+    </div>
+    <div class="form-group">
+      <input type="password" class="form-control" name="{{ form.password.name }}" placeholder="password"/>
+    </div>
+    <button type="submit" class="btn btn-primary btn-large">Login</button>
+  </form>
 </div>
 {% endblock %}
