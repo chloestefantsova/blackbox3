@@ -35,6 +35,7 @@ INSTALLED_APPS = (
 
     'reg',
     'api',
+    'game',
 )
 
 MIDDLEWARE_CLASSES = (
