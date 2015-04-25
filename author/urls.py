@@ -3,6 +3,7 @@ from django.conf.urls import url
 from django.views.generic.base import RedirectView
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.views import login
+from django.contrib.auth.views import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import permission_required
 
@@ -27,6 +28,11 @@ urlpatterns = patterns(
         login,
         {'template_name': 'author/login.html'},
         name='author-login'),
+
+    url(r'^logout/$',
+        logout,
+        {'next_page': reverse_lazy('author-login')},
+        name='author-logout'),
 
     url(r'^panel/$',
         author_required(function=views.PanelView.as_view(),
