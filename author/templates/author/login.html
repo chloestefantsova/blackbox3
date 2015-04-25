@@ -3,14 +3,43 @@
 {% block content %}
 <div class="container">
   <h1>Author, authenticate thyself!</h1>
+  {% if form.non_field_errors %}
+  <div class="alert alert-danger" role="alert">
+    {% for error in form.non_field_errors %}
+    <p>{{ error }}</p>
+    {% endfor %}
+  </div>
+  {% endif %}
   <form role="form" method="post" action="">
     {% csrf_token %}
+    <input type="hidden" name="next" value="{% url "panel" %}"/>
+
+    {% if form.username.errors %}
+    <div class="form-group has-error">
+      <input type="text" class="form-control" name="{{ form.username.name }}" placeholder="username"/>
+      {% for error in form.username.errors %}
+      <p class="help-block">{{ error }}</p>
+      {% endfor %}
+    </div>
+    {% else %}
     <div class="form-group">
       <input type="text" class="form-control" name="{{ form.username.name }}" placeholder="username"/>
     </div>
+    {% endif %}
+
+    {% if form.password.errors %}
+    <div class="form-group has-error">
+      <input type="password" class="form-control" name="{{ form.password.name }}" placeholder="password"/>
+      {% for error in form.password.errors %}
+      <p class="help-block">{{ error }}</p>
+      {% endfor %}
+    </div>
+    {% else %}
     <div class="form-group">
       <input type="password" class="form-control" name="{{ form.password.name }}" placeholder="password"/>
     </div>
+    {% endif %}
+
     <button type="submit" class="btn btn-primary btn-large">Login</button>
   </form>
 </div>
