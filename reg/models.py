@@ -32,7 +32,7 @@ class Team(models.Model):
             random_letters = [random.choice(alphabet) for _ in xrange(32)]
             self.auth_string = ''.join(random_letters)
             self.created_at = timezone.now()
-        super(Team, self).save(*args, **kwargs)
+        return super(Team, self).save(*args, **kwargs)
 
 
 class Member(models.Model):
@@ -43,7 +43,7 @@ class Member(models.Model):
     def save(self, *args, **kwargs):
         if self.pk is None:
             self.created_at = timezone.now()
-        super(Member, self).save(*args, **kwargs)
+        return super(Member, self).save(*args, **kwargs)
 
 
 def welcome_team(sender, instance, **kwargs):
