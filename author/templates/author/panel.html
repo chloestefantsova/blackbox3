@@ -3,6 +3,34 @@
 {% block content %}
 <div class="container">
   <h1>Welcome to BlackBox 3.0 Author Panel</h1>
+  <div class="well">
+    <h3>Upload your task tarballs here</h3>
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger" role="alert">
+      {% for error in form.non_field_errors %}
+      <p>{{ error }}</p>
+      {% endfor %}
+    </div>
+    {% endif %}
+    <form role="form" method="post" action="" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      {% if form.task_file.errors %}
+      <div class="form-group has-error">
+        <input type="file" name="{{ form.task_file.name }}"/>
+        {% for error in form.task_file.errors %}
+        <p class="help-block">{{ error }}</p>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="form-group">
+        <input type="file" name="{{ form.task_file.name }}"/>
+      </div>
+      {% endif %}
+
+      <input type="submit" class="btn btn-primary" value="Upload"/>
+    </form>
+  </div>
 </div>
 <div class="toolbox">
   <p class="pull-right"><a href="{% url "author-logout" %}">Logout</a></p>

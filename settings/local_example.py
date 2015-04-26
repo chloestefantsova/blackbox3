@@ -36,6 +36,10 @@ DATABASES = {
 }
 
 
+UPLOADED_TASK_DIR = os.path.join(BASE_DIR, 'uploaded_tasks')
+UPLOADED_IMAGES_DIR = os.path.join(BASE_DIR, 'uploaded_images')
+
+
 LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'Asia/Novosibirsk'

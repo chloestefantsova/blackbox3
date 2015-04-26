@@ -20,7 +20,7 @@ class UploadedTask(models.Model):
 
     def is_uploaded(self):
         return TaskUploadProgress.objects.filter(
-            upload_task=self,
+            uploaded_task=self,
             progress=100,
         ).exists()
 

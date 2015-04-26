@@ -7,3 +7,5 @@ local.py
 staticfiles
 *.mo
 tags
+uploaded_tasks/
+uploaded_images/
