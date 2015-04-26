@@ -1,5 +1,45 @@
 {% extends "author/base.html" %}
 
+{% block js %}
+{{ block.super }}
+<script>
+function addFileError(msg) {
+  var $field = $('#file-field');
+  $field.parent().addClass('has-error');
+  $field.parent().append(
+      $('<p>').addClass('help-block').text(msg)
+  );
+}
+function clearFileErrors() {
+  var $field = $('#file-field');
+  $field.parent().removeClass('has-error');
+  $field.parent().find('.help-block').remove();
+}
+function showFileError(msg) {
+  clearFileErrors();
+  addFileError(msg);
+}
+
+function addCommonError(msg) {
+  var $field = $('#error-box');
+  $field.removeClass('disabled');
+  $field.append(
+      $('<p>').text(msg)
+  );
+}
+function clearCommonErrors() {
+  var $field = $('#error-box');
+  $field.addClass('disabled');
+  $field.children().remove();
+  $field.text('');
+}
+function showCommonError(msg) {
+  clearCommonErrors();
+  addCommonError(msg);
+}
+</script>
+{% endblock %}
+
 {% block content %}
 <div class="container">
   <h1>Welcome to BlackBox 3.0 Author Panel</h1>
@@ -12,23 +52,25 @@
       {% endfor %}
     </div>
     {% endif %}
-    <form role="form" method="post" action="" enctype="multipart/form-data">
+    <div id="error-box" class="alert alert-danger disabled">
+    </div>
+    <form id="upload-form" role="form" method="post" action="{% url "api-upload" %}" enctype="multipart/form-data">
       {% csrf_token %}
 
       {% if form.task_file.errors %}
       <div class="form-group has-error">
-        <input type="file" name="{{ form.task_file.name }}"/>
+        <input id="file-field" type="file" name="{{ form.task_file.name }}"/>
         {% for error in form.task_file.errors %}
         <p class="help-block">{{ error }}</p>
         {% endfor %}
       </div>
       {% else %}
       <div class="form-group">
-        <input type="file" name="{{ form.task_file.name }}"/>
+        <input id="file-field" type="file" name="{{ form.task_file.name }}"/>
       </div>
       {% endif %}
 
-      <input type="submit" class="btn btn-primary" value="Upload"/>
+      <input id="upload-btn" type="submit" class="btn btn-primary" value="Upload"/>
     </form>
   </div>
 </div>
@@ -36,3 +78,46 @@
   <p class="pull-right"><a href="{% url "author-logout" %}">Logout</a></p>
 </div>
 {% endblock %}
+
+<script>
+{% block js_ready %}
+$('#upload-btn').click(function (e) {
+    e.preventDefault();
+    clearFileErrors();
+    clearCommonErrors();
+    var xhr = new XMLHttpRequest();
+    var file_field = $('#file-field').get(0);
+    if (file_field.files.length == 0) {
+      showFileError('No files specified for upload.');
+      return;
+    }
+    var file = file_field.files[0];
+    if (!xhr.upload) {
+      alert('Your browser doesn\'t support file upload through ajax. Update it.');
+    } else {
+      var upload_url = $('#upload-form').attr('action');
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+          if (xhr.status / 100 != 2) {
+            var responseJson = JSON.parse(xhr.responseText);
+            for (var key in responseJson) {
+              addCommonError(responseJson[key]);
+            }
+          } else {
+            console.log('ok');
+          }
+        }
+        console.log('readyState: ' + xhr.readyState + ', ' +
+                    'status: ' + xhr.status);
+      };
+      xhr.open('PUT', upload_url, true);
+      xhr.setRequestHeader(
+        'Content-Disposition',
+        'attachment; filename=' + file.name
+      );
+      xhr.setRequestHeader('X-CSRFToken', csrftoken);
+      xhr.send(file);
+    }
+});
+{% endblock %}
+</script>

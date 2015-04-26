@@ -32,6 +32,8 @@ INSTALLED_APPS = (
     'django_extensions',
     'django_countries',
     'compressor',
+    'debug_toolbar',
+    'debug_panel',
 
     'reg',
     'api',
@@ -40,6 +42,7 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'debug_panel.middleware.DebugPanelMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',

@@ -6,16 +6,28 @@
 <head>
 <title>{% block title %}BlackBox 3.0 Author Panel{% endblock %}</title>
 {% compress css %}
+{% block css %}
 <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}"/>
 <link rel="stylesheet" href="{% static "css/bootstrap-theme.min.css" %}"/>
 <link rel="stylesheet" href="{% static "css/author.less" %}" type="text/less"/>
+{% endblock %}
 {% endcompress %}
 {% compress js %}
+{% block js %}
 <script src="{% static "js/jquery-2.1.3.min.js" %}"></script>
+<script src="{% static "js/ajax_csrf.js" %}"></script>
+{% endblock %}
 {% endcompress %}
 </head>
 <body>
 {% block content %}{% endblock %}
 <div class="copyright">&copy; 2010&ndash;2015, <a href="http://sibears.ru/">SiBears</a></div>
+{% compress js %}
+<script>
+$(document).ready(function () {
+    {% block js_ready %}{% endblock %}
+});
+</script>
+{% endcompress %}
 </body>
 </html>
