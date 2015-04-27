@@ -45,5 +45,5 @@ class TaskUploadAPIView(APIView):
 
     def put(self, req, filename=None, format=None):
         file_obj = req.data['file']
-        process_uploaded_task(file_obj, req.user)
+        process_uploaded_task(file_obj)
         return Response(status=HTTP_201_CREATED)

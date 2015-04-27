@@ -100,6 +100,12 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
+FILE_UPLOAD_HANDLERS = (
+    'author.utils.TaskUploadHandler',
+    'django.core.files.uploadhandler.MemoryFileUploadHandler',
+    'django.core.files.uploadhandler.TemporaryFileUploadHandler',
+)
+
 COMPRESS_CSS_FILTERS = (
     'compressor.filters.yuglify.YUglifyCSSFilter',
 )
