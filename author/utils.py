@@ -2,6 +2,7 @@ from os import path
 from os.path import splitext
 from hashlib import sha1
 from io import BytesIO
+from re import match
 
 from django.conf import settings
 from django.core.files.uploadhandler import FileUploadHandler
@@ -10,6 +11,19 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 
 from author.models import UploadedTask
 from author.models import TaskUploadProgress
+
+
+def splitext_all(filename):
+    result = ''
+    filename, ext = splitext(filename)
+    while ext:
+        if len(ext) < 5 and not match(r'^\.\d+$', ext):
+            result = ext + result
+            filename, ext = splitext(filename)
+        else:
+            filename += ext
+            ext = ''
+    return filename, result
 
 
 class TaskUploadHandler(FileUploadHandler):
@@ -42,7 +56,7 @@ class TaskUploadHandler(FileUploadHandler):
             progress100 = TaskUploadProgress(uploaded_task=self.uploaded_task,
                                              progress=100)
             progress100.save()
-        file_name, ext = splitext(self.file_name)
+        file_name, ext = splitext_all(self.file_name)
         file_name = '%s%s' % (self.sha1.hexdigest(), ext)
         self.file.seek(0)
         return InMemoryUploadedFile(
