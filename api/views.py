@@ -74,4 +74,4 @@ class TaskUploadProgressAPIView(ListAPIView):
         uploaded_task_pk = self.request.QUERY_PARAMS.get('uploaded_task_pk')
         if uploaded_task_pk is not None:
             queryset = queryset.filter(uploaded_task__pk=uploaded_task_pk)
-        return queryset
+        return queryset.order_by('-progress')

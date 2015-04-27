@@ -20,21 +20,20 @@ class TaskUploadHandler(FileUploadHandler):
         self.uploaded_task = UploadedTask.objects.get(
             pk=self.request.GET.get('uploaded_task_pk')
         )
-        f = file('/tmp/asdf.txt', 'wt')
-        f.write('here: %s\n' % repr(self.request.GET.get('uploaded_task_pk')))
-        f.close()
         self.file = None
         self.sha1 = sha1()
 
     def receive_data_chunk(self, raw_data, start):
         self.bytes_passed += len(raw_data)
         percent = self.bytes_passed * 100 / self.content_length
-        progress = TaskUploadProgress(uploaded_task=self.uploaded_task,
-                                      progress=percent)
-        progress.save()
+        if not TaskUploadProgress.objects.filter(
+                uploaded_task=self.uploaded_task,
+                progress=percent).exists():
+            progress = TaskUploadProgress(uploaded_task=self.uploaded_task,
+                                          progress=percent)
+            progress.save()
         self.file.write(raw_data)
         self.sha1.update(raw_data)
-        return raw_data
 
     def file_complete(self, file_size):
         if not TaskUploadProgress.objects.filter(

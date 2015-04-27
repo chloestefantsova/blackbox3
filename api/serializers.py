@@ -139,5 +139,5 @@ class TaskUploadProgressSerializer(ModelSerializer):
 
     class Meta:
         model = TaskUploadProgress
-        exclude = ('uploaded_task',)
+        exclude = ('id', 'uploaded_task')
         read_only_fields = ('progress', 'timestamp')

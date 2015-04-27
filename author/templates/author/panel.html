@@ -10,15 +10,18 @@ function addFileError(msg) {
       $('<p>').addClass('help-block').text(msg)
   );
 }
+
 function clearFileErrors() {
   var $field = $('#file-field');
   $field.parent().removeClass('has-error');
   $field.parent().find('.help-block').remove();
 }
+
 function showFileError(msg) {
   clearFileErrors();
   addFileError(msg);
 }
+
 
 function addCommonError(msg) {
   var $field = $('#error-box');
@@ -27,15 +30,35 @@ function addCommonError(msg) {
       $('<p>').text(msg)
   );
 }
+
 function clearCommonErrors() {
   var $field = $('#error-box');
   $field.addClass('disabled');
   $field.children().remove();
   $field.text('');
 }
+
 function showCommonError(msg) {
   clearCommonErrors();
   addCommonError(msg);
+}
+
+
+function showProgressBar() {
+  var $field = $('#progress-bar');
+  $field.parent().removeClass('disabled');
+}
+
+function updateProgressBar(percent) {
+  var $field = $('#progress-bar');
+  $field.attr('aria-valuenow', percent);
+  $field.css('width', ''+percent+'%');
+  $field.text(''+percent+'%');
+}
+
+function hideProgressBar() {
+  var $field = $('#progress-bar');
+  $field.parent().addClass('disabled');
 }
 </script>
 {% endblock %}
@@ -70,6 +93,12 @@ function showCommonError(msg) {
       </div>
       {% endif %}
 
+      <div class="progress disabled">
+        <div id="progress-bar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+          0%
+        </div>
+      </div>
+
       <input id="upload-btn" type="submit" class="btn btn-primary" value="Upload"/>
     </form>
   </div>
@@ -101,6 +130,7 @@ $('#upload-btn').click(function (e) {
         var uploaded_task_pk = resp.uploaded_task_pk;
 
         var upload_url = '{% url "api-upload" %}?uploaded_task_pk='+uploaded_task_pk;
+
         xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
           if (xhr.readyState == 4) {
@@ -123,6 +153,26 @@ $('#upload-btn').click(function (e) {
         );
         xhr.setRequestHeader('X-CSRFToken', csrftoken);
         xhr.send(file);
+
+        updateProgressBar(0);
+        showProgressBar();
+        var progressInterval = setInterval(function () {
+            $.ajax({
+              method: 'GET',
+              url: '{% url "api-upload-progress" %}?uploaded_task_pk='+uploaded_task_pk,
+              dataType: 'json',
+              data: '',
+              success: function (data, stat, xhr) {
+                var marks = JSON.parse(xhr.responseText);
+                marks.sort(function (a, b) { return a.progress - b.progress; });
+                var best = marks.pop();
+                updateProgressBar(best.progress);
+                if (best.progress == 100) {
+                  clearInterval(progressInterval);
+                }
+              }
+            });
+        }, 1000);
       },
       error: function (xhr, stat, err) {
         showCommonError(xhr.responseText);
