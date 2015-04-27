@@ -4,9 +4,16 @@ from time import mktime
 from django.utils.translation import ugettext as _
 from django.contrib.auth.models import User
 
-from rest_framework.serializers import ModelSerializer, ValidationError, RelatedField, HiddenField, CharField, Field, DateTimeField, SerializerMethodField
+from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ValidationError
+from rest_framework.serializers import RelatedField
+from rest_framework.serializers import CharField
+from rest_framework.serializers import Field
+from rest_framework.serializers import DateTimeField
+from rest_framework.serializers import SerializerMethodField
 
 from reg.models import Team, Member
+from author.models import TaskUploadProgress
 
 
 class UnixEpochDateTimeField(DateTimeField):
@@ -68,6 +75,7 @@ class PasswordField(Field):
     def to_internal_value(self, data):
         return data
 
+
 class UserSerializer(ModelSerializer):
 
     password1 = PasswordField(write_only=True)
@@ -123,3 +131,13 @@ class MemberSerializer(ModelSerializer):
     class Meta:
         model = Member
         read_only_fields = ('id', 'created_at')
+
+
+class TaskUploadProgressSerializer(ModelSerializer):
+
+    timestamp = UnixEpochDateTimeField(read_only=True)
+
+    class Meta:
+        model = TaskUploadProgress
+        exclude = ('uploaded_task',)
+        read_only_fields = ('progress', 'timestamp')

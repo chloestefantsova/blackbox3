@@ -17,8 +17,12 @@ class TaskUploadHandler(FileUploadHandler):
     def __init__(self, *args, **kwargs):
         super(TaskUploadHandler, self).__init__(*args, **kwargs)
         self.bytes_passed = 0
-        self.uploaded_task = UploadedTask(author=self.request.user)
-        self.uploaded_task.save()
+        self.uploaded_task = UploadedTask.objects.get(
+            pk=self.request.GET.get('uploaded_task_pk')
+        )
+        f = file('/tmp/asdf.txt', 'wt')
+        f.write('here: %s\n' % repr(self.request.GET.get('uploaded_task_pk')))
+        f.close()
         self.file = None
         self.sha1 = sha1()
 
@@ -39,16 +43,13 @@ class TaskUploadHandler(FileUploadHandler):
             progress100 = TaskUploadProgress(uploaded_task=self.uploaded_task,
                                              progress=100)
             progress100.save()
-        _, ext = splitext(self.file_name)
-        new_name = '%s%s' % (self.sha1.hexdigest(), ext)
-        new_path = path.join(settings.UPLOADED_TASK_DIR, new_name)
-        self.uploaded_task.path = new_path
-        self.uploaded_task.save()
+        file_name, ext = splitext(self.file_name)
+        file_name = '%s%s' % (self.sha1.hexdigest(), ext)
         self.file.seek(0)
         return InMemoryUploadedFile(
             file=self.file,
             field_name=self.field_name,
-            name=new_name,
+            name=file_name,
             content_type=self.content_type,
             size=file_size,
             charset=self.charset,
@@ -64,9 +65,11 @@ class TaskUploadHandler(FileUploadHandler):
         raise StopFutureHandlers()
 
 
-def process_uploaded_task(uploaded_file):
-    filename = path.join(settings.UPLOADED_TASK_DIR, uploaded_file.name)
-    f_file = file(filename, 'wb')
+def process_uploaded_task(uploaded_file, uploaded_task):
+    full_name = path.join(settings.UPLOADED_TASK_DIR, uploaded_file.name)
+    actual_file = file(full_name, 'wb')
     for chunk in uploaded_file.chunks():
-        f_file.write(chunk)
-    f_file.close()
+        actual_file.write(chunk)
+    actual_file.close()
+    uploaded_task.path = full_name
+    uploaded_task.save()

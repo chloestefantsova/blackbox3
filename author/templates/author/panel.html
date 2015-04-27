@@ -54,7 +54,7 @@ function showCommonError(msg) {
     {% endif %}
     <div id="error-box" class="alert alert-danger disabled">
     </div>
-    <form id="upload-form" role="form" method="post" action="{% url "api-upload" %}" enctype="multipart/form-data">
+    <form id="upload-form" role="form" enctype="multipart/form-data">
       {% csrf_token %}
 
       {% if form.task_file.errors %}
@@ -85,39 +85,49 @@ $('#upload-btn').click(function (e) {
     e.preventDefault();
     clearFileErrors();
     clearCommonErrors();
-    var xhr = new XMLHttpRequest();
     var file_field = $('#file-field').get(0);
     if (file_field.files.length == 0) {
       showFileError('No files specified for upload.');
       return;
     }
     var file = file_field.files[0];
-    if (!xhr.upload) {
-      alert('Your browser doesn\'t support file upload through ajax. Update it.');
-    } else {
-      var upload_url = $('#upload-form').attr('action');
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState == 4) {
-          if (xhr.status / 100 != 2) {
-            var responseJson = JSON.parse(xhr.responseText);
-            for (var key in responseJson) {
-              addCommonError(responseJson[key]);
+    $.ajax({
+      method: 'POST',
+      url: '{% url "api-upload-start" %}',
+      dataType: 'json',
+      data: '',
+      success: function (data, stat, xhr) {
+        var resp = JSON.parse(xhr.responseText);
+        var uploaded_task_pk = resp.uploaded_task_pk;
+
+        var upload_url = '{% url "api-upload" %}?uploaded_task_pk='+uploaded_task_pk;
+        xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState == 4) {
+            if (xhr.status / 100 != 2) {
+              var responseJson = JSON.parse(xhr.responseText);
+              for (var key in responseJson) {
+                addCommonError(responseJson[key]);
+              }
+            } else {
+              console.log('ok');
             }
-          } else {
-            console.log('ok');
           }
-        }
-        console.log('readyState: ' + xhr.readyState + ', ' +
-                    'status: ' + xhr.status);
-      };
-      xhr.open('PUT', upload_url, true);
-      xhr.setRequestHeader(
-        'Content-Disposition',
-        'attachment; filename=' + file.name
-      );
-      xhr.setRequestHeader('X-CSRFToken', csrftoken);
-      xhr.send(file);
-    }
+          console.log('readyState: ' + xhr.readyState + ', ' +
+                      'status: ' + xhr.status);
+        };
+        xhr.open('PUT', upload_url, true);
+        xhr.setRequestHeader(
+          'Content-Disposition',
+          'attachment; filename=' + file.name
+        );
+        xhr.setRequestHeader('X-CSRFToken', csrftoken);
+        xhr.send(file);
+      },
+      error: function (xhr, stat, err) {
+        showCommonError(xhr.responseText);
+      }
+    });
 });
 {% endblock %}
 </script>
