@@ -13,6 +13,7 @@ class UploadedTask(models.Model):
     path = models.CharField(null=False, blank=True, max_length=1024)
     format_checks_passed = models.BooleanField(default=False)
     untarred_path = models.CharField(null=False, blank=True, max_length=1024)
+    created_at = models.DateTimeField(null=False, blank=True)
 
     def get_filename(self):
         return path.basename(self.path)
@@ -61,6 +62,11 @@ class UploadedTask(models.Model):
             if not image.is_deployed():
                 return False
         return True
+
+    def save(self, *args, **kwargs):
+        if self.pk is None:
+            self.created_at = timezone.now()
+        return super(UploadedTask, self).save(*args, **kwargs)
 
 
 class UploadedTaskFile(models.Model):
