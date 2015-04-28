@@ -10,12 +10,14 @@ from rest_framework.status import HTTP_201_CREATED
 from author.utils import process_uploaded_task
 from author.models import UploadedTask
 from author.models import TaskUploadProgress
+from author.models import UploadedTaskDeployStatus
 from author.tasks import deploy_uploaded_task
 from reg.models import Team, Member
 from api.serializers import TeamSerializer
 from api.serializers import MemberSerializer
 from api.serializers import TaskUploadProgressSerializer
 from api.serializers import UploadedTaskSerializer
+from api.serializers import UploadedTaskDeployStatusSerializer
 
 
 class TeamAPIView(ListModelMixin,
@@ -90,3 +92,14 @@ class UploadedTaskAPIView(ListAPIView):
 
     def get_queryset(self):
         return UploadedTask.objects.filter(author=self.request.user)
+
+
+# TODO: only for author of the tasks
+class UploadedTaskDeployStatusAPIView(ListAPIView):
+
+    serializer_class = UploadedTaskDeployStatusSerializer
+
+    def get_queryset(self):
+        return UploadedTaskDeployStatus.objects.filter(
+            uploaded_task__pk=self.kwargs['uploaded_task_pk'],
+        )

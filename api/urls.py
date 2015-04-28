@@ -6,6 +6,7 @@ from api.views import TaskUploadAPIView
 from api.views import TaskUploadStartAPIView
 from api.views import TaskUploadProgressAPIView
 from api.views import UploadedTaskAPIView
+from api.views import UploadedTaskDeployStatusAPIView
 
 
 urlpatterns = patterns(
@@ -20,4 +21,7 @@ urlpatterns = patterns(
         name='api-upload-progress'),
     url(r'^upload/tasks/$', UploadedTaskAPIView.as_view(),
         name='api-uploaded-tasks'),
+    url(r'^upload/tasks/(?P<uploaded_task_pk>\d+)/status/$',
+        UploadedTaskDeployStatusAPIView.as_view(),
+        name='api-uploaded-task-status'),
 )

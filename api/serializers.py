@@ -12,9 +12,11 @@ from rest_framework.serializers import Field
 from rest_framework.serializers import DateTimeField
 from rest_framework.serializers import SerializerMethodField
 
-from reg.models import Team, Member
+from reg.models import Team
+from reg.models import Member
 from author.models import TaskUploadProgress
 from author.models import UploadedTask
+from author.models import UploadedTaskDeployStatus
 
 
 class UnixEpochDateTimeField(DateTimeField):
@@ -169,3 +171,17 @@ class UploadedTaskSerializer(ModelSerializer):
         model = UploadedTask
         exclude = ('path', 'format_checks_passed', 'untarred_path')
         read_only_fields = ('pk', 'author', 'task')
+
+
+class UploadedTaskDeployStatusSerializer(ModelSerializer):
+
+    phase = SerializerMethodField()
+    timestamp = UnixEpochDateTimeField(read_only=True)
+
+    def get_phase(self, obj):
+        return dict(UploadedTaskDeployStatus.PHASE_CHOICES)[obj.phase]
+
+    class Meta:
+        model = UploadedTaskDeployStatus
+        read_only_fields = ('pk', 'uploaded_task', 'phase', 'message',
+                            'timestamp')
