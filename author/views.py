@@ -5,6 +5,7 @@ from django.template import RequestContext
 
 from author.forms import UploadTaskForm
 from author.utils import process_uploaded_task
+from author.models import UploadedTask
 
 
 class PanelView(TemplateView):
@@ -14,6 +15,9 @@ class PanelView(TemplateView):
     def get_context_data(self, *args, **kwargs):
         context = super(PanelView, self).get_context_data(*args, **kwargs)
         context['form'] = UploadTaskForm()
+        context['uploaded_tasks'] = UploadedTask.objects.filter(
+            author=self.request.user
+        )
         return context
 
     def post(self, req):

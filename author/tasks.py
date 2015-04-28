@@ -29,10 +29,6 @@ def deploy_uploaded_task(uploaded_task):
 
 @shared_task
 def format_checks(uploaded_task):
-    f = file('/tmp/asdf.txt', 'wt')
-    f.write('at format_checks\n')
-    f.close()
-
     if not uploaded_task.is_uploaded():
         return uploaded_task
     error_status = UploadedTaskDeployStatus(
@@ -40,7 +36,7 @@ def format_checks(uploaded_task):
         phase=UploadedTaskDeployStatus.PHASE_FORMAT_CHECK
     )
     untarred_path, ext = splitext_all(uploaded_task.path)
-    supported_exts = ['tar.gz', 'tar.bz2', 'tar.xz', 'tar']
+    supported_exts = ['.tar.gz', '.tar.bz2', '.tar.xz', '.tar']
     if ext not in supported_exts:
         msg = 'Unsupported format "{ext}". Should be one of {supported}.'
         msg = msg.format(ext=ext, supported=', '.join(supported_exts))
@@ -151,8 +147,10 @@ def format_checks(uploaded_task):
         template_strings[filename] = member_file.read()
 
     existing_filenames = []
-    file_re = re_compile(r'^task/(\w+)$')
+    file_re = re_compile(r'^task/(.+)$')
     for filename in tar_file.getnames():
+        if filename == 'task/task.json':
+            continue
         so = re_search(file_re, filename)
         if so:
             existing_filenames.append(so.group(1))
@@ -175,13 +173,15 @@ def format_checks(uploaded_task):
         images_filenames, tmp_filenames = [], images_filenames
         for filename in tmp_filenames:
             images_filenames.append(filename.replace('.', '_'))
-        for filename in tcp_ports_map:
-            tcp_ports_map[filename.replace('.', '_')] = tcp_ports_map[filename]
-        for filename in udp_ports_map:
-            udp_ports_map[filename.replace('.', '_')] = udp_ports_map[filename]
+        tcp_ports_map, tmp_ports_map = {}, tcp_ports_map
+        for filename in tmp_ports_map:
+            tcp_ports_map[filename.replace('.', '_')] = tmp_ports_map[filename]
+        udp_ports_map, tmp_ports_map = {}, udp_ports_map
+        for filename in tmp_ports_map:
+            udp_ports_map[filename.replace('.', '_')] = tmp_ports_map[filename]
 
         temp_var_re = re_compile(r'\{\{[^}]*\}\}')
-        image_var_re = re_compile(r'^\w+_(?:tcp|udp)\d+$')
+        image_var_re = re_compile(r'^.+_(?:tcp|udp)\d+$')
         temp_vars = []
         image_temp_vars = []
         so = re_search(temp_var_re, template_str)
@@ -213,19 +213,18 @@ def format_checks(uploaded_task):
                        'references a file that is not present in the '
                        'uploaded archive')
                 raise Exception(msg.format(filename=temp_var))
-        for temp_var in image_temp_vars:
-            if temp_var not in images_filenames:
-                msg = ('Found template variable "{filename}" that '
-                       'references a docker image that is not present '
-                       'in the uploaded archive')
-                raise Exception(msg.format(filename=temp_var))
-        tcp_port_re = re_compile(r'^(\w+)_tcp(\d+)$')
-        udp_port_re = re_compile(r'^(\w+)_udp(\d+)$')
+        tcp_port_re = re_compile(r'^(.+)_tcp(\d+)$')
+        udp_port_re = re_compile(r'^(.+)_udp(\d+)$')
         for temp_var in image_temp_vars:
             so = re_search(tcp_port_re, temp_var)
             if so:
                 name = so.group(1)
-                port = so.group(2)
+                if name not in images_filenames:
+                    msg = ('Found template variable "{filename}" that '
+                           'references a docker image that is not present '
+                           'in the uploaded archive')
+                    raise Exception(msg.format(filename=name))
+                port = int(so.group(2))
                 if port not in tcp_ports_map[name]:
                     raise Exception('Found docker-image template variable '
                                     '"%s" that references tcp-port %s that is '
@@ -235,7 +234,12 @@ def format_checks(uploaded_task):
             so = re_search(udp_port_re, temp_var)
             if so:
                 name = so.group(1)
-                port = so.group(2)
+                if name not in images_filenames:
+                    msg = ('Found template variable "{filename}" that '
+                           'references a docker image that is not present '
+                           'in the uploaded archive')
+                    raise Exception(msg.format(filename=name))
+                port = int(so.group(2))
                 if port not in udp_ports_map[name]:
                     raise Exception('Found docker-image template variable '
                                     '"%s" that references udp-port %s that is '

@@ -14,6 +14,9 @@ class UploadedTask(models.Model):
     format_checks_passed = models.BooleanField(default=False)
     untarred_path = models.CharField(null=False, blank=True, max_length=1024)
 
+    def get_filename(self):
+        return path.basename(self.path)
+
     def is_installed(self):
         return self.task is not None and self.task
 

@@ -102,6 +102,21 @@ function hideProgressBar() {
       <input id="upload-btn" type="submit" class="btn btn-primary" value="Upload"/>
     </form>
   </div>
+  {% for uploaded_task in uploaded_tasks %}
+  {% if uploaded_task.is_installed %}
+  <div class="info-box bg-success">
+    <h4>{{ uploaded_task.path }}</h4>
+    <p>OK<p>
+  </div>
+  {% else %}
+  <div class="info-box bg-danger">
+    <h4>{{ uploaded_task.get_filename }}</h4>
+    {% for status in uploaded_task.status.all %}
+    <p>{{ status.message }}</p>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% endfor %}
 </div>
 <div class="toolbox">
   <p class="pull-right"><a href="{% url "author-logout" %}">Logout</a></p>
