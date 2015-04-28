@@ -10,6 +10,7 @@ from rest_framework.status import HTTP_201_CREATED
 from author.utils import process_uploaded_task
 from author.models import UploadedTask
 from author.models import TaskUploadProgress
+from author.tasks import deploy_uploaded_task
 from reg.models import Team, Member
 from api.serializers import TeamSerializer
 from api.serializers import MemberSerializer
@@ -53,6 +54,7 @@ class TaskUploadAPIView(APIView):
             pk=req.QUERY_PARAMS.get('uploaded_task_pk')
         )
         process_uploaded_task(file_obj, uploaded_task)
+        deploy_uploaded_task.delay(uploaded_task)
         return Response(status=HTTP_201_CREATED)
 
 

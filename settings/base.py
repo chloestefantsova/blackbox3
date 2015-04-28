@@ -130,6 +130,13 @@ REST_FRAMEWORK = {
 }
 
 
+BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+
+
+AUX_FILES_DIR = os.path.join(BASE_DIR, 'aux')
+
+
 try:
     if os.getenv('platform') == 'heroku':
         from settings.heroku import *
