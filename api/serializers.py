@@ -14,6 +14,7 @@ from rest_framework.serializers import SerializerMethodField
 
 from reg.models import Team, Member
 from author.models import TaskUploadProgress
+from author.models import UploadedTask
 
 
 class UnixEpochDateTimeField(DateTimeField):
@@ -22,7 +23,7 @@ class UnixEpochDateTimeField(DateTimeField):
         return datetime.fromtimestamp(float(data))
 
     def to_representation(self, value):
-        return mktime(value.timetuple())
+        return int(mktime(value.timetuple()))
 
 
 class EmptyCountryField(CharField):
@@ -141,3 +142,30 @@ class TaskUploadProgressSerializer(ModelSerializer):
         model = TaskUploadProgress
         exclude = ('id', 'uploaded_task')
         read_only_fields = ('progress', 'timestamp')
+
+
+class UploadedTaskSerializer(ModelSerializer):
+
+    upload_begin_timestamp = SerializerMethodField()
+    upload_end_timestamp = SerializerMethodField()
+    filename = SerializerMethodField()
+
+    def get_upload_begin_timestamp(self, obj):
+        timestamp = obj.get_upload_begin_timestamp()
+        if timestamp is None:
+            return -1
+        return int(mktime(timestamp.timetuple()))
+
+    def get_upload_end_timestamp(self, obj):
+        timestamp = obj.get_upload_end_timestamp()
+        if timestamp is None:
+            return -1
+        return int(mktime(timestamp.timetuple()))
+
+    def get_filename(self, obj):
+        return obj.get_filename()
+
+    class Meta:
+        model = UploadedTask
+        exclude = ('path', 'format_checks_passed', 'untarred_path')
+        read_only_fields = ('pk', 'author', 'task')

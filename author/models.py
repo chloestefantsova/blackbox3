@@ -17,6 +17,18 @@ class UploadedTask(models.Model):
     def get_filename(self):
         return path.basename(self.path)
 
+    def get_upload_begin_timestamp(self):
+        progress0 = self.progress.filter(progress=0)
+        if progress0.exists():
+            return progress0[0].timestamp
+        return None
+
+    def get_upload_end_timestamp(self):
+        progress100 = self.progress.filter(progress=100)
+        if progress100.exists():
+            return progress100[0].timestamp
+        return None
+
     def is_installed(self):
         return self.task is not None and self.task
 

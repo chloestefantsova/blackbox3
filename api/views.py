@@ -15,6 +15,7 @@ from reg.models import Team, Member
 from api.serializers import TeamSerializer
 from api.serializers import MemberSerializer
 from api.serializers import TaskUploadProgressSerializer
+from api.serializers import UploadedTaskSerializer
 
 
 class TeamAPIView(ListModelMixin,
@@ -44,6 +45,7 @@ class MemberAPIView(CreateModelMixin,
         return self.create(req, *args, **kwargs)
 
 
+# TODO: only for authors
 class TaskUploadAPIView(APIView):
 
     parser_classes = (FileUploadParser,)
@@ -58,6 +60,7 @@ class TaskUploadAPIView(APIView):
         return Response(status=HTTP_201_CREATED)
 
 
+# TODO: only for the author who initiated upload
 class TaskUploadStartAPIView(APIView):
 
     def post(self, req, *args, **kwargs):
@@ -67,6 +70,7 @@ class TaskUploadStartAPIView(APIView):
                         status=HTTP_201_CREATED)
 
 
+# TODO: only for author of the task
 class TaskUploadProgressAPIView(ListAPIView):
 
     serializer_class = TaskUploadProgressSerializer
@@ -77,3 +81,12 @@ class TaskUploadProgressAPIView(ListAPIView):
         if uploaded_task_pk is not None:
             queryset = queryset.filter(uploaded_task__pk=uploaded_task_pk)
         return queryset.order_by('-progress')
+
+
+# TODO: only for author of the tasks
+class UploadedTaskAPIView(ListAPIView):
+
+    serializer_class = UploadedTaskSerializer
+
+    def get_queryset(self):
+        return UploadedTask.objects.filter(author=self.request.user)
