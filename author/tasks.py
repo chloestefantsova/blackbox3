@@ -225,7 +225,7 @@ def format_checks(uploaded_task):
                            'in the uploaded archive')
                     raise Exception(msg.format(filename=name))
                 port = int(so.group(2))
-                if port not in tcp_ports_map[name]:
+                if name not in tcp_ports_map and port not in tcp_ports_map[name]:
                     raise Exception('Found docker-image template variable '
                                     '"%s" that references tcp-port %s that is '
                                     'not mentioned in the corresponding '
@@ -240,7 +240,7 @@ def format_checks(uploaded_task):
                            'in the uploaded archive')
                     raise Exception(msg.format(filename=name))
                 port = int(so.group(2))
-                if port not in udp_ports_map[name]:
+                if name not in udp_ports_map or port not in udp_ports_map[name]:
                     raise Exception('Found docker-image template variable '
                                     '"%s" that references udp-port %s that is '
                                     'not mentioned in the corresponding '
