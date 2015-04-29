@@ -103,3 +103,14 @@ class UploadedTaskDeployStatusAPIView(ListAPIView):
         return UploadedTaskDeployStatus.objects.filter(
             uploaded_task__pk=self.kwargs['uploaded_task_pk'],
         )
+
+
+# TODO: only for author of the tasks
+class AllUploadedTaskDeployStatusAPIView(ListAPIView):
+
+    serializer_class = UploadedTaskDeployStatusSerializer
+
+    def get_queryset(self):
+        return UploadedTaskDeployStatus.objects.filter(
+            uploaded_task__author=self.request.user
+        )

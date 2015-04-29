@@ -60,6 +60,85 @@ function hideProgressBar() {
   var $field = $('#progress-bar');
   $field.parent().addClass('disabled');
 }
+
+
+var makeStatusEl = function (status, msgs) {
+  var $el = $('<div>')
+    .addClass('uploaded-file-status')
+    .addClass('disabled');
+  var $title = $('<h4>').addClass('status-title').text(status.filename);
+  $el.append($title);
+  if (!msgs || msgs.length == 0) {
+    $el.addClass('bg-success');
+  } else {
+    $el.addClass('bg-danger');
+    msgs.forEach(function (msg) {
+      var $msg = $('<p>').text(msg.message);
+      $el.append($msg);
+    });
+  }
+  return $el;
+};
+
+var refreshUploadedTasks = function (receivedStatus, msgs) {
+  var msgsMap = {};
+  msgs.forEach(function (msg) {
+      if (msg.uploaded_task in msgsMap) {
+        msgsMap[msg.uploaded_task].push(msg);
+      } else {
+        msgsMap[msg.uploaded_task] = [msg];
+      }
+  });
+
+  var $statusParent = $('#uploaded-tasks-container');
+  var idx = 0;
+  $statusParent.children().each(function () {
+      var $el = $(this);
+      while (receivedStatus[idx].filename != $el.find('.status-title').text()) {
+        $el.before(makeStatusEl(receivedStatus[idx],
+                                msgsMap[receivedStatus[idx].pk]));
+        ++idx;
+      }
+      if (receivedStatus[idx].filename == $el.find('.status-title').text()) {
+        ++idx;
+      }
+  });
+  while (idx < receivedStatus.length) {
+    $statusParent.append(makeStatusEl(receivedStatus[idx],
+                                      msgsMap[receivedStatus[idx].pk]));
+    ++idx;
+  }
+  $('.uploaded-file-status').slideDown();
+};
+
+var fetchUploadedTasks = function () {
+  $.ajax({
+    method: 'GET',
+    url: '{% url "api-uploaded-tasks" %}',
+    dataType: 'json',
+    success: function (data, stat, xhr1) {
+      $.ajax({
+        method: 'GET',
+        url: '{% url "api-all-uploaded-task-status" %}',
+        dataType: 'json',
+        success: function (data, stat, xhr2) {
+          var status = JSON.parse(xhr1.responseText);
+          var msgs = JSON.parse(xhr2.responseText);
+          status.sort(function (a, b) {
+            if (a.created_at != b.created_at) {
+              return b.created_at - a.created_at;
+            }
+            if (a.upload_start_timestamp != b.upload_start_timestamp) {
+              return b.upload_start_timestamp - a.upload_start_timestamp;
+            }
+            return b.upload_end_timestamp - a.upload_end_timestamp;
+          });
+          refreshUploadedTasks(status, msgs);
+        }
+      });
+    }
+  });
+};
 </script>
 {% endblock %}
 
@@ -102,21 +181,7 @@ function hideProgressBar() {
       <input id="upload-btn" type="submit" class="btn btn-primary" value="Upload"/>
     </form>
   </div>
-  {% for uploaded_task in uploaded_tasks %}
-  {% if uploaded_task.is_installed %}
-  <div class="info-box bg-success">
-    <h4>{{ uploaded_task.path }}</h4>
-    <p>OK<p>
-  </div>
-  {% else %}
-  <div class="info-box bg-danger">
-    <h4>{{ uploaded_task.get_filename }}</h4>
-    {% for status in uploaded_task.status.all %}
-    <p>{{ status.message }}</p>
-    {% endfor %}
-  </div>
-  {% endif %}
-  {% endfor %}
+  <div id="uploaded-tasks-container"></div>
 </div>
 <div class="toolbox">
   <p class="pull-right"><a href="{% url "author-logout" %}">Logout</a></p>
@@ -154,12 +219,8 @@ $('#upload-btn').click(function (e) {
               for (var key in responseJson) {
                 addCommonError(responseJson[key]);
               }
-            } else {
-              console.log('ok');
             }
           }
-          console.log('readyState: ' + xhr.readyState + ', ' +
-                      'status: ' + xhr.status);
         };
         xhr.open('PUT', upload_url, true);
         xhr.setRequestHeader(
@@ -184,6 +245,7 @@ $('#upload-btn').click(function (e) {
                 updateProgressBar(best.progress);
                 if (best.progress == 100) {
                   clearInterval(progressInterval);
+                  fetchUploadedTasks();
                 }
               }
             });
@@ -194,5 +256,9 @@ $('#upload-btn').click(function (e) {
       }
     });
 });
+
+
+fetchUploadedTasks();
+var uploadedTaskStatesInterval = setInterval(fetchUploadedTasks, 5000);
 {% endblock %}
 </script>

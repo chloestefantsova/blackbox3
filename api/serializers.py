@@ -133,7 +133,8 @@ class MemberSerializer(ModelSerializer):
 
     class Meta:
         model = Member
-        read_only_fields = ('id', 'created_at')
+        fields = ('pk', 'created_at', 'user', 'team')
+        read_only_fields = ('pk', 'created_at')
 
 
 class TaskUploadProgressSerializer(ModelSerializer):
@@ -142,7 +143,7 @@ class TaskUploadProgressSerializer(ModelSerializer):
 
     class Meta:
         model = TaskUploadProgress
-        exclude = ('id', 'uploaded_task')
+        fields = ('progress', 'timestamp')
         read_only_fields = ('progress', 'timestamp')
 
 
@@ -151,6 +152,7 @@ class UploadedTaskSerializer(ModelSerializer):
     upload_begin_timestamp = SerializerMethodField()
     upload_end_timestamp = SerializerMethodField()
     filename = SerializerMethodField()
+    created_at = UnixEpochDateTimeField(read_only=True)
 
     def get_upload_begin_timestamp(self, obj):
         timestamp = obj.get_upload_begin_timestamp()
@@ -169,8 +171,9 @@ class UploadedTaskSerializer(ModelSerializer):
 
     class Meta:
         model = UploadedTask
-        exclude = ('path', 'format_checks_passed', 'untarred_path')
-        read_only_fields = ('pk', 'author', 'task')
+        fields = ('pk', 'author', 'task', 'created_at', 'filename',
+                  'upload_begin_timestamp', 'upload_end_timestamp')
+        read_only_fields = ('pk', 'author', 'task', 'created_at')
 
 
 class UploadedTaskDeployStatusSerializer(ModelSerializer):
@@ -183,5 +186,6 @@ class UploadedTaskDeployStatusSerializer(ModelSerializer):
 
     class Meta:
         model = UploadedTaskDeployStatus
+        fields = ('pk', 'uploaded_task', 'phase', 'message', 'timestamp')
         read_only_fields = ('pk', 'uploaded_task', 'phase', 'message',
                             'timestamp')
