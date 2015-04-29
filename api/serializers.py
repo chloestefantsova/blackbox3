@@ -155,16 +155,16 @@ class UploadedTaskSerializer(ModelSerializer):
     created_at = UnixEpochDateTimeField(read_only=True)
 
     def get_upload_begin_timestamp(self, obj):
-        timestamp = obj.get_upload_begin_timestamp()
-        if timestamp is None:
-            return -1
-        return int(mktime(timestamp.timetuple()))
+        if obj.progress0:
+            timestamp = obj.progress0[0].timestamp
+            return int(mktime(timestamp.timetuple()))
+        return -1
 
     def get_upload_end_timestamp(self, obj):
-        timestamp = obj.get_upload_end_timestamp()
-        if timestamp is None:
-            return -1
-        return int(mktime(timestamp.timetuple()))
+        if obj.progress100:
+            timestamp = obj.progress100[0].timestamp
+            return int(mktime(timestamp.timetuple()))
+        return -1
 
     def get_filename(self, obj):
         return obj.get_filename()

@@ -1,3 +1,6 @@
+from django.db.models import Prefetch
+from django.db.models import Q
+
 from rest_framework.generics import GenericAPIView
 from rest_framework.generics import ListAPIView
 from rest_framework.mixins import CreateModelMixin
@@ -91,7 +94,20 @@ class UploadedTaskAPIView(ListAPIView):
     serializer_class = UploadedTaskSerializer
 
     def get_queryset(self):
-        return UploadedTask.objects.filter(author=self.request.user)
+        queryset = UploadedTask.objects.filter(
+            Q(author=self.request.user) & ~Q(path='')
+        )
+        queryset = queryset.prefetch_related(Prefetch(
+            'progress',
+            queryset=TaskUploadProgress.objects.filter(progress=0),
+            to_attr='progress0',
+        ))
+        queryset = queryset.prefetch_related(Prefetch(
+            'progress',
+            queryset=TaskUploadProgress.objects.filter(progress=100),
+            to_attr='progress100',
+        ))
+        return queryset
 
 
 # TODO: only for author of the tasks
