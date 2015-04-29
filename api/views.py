@@ -62,7 +62,7 @@ class TaskUploadAPIView(APIView):
         )
         process_uploaded_task(file_obj, uploaded_task)
         deploy_uploaded_task.delay(uploaded_task)
-        return Response(status=HTTP_201_CREATED)
+        return Response({}, status=HTTP_201_CREATED)
 
 
 # TODO: only for the author who initiated upload
