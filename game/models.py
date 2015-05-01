@@ -16,6 +16,8 @@ class Task(models.Model):
     title_en = models.CharField(null=False, blank=False, max_length=256)
     desc_ru = models.TextField(null=False, blank=False)
     desc_en = models.TextField(null=False, blank=False)
+    writeup_ru = models.TextField(null=False, blank=False)
+    writeup_en = models.TextField(null=False, blank=False)
     flag = models.CharField(max_length=1024)
     is_case_insensitive_check = models.BooleanField(default=False)
     is_trimmed_check = models.BooleanField(default=False)

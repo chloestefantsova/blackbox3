@@ -37,7 +37,10 @@ DATABASES = {
 
 
 UPLOADED_TASK_DIR = os.path.join(BASE_DIR, 'uploaded_tasks')
+UPLOADED_FILES_DIR = os.path.join(BASE_DIR, 'uploaded_files')
 UPLOADED_IMAGES_DIR = os.path.join(BASE_DIR, 'uploaded_images')
+UPLOADED_FILES_URL = '/files/'
+UPLOADED_IMAGES_URL = '/images/'
 
 
 LANGUAGE_CODE = 'ru'

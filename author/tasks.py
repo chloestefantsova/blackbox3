@@ -11,11 +11,16 @@ from jsonschema import validate as json_validate
 from jsonschema import ValidationError as JsonValidationError
 from re import compile as re_compile
 from re import search as re_search
+from hashlib import sha1
+from shutil import copyfile
 
 from django.conf import settings
 
 from author.utils import splitext_all
 from author.models import UploadedTaskDeployStatus
+from author.models import UploadedTaskFile
+from author.models import UploadedTaskImage
+from game.models import Task
 
 
 @shared_task
@@ -268,6 +273,93 @@ def format_checks(uploaded_task):
 def untar_task(uploaded_task):
     if not uploaded_task.is_correct():
         return uploaded_task
+
+    error_status = UploadedTaskDeployStatus(
+        uploaded_task=uploaded_task,
+        phase=UploadedTaskDeployStatus.PHASE_UNTAR,
+    )
+
+    uploaded_path = uploaded_task.path
+    untarred_path, ext = splitext_all(uploaded_path)
+
+    if ext == '.tar.xz':
+        try:
+            compressed = LZMAFile(uploaded_task.path)
+            tar_file = tar_open(fileobj=compressed)
+        except Exception, ex:
+            error_status.message = 'Error opening tar file: %s' % str(ex)
+            error_status.save()
+            return uploaded_task
+    else:
+        try:
+            tar_file = tar_open(uploaded_task.path)
+        except Exception, ex:
+            error_status.message = 'Error opening tar file: %s' % str(ex)
+            error_status.save()
+            return uploaded_task
+
+    try:
+        tar_file.extractall(path=untarred_path)
+    except Exception, ex:
+        error_status.message = 'Error untarring file: %s' % str(ex)
+        error_status.save()
+        return uploaded_task
+
+    task_json = None
+    try:
+        task_json_filename = path.join(untarred_path, 'task', 'task.json')
+        task_json_file = file(task_json_filename, 'rb')
+        task_json_str = task_json_file.read()
+        task_json_file.close()
+        task_json = json_loads(task_json_str)
+    except Exception, ex:
+        error_status.message = 'Error opening "task.json" file: %s' % str(ex)
+        error_status.save()
+        return uploaded_task
+
+    images_filenames = []
+    for image in task_json['images']:
+        images_filenames.append(image['filename'])
+    tcp_ports_map = {}
+    for image in task_json['images']:
+        if 'tcp_ports' in image:
+            ports_string = ','.join(map(str, image['tcp_ports']))
+            tcp_ports_map[image['filename']] = ports_string
+        else:
+            tcp_ports_map[image['filename']] = ''
+    udp_ports_map = {}
+    for image in task_json['images']:
+        if 'udp_ports' in image:
+            ports_string = ','.join(map(str, image['udp_ports']))
+            udp_ports_map[image['filename']] = ports_string
+        else:
+            udp_ports_map[image['filename']] = ''
+    for filename in tar_file.getnames():
+        if tar_file.getmember(filename).isdir():
+            continue
+        base_filename = path.basename(filename)
+        if base_filename == 'task.json':
+            continue
+        if base_filename in images_filenames:
+            uti = UploadedTaskImage(
+                uploaded_task=uploaded_task,
+                original_name=base_filename,
+                tcp_ports_str=tcp_ports_map[base_filename],
+                udp_ports_str=udp_ports_map[base_filename],
+                untarred_path=path.join(untarred_path, filename),
+            )
+            uti.save()
+        else:
+            utf = UploadedTaskFile(
+                uploaded_task=uploaded_task,
+                original_name=base_filename,
+                untarred_path=path.join(untarred_path, filename),
+            )
+            utf.save()
+
+    uploaded_task.untarred_path = untarred_path
+    uploaded_task.save()
+
     return uploaded_task
 
 
@@ -275,6 +367,70 @@ def untar_task(uploaded_task):
 def move_files(uploaded_task):
     if not uploaded_task.is_untarred():
         return uploaded_task
+
+    error_status = UploadedTaskDeployStatus(
+        uploaded_task=uploaded_task,
+        phase=UploadedTaskDeployStatus.PHASE_UNTAR,
+    )
+
+    for task_file_obj in uploaded_task.files.all():
+        try:
+            sha1obj = sha1()
+            task_file = file(task_file_obj.untarred_path, 'rb')
+            chunk = task_file.read(4096)
+            while len(chunk) > 0:
+                sha1obj.update(chunk)
+                chunk = task_file.read(4096)
+            task_file.close()
+            original_name, original_ext = splitext_all(
+                task_file_obj.original_name
+            )
+            new_name = '%s_%s%s' % (
+                original_name,
+                sha1obj.hexdigest(),
+                original_ext
+            )
+            new_path = path.join(settings.UPLOADED_FILES_DIR, new_name)
+            copyfile(task_file_obj.untarred_path, new_path)
+            task_file_obj.related_name = new_name
+            task_file_obj.save()
+        except Exception, ex:
+            msg = 'Error copying file "{filename}": {reason}'.format(
+                filename=task_file_obj.original_name,
+                reason=str(ex),
+            )
+            error_status.message = msg
+            error_status.save()
+            return uploaded_task
+    for task_image_obj in uploaded_task.images.all():
+        try:
+            sha1obj = sha1()
+            task_image = file(task_image_obj.untarred_path, 'rb')
+            chunk = task_image.read(4096)
+            while len(chunk) > 0:
+                sha1obj.update(chunk)
+                chunk = task_file.read(4096)
+            task_file.close()
+            original_name, original_ext = splitext_all(
+                task_image_obj.original_name
+            )
+            new_name = '%s_%s%s' % (
+                original_name,
+                sha1obj.hexdigest(),
+                original_ext
+            )
+            new_path = path.join(settings.UPLOADED_IMAGES_DIR, new_name)
+            copyfile(task_image_obj.untarred_path, new_path)
+            task_image_obj.related_name = new_name
+            task_image_obj.save()
+        except Exception, ex:
+            msg = 'Error copying image file "{filename}": {reason}'.format(
+                filename=task_image_obj.original_name,
+                reason=str(ex),
+            )
+            error_status.message = msg
+            error_status.save()
+            return uploaded_task
     return uploaded_task
 
 
@@ -289,4 +445,55 @@ def email_docker_deployers(uploaded_task):
 def make_task(uploaded_task):
     if not uploaded_task.files_are_deployed():
         return uploaded_task
+
+    error_status = UploadedTaskDeployStatus(
+        uploaded_task=uploaded_task,
+        phase=UploadedTaskDeployStatus.PHASE_UNTAR,
+    )
+
+    task_json = None
+    try:
+        task_json_filename = path.join(uploaded_task.untarred_path,
+                                       'task',
+                                       'task.json')
+        task_json_file = file(task_json_filename, 'rb')
+        task_json_str = task_json_file.read()
+        task_json_file.close()
+        task_json = json_loads(task_json_str)
+    except Exception, ex:
+        error_status.message = 'Error loading "task.json" file: %s' % str(ex)
+        error_status.save()
+        return uploaded_task
+
+    task_params = {
+        'title_ru': task_json['title_ru'],
+        'title_en': task_json['title_en'],
+        'flag': task_json['flag'],
+    }
+
+    for field in ['desc_ru', 'desc_en', 'writeup_ru', 'writeup_en']:
+        filename = task_json[field]
+        fileobj = uploaded_task.files.get(original_name=filename)
+        filepath = fileobj.get_full_path()
+        tmpfile = file(filepath, 'rb')
+        contents = tmpfile.read()
+        tmpfile.close()
+        task_params[field] = contents
+
+    check_re = re_compile(r'^(?P<mods>it|ti|i|t|)(?P<method>equals|regex)$')
+    so = re_search(check_re, task_json['flag_comp'])
+    mods = so.group('mods')
+    method = so.group('method')
+    if 't' in mods:
+        task_params['is_trimmed_check'] = True
+    if 'i' in mods:
+        task_params['is_case_insensitive_check'] = True
+    if method == 'equals':
+        task_params['check'] = Task.EQUALS_CHECK
+    if method == 'regex':
+        task_params['check'] = Task.REGEX_CHECK
+
+    task = Task(**task_params)
+    task.save()
+
     return uploaded_task

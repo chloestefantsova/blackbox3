@@ -64,6 +64,7 @@ class UploadedTaskFile(models.Model):
                                       null=False,
                                       blank=False)
 
+    original_name = models.CharField(null=False, blank=True, max_length=1024)
     untarred_path = models.CharField(null=False, blank=True, max_length=1024)
     relative_path = models.CharField(null=False, blank=True, max_length=1024)
 
@@ -87,6 +88,7 @@ class UploadedTaskImage(models.Model):
     tcp_ports_str = models.CharField(null=False, blank=True, max_length=1024)
     udp_ports_str = models.CharField(null=False, blank=True, max_length=1024)
 
+    original_name = models.CharField(null=False, blank=True, max_length=1024)
     untarred_path = models.CharField(null=False, blank=True, max_length=1024)
     relative_path = models.CharField(null=False, blank=False, max_length=1024)
 
