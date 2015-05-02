@@ -8,6 +8,7 @@ from django.db import models
 from django.utils import timezone
 from django.template import Template
 from django.template import Context
+from django.contrib.auth.models import User
 
 
 class Task(models.Model):
@@ -74,10 +75,11 @@ class Task(models.Model):
 class Answer(models.Model):
 
     task = models.ForeignKey(Task, related_name='answers')
+    member = models.ForeignKey('reg.Member', related_name='answers')
     flag = models.CharField(null=False, blank=False, max_length=1024)
     created_at = models.DateTimeField(null=False, blank=True)
 
     def save(self, *args, **kwargs):
         if self.pk is None:
             self.created_at = timezone.now()
-        return super(Task, self).save(*args, **kwargs)
+        return super(Answer, self).save(*args, **kwargs)

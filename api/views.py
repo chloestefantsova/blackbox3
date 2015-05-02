@@ -154,6 +154,7 @@ class FlagAPIView(APIView):
             return Response({'error': 'No such task.'},
                             status=HTTP_400_BAD_REQUEST)
         task = tasks[0]
+        Answer(task=task, member=req.user.member, flag=flag).save()
         if task.check_answer(flag):
             return Response({'result': 'Congrats!'},
                             status=HTTP_200_OK)

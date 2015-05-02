@@ -270,7 +270,7 @@
     {% compress js %}
     <script>
     $(document).ready(function () {
-        //initBackbone();
+        initBackbone();
         task_submit_url = '{% url "api-flag" %}';
         var animation = new SlrAnimation('#home');
         animation.animateIn($('#home'));

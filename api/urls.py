@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, url
+from django.contrib.auth.decorators import login_required
 
 from api.views import TeamAPIView
 from api.views import MemberAPIView
@@ -31,5 +32,5 @@ urlpatterns = patterns(
         AllUploadedTaskDeployStatusAPIView.as_view(),
         name='api-all-uploaded-task-status'),
     url(r'^tasks/$', TaskListAPIView.as_view(), name='api-tasks'),
-    url(r'^flag/$', FlagAPIView.as_view(), name='api-flag'),
+    url(r'^flag/$', login_required(FlagAPIView.as_view()), name='api-flag'),
 )
