@@ -25,7 +25,6 @@ var refreshTaskList = function ($root) {
             .text(text);
         $link.click(function (e) {
             e.preventDefault();
-            router.navigate($link.attr('href'));
             if ($task_panel === null) {
                 return;
             }

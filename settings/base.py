@@ -34,6 +34,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'django_countries',
     'compressor',
+    'ws4redis',
     'debug_toolbar',
     'debug_panel',
 
@@ -89,6 +90,22 @@ LANGUAGES = (
 
 LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'locale'),
+)
+
+
+WEBSOCKET_URL = '/ws/'
+WS4REDIS_PREFIX = 'ws'
+
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+    'ws4redis.context_processors.default',
+    'django.core.context_processors.tz',
+    'django.contrib.messages.context_processors.messages',
 )
 
 

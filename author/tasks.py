@@ -13,6 +13,8 @@ from re import compile as re_compile
 from re import search as re_search
 from hashlib import sha1
 from shutil import copyfile
+from ws4redis.publisher import RedisPublisher
+from ws4redis.redis_store import RedisMessage
 
 from django.conf import settings
 
@@ -505,5 +507,9 @@ def make_task(uploaded_task):
 
     uploaded_task.task = task
     uploaded_task.save()
+
+    redis_publisher = RedisPublisher(facility='tasks', broadcast=True)
+    message = RedisMessage('tasks')
+    redis_publisher.publish_message(message)
 
     return uploaded_task

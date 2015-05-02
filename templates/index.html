@@ -15,9 +15,7 @@
     {% compress js %}
     <script src="{% static "js/jquery-2.1.3.min.js" %}"></script>
     <script src="{% static "js/ajax_csrf.js" %}"></script>
-    <script src="{% static "js/underscore.js" %}"></script>
-    <script src="{% static "js/backbone.js" %}"></script>
-    <script src="{% static "js/links_bb.js" %}"></script>
+    <script src="{% static "js/ws4redis.js" %}"></script>
     <script src="{% static "js/bootstrap.min.js" %}"></script>
     <script src="{% static "js/velocity.min.js" %}"></script>
     <script src="{% static "js/velocity.ui.min.js" %}"></script>
@@ -274,8 +272,22 @@
     {% compress js %}
     <script>
     $(document).ready(function () {
-        initBackbone();
-        
+
+        // receive a message though the websocket from the server
+        function receiveMessage(msg) {
+          if (msg == 'tasks') {
+            fetchTasks();
+          } else if (msg == 'rating') {
+          }
+        }
+
+        var ws4redis = WS4Redis({
+            uri: '{{ WEBSOCKET_URI }}tasks?subscribe-broadcast',
+            receive_message: receiveMessage,
+            heartbeat_msg: {{ WS4REDIS_HEARTBEAT }}
+        });
+
+
         var refreshMe = function () {
           var showLoggedIn = function (username, team) {
             $('#login-menu-btn').addClass('disabled');
@@ -332,7 +344,6 @@
             });
             $('.menu-button').removeClass('active');
             $(this).addClass('active');
-            router.navigate(target+'-ref');
           }
         });
 
@@ -429,47 +440,50 @@
         var fetchTasks = function () {
           updateTaskList('{% url "api-tasks" %}', $('#task-list'));
         };
+        window.fetchTasks = fetchTasks;
         fetchTasks();
-        var taskUpdateInterval = setInterval(fetchTasks, 5000);
-    });
 
-    $('#login-menu-btn').click(function () {
-      $('#modal-login').modal();
-    });
+        $('#login-menu-btn').click(function () {
+          $('#modal-login').modal();
+        });
 
-    $('#login-btn').click(function () {
-        var loginForm = new Form('#login-form');
-        $.ajax({
-          method: 'POST',
-          url: '{% url "rest_login" %}',
-          data: loginForm.getJson(),
-          success: function (data, stat, xhr) {
-            var resp = JSON.parse(xhr.responseText);
-            loginForm.hideErrors();
-            loginForm.clearFields();
-            refreshCsrfToken();
-            refreshMe();
-            $('#modal-login').modal('hide');
-          },
-          error: function (xhr) {
-            var errors = JSON.parse(xhr.responseText);
-            loginForm.showErrors(errors);
-            refreshMe();
-          }
+        $('#login-btn').click(function () {
+            var loginForm = new Form('#login-form');
+            $.ajax({
+              method: 'POST',
+              url: '{% url "rest_login" %}',
+              data: loginForm.getJson(),
+              success: function (data, stat, xhr) {
+                var resp = JSON.parse(xhr.responseText);
+                loginForm.hideErrors();
+                loginForm.clearFields();
+                refreshCsrfToken();
+                refreshMe();
+                $('#modal-login').modal('hide');
+              },
+              error: function (xhr) {
+                var errors = JSON.parse(xhr.responseText);
+                loginForm.showErrors(errors);
+                refreshMe();
+              }
+            });
         });
-    });
-    $('#logout-menu-btn').click(function () {
-        $.ajax({
-          method: 'POST',
-          url: '{% url "rest_logout" %}',
-          success: function (data, stat, xhr) {
-            refreshMe();
-          },
-          error: function (xhr) {
-            refreshMe();
-          }
+
+        $('#logout-menu-btn').click(function () {
+            $.ajax({
+              method: 'POST',
+              url: '{% url "rest_logout" %}',
+              success: function (data, stat, xhr) {
+                refreshMe();
+              },
+              error: function (xhr) {
+                refreshMe();
+              }
+            });
         });
-    });
+
+      });
+
     </script>
     {% endcompress %}
   </body>

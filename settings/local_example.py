@@ -52,3 +52,5 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'jury@school-ctf.org'
 EMAIL_HOST_PASSWORD = 'XXX'
 EMAIL_USE_TLS = True
+
+# WSGI_APPLICATION = 'ws4redis.django_runserver.application' # Development only.
