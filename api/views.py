@@ -9,6 +9,8 @@ from rest_framework.parsers import FileUploadParser
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED
+from rest_framework.status import HTTP_400_BAD_REQUEST
+from rest_framework.status import HTTP_200_OK
 
 from author.utils import process_uploaded_task
 from author.models import UploadedTask
@@ -17,6 +19,7 @@ from author.models import UploadedTaskDeployStatus
 from author.tasks import deploy_uploaded_task
 from reg.models import Team, Member
 from game.models import Task
+from game.models import Answer
 from api.serializers import TeamSerializer
 from api.serializers import MemberSerializer
 from api.serializers import TaskUploadProgressSerializer
@@ -138,3 +141,22 @@ class TaskListAPIView(ListAPIView):
 
     serializer_class = TaskSerializer
     queryset = Task.objects.all()
+
+
+class FlagAPIView(APIView):
+
+    def post(self, req, *args, **kwargs):
+        task_pk = req.POST.get('task')
+        flag = req.POST.get('flag')
+
+        tasks = Task.objects.filter(pk=task_pk)
+        if not tasks:
+            return Response({'error': 'No such task.'},
+                            status=HTTP_400_BAD_REQUEST)
+        task = tasks[0]
+        if task.check_answer(flag):
+            return Response({'result': 'Congrats!'},
+                            status=HTTP_200_OK)
+
+        return Response({'result': 'Wrong flag.'},
+                        status=HTTP_200_OK)

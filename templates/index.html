@@ -266,6 +266,7 @@
     </div><!-- /.modal -->
     {% compress js %}
     <script>
+    task_submit_url = '{% url "api-flag" %}';
     $(document).ready(function () {
         var animation = new SlrAnimation('#home');
         animation.animateIn($('#home'));

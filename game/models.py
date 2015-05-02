@@ -1,3 +1,7 @@
+from re import compile as re_compile
+from re import match as re_match
+from re import I as re_I
+
 from markdown import markdown
 
 from django.db import models
@@ -30,6 +34,27 @@ class Task(models.Model):
     check = models.CharField(null=False, blank=False, max_length=2, choices=CHECK_CHOICES)
     created_at = models.DateTimeField(null=False, blank=True)
 
+    def check_answer(self, answer_str):
+        if self.check == self.EQUALS_CHECK:
+            ans = answer_str
+            correct = self.flag
+            if self.is_case_insensitive_check:
+                ans = ans.lower()
+                correct = correct.lower()
+            if self.is_trimmed_check:
+                ans = ans.strip()
+                correct = correct.strip()
+            return ans == correct
+        elif self.check == self.REGEX_CHECK:
+            ans = answer_str
+            flags = 0
+            if self.is_case_insensitive_check:
+                flags |= re_I
+            if self.is_trimmed_check:
+                ans = ans.strip()
+            return re_match(self.flag, ans, flags)
+        return False
+
     def get_title(self):
         return self.title_en
 
@@ -39,6 +64,18 @@ class Task(models.Model):
             template_vars[file_obj.original_name.replace('.', '_')] = file_obj.get_link()
         desc = Template(self.desc_en).render(Context(template_vars))
         return markdown(desc)
+
+    def save(self, *args, **kwargs):
+        if self.pk is None:
+            self.created_at = timezone.now()
+        return super(Task, self).save(*args, **kwargs)
+
+
+class Answer(models.Model):
+
+    task = models.ForeignKey(Task, related_name='answers')
+    flag = models.CharField(null=False, blank=False, max_length=1024)
+    created_at = models.DateTimeField(null=False, blank=True)
 
     def save(self, *args, **kwargs):
         if self.pk is None:

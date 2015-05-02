@@ -9,6 +9,7 @@ from api.views import UploadedTaskAPIView
 from api.views import UploadedTaskDeployStatusAPIView
 from api.views import AllUploadedTaskDeployStatusAPIView
 from api.views import TaskListAPIView
+from api.views import FlagAPIView
 
 
 urlpatterns = patterns(
@@ -30,4 +31,5 @@ urlpatterns = patterns(
         AllUploadedTaskDeployStatusAPIView.as_view(),
         name='api-all-uploaded-task-status'),
     url(r'^tasks/$', TaskListAPIView.as_view(), name='api-tasks'),
+    url(r'^flag/$', FlagAPIView.as_view(), name='api-flag'),
 )
