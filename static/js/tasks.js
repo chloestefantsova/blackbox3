@@ -34,8 +34,31 @@ var refreshTaskList = function ($root) {
             var $body = $(task.desc);
             $task.append($title).append($body);
 
+            $submitForm = $('<form>')
+
+                .attr('id', 'flag-submit-form')
+
+                .append($('<input>')
+                            .attr('type', 'hidden')
+                            .attr('name', 'task')
+                            .attr('value', task.pk))
+
+                .append($('<input>')
+                            .addClass('form-control')
+                            .attr('type', 'text')
+                            .attr('name', 'flag')
+                            .attr('placeholder', 'Flag'))
+
+                .append($('<input>')
+                            .attr('id', 'flag-submit-btn')
+                            .attr('type', 'submit')
+                            .attr('value', 'Submit Flag')
+                            .addClass('btn')
+                            .addClass('btn-primary'));
+
             $task_panel.children().remove();
             $task_panel.append($task);
+            $task.append($submitForm);
         });
         $item.append($link);
         $list.append($item);
