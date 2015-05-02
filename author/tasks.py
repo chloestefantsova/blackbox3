@@ -165,7 +165,7 @@ def format_checks(uploaded_task):
 
     tcp_ports_map = {}
     udp_ports_map = {}
-    if 'image' in task_json:
+    if 'images' in task_json:
         for image in task_json['images']:
             if 'tcp_ports' in image:
                 tcp_ports_map[image['filename']] = image['tcp_ports']
@@ -232,7 +232,7 @@ def format_checks(uploaded_task):
                            'in the uploaded archive')
                     raise Exception(msg.format(filename=name))
                 port = int(so.group(2))
-                if name not in tcp_ports_map and port not in tcp_ports_map[name]:
+                if name not in tcp_ports_map or port not in tcp_ports_map[name]:
                     raise Exception('Found docker-image template variable '
                                     '"%s" that references tcp-port %s that is '
                                     'not mentioned in the corresponding '
@@ -369,10 +369,6 @@ def move_files(uploaded_task):
     if not uploaded_task.is_untarred():
         return uploaded_task
 
-    error_status = UploadedTaskDeployStatus(
-        uploaded_task=uploaded_task,
-        phase=UploadedTaskDeployStatus.PHASE_UNTAR,
-    )
     for task_file_obj in uploaded_task.files.all():
         try:
             sha1obj = sha1()
@@ -401,7 +397,7 @@ def move_files(uploaded_task):
             )
             error_status = UploadedTaskDeployStatus(
                 uploaded_task=uploaded_task,
-                phase=UploadedTaskDeployStatus.PHASE_UNTAR,
+                phase=UploadedTaskDeployStatus.PHASE_MOVE_FILES,
             )
             error_status.message = msg
             error_status.save()
@@ -413,8 +409,8 @@ def move_files(uploaded_task):
             chunk = task_image.read(4096)
             while len(chunk) > 0:
                 sha1obj.update(chunk)
-                chunk = task_file.read(4096)
-            task_file.close()
+                chunk = task_image.read(4096)
+            task_image.close()
             original_name, original_ext = splitext_all(
                 task_image_obj.original_name
             )
@@ -434,7 +430,7 @@ def move_files(uploaded_task):
             )
             error_status = UploadedTaskDeployStatus(
                 uploaded_task=uploaded_task,
-                phase=UploadedTaskDeployStatus.PHASE_UNTAR,
+                phase=UploadedTaskDeployStatus.PHASE_MOVE_FILES,
             )
             error_status.message = msg
             error_status.save()
@@ -457,7 +453,7 @@ def make_task(uploaded_task):
 
     error_status = UploadedTaskDeployStatus(
         uploaded_task=uploaded_task,
-        phase=UploadedTaskDeployStatus.PHASE_UNTAR,
+        phase=UploadedTaskDeployStatus.PHASE_MAKE_TASK,
     )
 
     task_json = None
