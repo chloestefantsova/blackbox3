@@ -8,7 +8,7 @@ from django.conf import settings
 
 class UploadedTask(models.Model):
 
-    author = models.ForeignKey(User)
+    author = models.ForeignKey(User, related_name='uploaded_task')
     task = models.ForeignKey('game.Task', null=True, blank=True)
     path = models.CharField(null=False, blank=True, max_length=1024)
     format_checks_passed = models.BooleanField(default=False)

@@ -2,6 +2,8 @@ from markdown import markdown
 
 from django.db import models
 from django.utils import timezone
+from django.template import Template
+from django.template import Context
 
 
 class Task(models.Model):
@@ -32,7 +34,11 @@ class Task(models.Model):
         return self.title_en
 
     def get_desc(self):
-        return markdown(self.desc_en)
+        template_vars = {}
+        for file_obj in self.uploadedtask_set.all()[0].files.all():
+            template_vars[file_obj.original_name.replace('.', '_')] = file_obj.get_link()
+        desc = Template(self.desc_en).render(Context(template_vars))
+        return markdown(desc)
 
     def save(self, *args, **kwargs):
         if self.pk is None:
