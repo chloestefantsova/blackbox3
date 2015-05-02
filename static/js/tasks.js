@@ -22,7 +22,7 @@ var refreshTaskList = function ($root) {
         var $link = $('<a>')
             .addClass('task-link')
             .attr('href', '#')
-            .attr('pk', task.pk)
+            .addClass('pk'+task.pk)
             .text(text);
         $link.click(function (e) {
             e.preventDefault();
