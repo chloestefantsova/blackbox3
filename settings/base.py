@@ -136,6 +136,10 @@ BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 
 
+SESSION_ENGINE = 'redis_sessions.session'
+SESSION_REDIS_PREFIX = 'session'
+
+
 AUX_FILES_DIR = os.path.join(BASE_DIR, 'aux')
 
 
