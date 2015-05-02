@@ -53,6 +53,10 @@
               <span class="visible-md-inline visible-lg-inline">{% trans "Login" context "menu bar" %}</span>
               <span class="glyphicon glyphicon-log-in visible-xs-inline visible-sm-inline"></span>
             </div>
+            <div id="logout-menu-btn" class="menu-button pull-right disabled">
+              <span id="username-menu-bar"></span><span class="visible-md-inline visible-lg-inline">{% trans "Logout" context "menu bar" %}</span>
+              <span class="glyphicon glyphicon-log-out visible-xs-inline visible-sm-inline"></span>
+            </div>
           </div>
         </div>
       </div>
@@ -255,10 +259,10 @@
             <div class="container-fluid">
               <form id="login-form" role="form">
                 <div class="form-gorup">
-                  <input type="text" name="username" class="form-control" placeholder="Username"/>
+                  <input type="text" name="username" class="form-control" placeholder="{% trans "Username" context "login modal" %}"/>
                 </div>
                 <div class="form-group">
-                  <input type="password" name="password" class="form-control" placeholder="Password"/>
+                  <input type="password" name="password" class="form-control" placeholder="{% trans "Password" context "login modal" %}"/>
                 </div>
                 <button id="login-btn" type="button" class="btn btn-primary">{% trans "Login" context "login modal" %}</button>
               </form>
@@ -271,6 +275,44 @@
     <script>
     $(document).ready(function () {
         initBackbone();
+        
+        var refreshMe = function () {
+          var showLoggedIn = function (username, team) {
+            $('#login-menu-btn').addClass('disabled');
+            $('#logout-menu-btn').removeClass('disabled');
+            var text = username;
+            if (team) {
+              text += ' | ' + team;
+            }
+            text += ' | ';
+            $('#username-menu-bar').text(text);
+          };
+          var showLoggedOut = function () {
+            $('#logout-menu-btn').addClass('disabled');
+            $('#login-menu-btn').removeClass('disabled');
+            $('#username-menu-bar').text('');
+          };
+          $.ajax({
+            method: 'GET',
+            url: '{% url "me" %}',
+            dataType: 'json',
+            success: function (data, stat, xhr) {
+              var resp = JSON.parse(xhr.responseText);
+              if ('username' in resp) {
+                showLoggedIn(resp['username'], resp['team']);
+              } else {
+                showLoggedOut();
+              }
+            },
+            error: function (xhr) {
+              showLoggedOut();
+            }
+          });
+        };
+        window.refreshMe = refreshMe;
+        refreshMe();
+        var refreshMeInterval = setInterval(refreshMe, 5000);
+
         task_submit_url = '{% url "api-flag" %}';
         var animation = new SlrAnimation('#home');
         animation.animateIn($('#home'));
@@ -396,7 +438,6 @@
       $('#modal-login').modal();
     });
 
-    var username = null;
     $('#login-btn').click(function () {
         var loginForm = new Form('#login-form');
         $.ajax({
@@ -408,10 +449,25 @@
             loginForm.hideErrors();
             loginForm.clearFields();
             refreshCsrfToken();
+            refreshMe();
+            $('#modal-login').modal('hide');
           },
           error: function (xhr) {
             var errors = JSON.parse(xhr.responseText);
             loginForm.showErrors(errors);
+            refreshMe();
+          }
+        });
+    });
+    $('#logout-menu-btn').click(function () {
+        $.ajax({
+          method: 'POST',
+          url: '{% url "rest_logout" %}',
+          success: function (data, stat, xhr) {
+            refreshMe();
+          },
+          error: function (xhr) {
+            refreshMe();
           }
         });
     });

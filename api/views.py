@@ -161,3 +161,18 @@ class FlagAPIView(APIView):
 
         return Response({'result': 'Wrong flag.'},
                         status=HTTP_200_OK)
+
+
+class MeAPIView(APIView):
+
+    def get(self, req, *args, **kwargs):
+        resp = {}
+
+        if hasattr(req, 'user') and req.user.is_authenticated():
+            resp = {'username': req.user.username}
+            if hasattr(req.user, 'member'):
+                resp['team'] = req.user.member.team.name
+            else:
+                resp['team'] = ''
+
+        return Response(resp, status=HTTP_200_OK)

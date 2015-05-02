@@ -11,11 +11,13 @@ from api.views import UploadedTaskDeployStatusAPIView
 from api.views import AllUploadedTaskDeployStatusAPIView
 from api.views import TaskListAPIView
 from api.views import FlagAPIView
+from api.views import MeAPIView
 
 
 urlpatterns = patterns(
     '',
 
+    url(r'^me/$', MeAPIView.as_view(), name='me'),
     url(r'^teams/$', TeamAPIView.as_view(), name='teams'),
     url(r'^members/$', MemberAPIView.as_view(), name='members'),
     url(r'^upload/$', TaskUploadAPIView.as_view(), name='api-upload'),
