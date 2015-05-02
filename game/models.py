@@ -35,6 +35,21 @@ class Task(models.Model):
     check = models.CharField(null=False, blank=False, max_length=2, choices=CHECK_CHOICES)
     created_at = models.DateTimeField(null=False, blank=True)
 
+    def is_solved(self):
+        for answer in self.answers.all():
+            if answer.is_correct():
+                return True
+        return False
+
+    def is_published(self):
+        same_cat_tasks = Task.objects.filter(category=self.category,
+                                             cost__lt=self.cost)
+        same_cat_tasks = same_cat_tasks.select_related('answers')
+        for task in same_cat_tasks:
+            if not task.is_solved():
+                return False
+        return True
+
     def check_answer(self, answer_str):
         if self.check == self.EQUALS_CHECK:
             ans = answer_str
@@ -78,6 +93,9 @@ class Answer(models.Model):
     member = models.ForeignKey('reg.Member', related_name='answers')
     flag = models.CharField(null=False, blank=False, max_length=1024)
     created_at = models.DateTimeField(null=False, blank=True)
+
+    def is_correct(self):
+        return self.task.check_answer(self.flag)
 
     def save(self, *args, **kwargs):
         if self.pk is None:

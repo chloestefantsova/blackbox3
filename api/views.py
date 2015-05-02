@@ -1,3 +1,6 @@
+from ws4redis.publisher import RedisPublisher
+from ws4redis.redis_store import RedisMessage
+
 from django.db.models import Prefetch
 from django.db.models import Q
 
@@ -140,7 +143,11 @@ class AllUploadedTaskDeployStatusAPIView(ListAPIView):
 class TaskListAPIView(ListAPIView):
 
     serializer_class = TaskSerializer
-    queryset = Task.objects.all()
+
+    def get_queryset(self):
+        queryset = Task.objects.all()
+        selected_pks = [task.pk for task in queryset if task.is_published()]
+        return Task.objects.filter(pk__in=selected_pks)
 
 
 class FlagAPIView(APIView):
@@ -156,6 +163,9 @@ class FlagAPIView(APIView):
         task = tasks[0]
         Answer(task=task, member=req.user.member, flag=flag).save()
         if task.check_answer(flag):
+            redis_publisher = RedisPublisher(facility='tasks', broadcast=True)
+            message = RedisMessage('tasks')
+            redis_publisher.publish_message(message)
             return Response({'result': 'Congrats!'},
                             status=HTTP_200_OK)
 
