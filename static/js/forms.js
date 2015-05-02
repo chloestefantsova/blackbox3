@@ -29,6 +29,7 @@ Form.prototype = {
 
     showErrors: function (errDict) {
         this.$el.find('.help-block').remove();
+        this.$el.find('.alert').remove();
         this.$el.find('input,textarea,select').each(function (index, el) {
             var $el = $(el);
             if ($el.attr('name') in errDict) {
@@ -41,10 +42,21 @@ Form.prototype = {
                 $el.parent().removeClass('has-error');
             }
         });
+        if ('non_field_errors' in errDict) {
+            var $errBox = $('<div>')
+                .addClass('alert')
+                .addClass('alert-danger')
+                .text(errDict['non_field_errors']);
+            this.$el.prepend($errBox);
+        }
     },
 
     hideErrors: function () {
         this.showErrors({});
+    },
+
+    clearFields: function () {
+        this.$el.find('input,textarea,select').val('');
     },
 
 }

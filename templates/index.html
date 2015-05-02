@@ -14,6 +14,7 @@
     {% endcompress %}
     {% compress js %}
     <script src="{% static "js/jquery-2.1.3.min.js" %}"></script>
+    <script src="{% static "js/ajax_csrf.js" %}"></script>
     <script src="{% static "js/bootstrap.min.js" %}"></script>
     <script src="{% static "js/velocity.min.js" %}"></script>
     <script src="{% static "js/velocity.ui.min.js" %}"></script>
@@ -44,6 +45,10 @@
             <div class="menu-button" data-target="#tasks">
               <span class="visible-md-inline visible-lg-inline">{% trans "Tasks" %}</span>
               <span class="glyphicon glyphicon-file visible-xs-inline visible-sm-inline"></span>
+            </div>
+            <div id="login-menu-btn" class="menu-button pull-right">
+              <span class="visible-md-inline visible-lg-inline">{% trans "Login" context "menu bar" %}</span>
+              <span class="glyphicon glyphicon-log-in visible-xs-inline visible-sm-inline"></span>
             </div>
           </div>
         </div>
@@ -235,6 +240,30 @@
       </div>
 
     </div>
+
+    <div id="modal-login" class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">{% trans "Please, authenticate" %}</h4>
+          </div>
+          <div class="modal-body">
+            <div class="container-fluid">
+              <form id="login-form" role="form">
+                <div class="form-gorup">
+                  <input type="text" name="username" class="form-control" placeholder="Username"/>
+                </div>
+                <div class="form-group">
+                  <input type="password" name="password" class="form-control" placeholder="Password"/>
+                </div>
+                <button id="login-btn" type="button" class="btn btn-primary">{% trans "Login" context "login modal" %}</button>
+              </form>
+            </div>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
     {% compress js %}
     <script>
     $(document).ready(function () {
@@ -249,13 +278,15 @@
 
         $('.menu-button').click(function () {
           var target = $(this).data('target');
-          animation.moveTo(target).then(function () {
-            for (var i = 1; i <= 9; ++i) {
-              $(target).find('.in'+i+'-fade').removeClass('in'+i+'-fade');
-            }
-          });
-          $('.menu-button').removeClass('active');
-          $(this).addClass('active');
+          if (target) {
+            animation.moveTo(target).then(function () {
+              for (var i = 1; i <= 9; ++i) {
+                $(target).find('.in'+i+'-fade').removeClass('in'+i+'-fade');
+              }
+            });
+            $('.menu-button').removeClass('active');
+            $(this).addClass('active');
+          }
         });
 
 
@@ -353,6 +384,30 @@
         };
         fetchTasks();
         var taskUpdateInterval = setInterval(fetchTasks, 5000);
+    });
+
+    $('#login-menu-btn').click(function () {
+      $('#modal-login').modal();
+    });
+
+    var username = null;
+    $('#login-btn').click(function () {
+        var loginForm = new Form('#login-form');
+        $.ajax({
+          method: 'POST',
+          url: '{% url "rest_login" %}',
+          data: loginForm.getJson(),
+          success: function (data, stat, xhr) {
+            var resp = JSON.parse(xhr.responseText);
+            loginForm.hideErrors();
+            loginForm.clearFields();
+            refreshCsrfToken();
+          },
+          error: function (xhr) {
+            var errors = JSON.parse(xhr.responseText);
+            loginForm.showErrors(errors);
+          }
+        });
     });
     </script>
     {% endcompress %}
