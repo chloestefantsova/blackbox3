@@ -25,11 +25,12 @@ from game.models import Task
 
 @shared_task
 def deploy_uploaded_task(uploaded_task):
-    chain(format_checks.s(uploaded_task) |
+    workflow = chain(format_checks.s() |
           untar_task.s() |
           move_files.s() |
           group([email_docker_deployers.s(), make_task.s()])
-    )()
+    )
+    workflow.delay(uploaded_task)
 
 
 @shared_task
@@ -164,11 +165,12 @@ def format_checks(uploaded_task):
 
     tcp_ports_map = {}
     udp_ports_map = {}
-    for image in task_json['images']:
-        if 'tcp_ports' in image:
-            tcp_ports_map[image['filename']] = image['tcp_ports']
-        if 'udp_ports' in image:
-            udp_ports_map[image['filename']] = image['udp_ports']
+    if 'image' in task_json:
+        for image in task_json['images']:
+            if 'tcp_ports' in image:
+                tcp_ports_map[image['filename']] = image['tcp_ports']
+            if 'udp_ports' in image:
+                udp_ports_map[image['filename']] = image['udp_ports']
 
     def check_links(template_str, existing_filenames, images_filenames,
                     tcp_ports_map, udp_ports_map):
@@ -318,22 +320,21 @@ def untar_task(uploaded_task):
         return uploaded_task
 
     images_filenames = []
-    for image in task_json['images']:
-        images_filenames.append(image['filename'])
     tcp_ports_map = {}
-    for image in task_json['images']:
-        if 'tcp_ports' in image:
-            ports_string = ','.join(map(str, image['tcp_ports']))
-            tcp_ports_map[image['filename']] = ports_string
-        else:
-            tcp_ports_map[image['filename']] = ''
     udp_ports_map = {}
-    for image in task_json['images']:
-        if 'udp_ports' in image:
-            ports_string = ','.join(map(str, image['udp_ports']))
-            udp_ports_map[image['filename']] = ports_string
-        else:
-            udp_ports_map[image['filename']] = ''
+    if 'images' in task_json:
+        for image in task_json['images']:
+            images_filenames.append(image['filename'])
+            if 'tcp_ports' in image:
+                ports_string = ','.join(map(str, image['tcp_ports']))
+                tcp_ports_map[image['filename']] = ports_string
+            else:
+                tcp_ports_map[image['filename']] = ''
+            if 'udp_ports' in image:
+                ports_string = ','.join(map(str, image['udp_ports']))
+                udp_ports_map[image['filename']] = ports_string
+            else:
+                udp_ports_map[image['filename']] = ''
     for filename in tar_file.getnames():
         if tar_file.getmember(filename).isdir():
             continue
@@ -372,7 +373,6 @@ def move_files(uploaded_task):
         uploaded_task=uploaded_task,
         phase=UploadedTaskDeployStatus.PHASE_UNTAR,
     )
-
     for task_file_obj in uploaded_task.files.all():
         try:
             sha1obj = sha1()
@@ -388,16 +388,20 @@ def move_files(uploaded_task):
             new_name = '%s_%s%s' % (
                 original_name,
                 sha1obj.hexdigest(),
-                original_ext
+                original_ext,
             )
             new_path = path.join(settings.UPLOADED_FILES_DIR, new_name)
             copyfile(task_file_obj.untarred_path, new_path)
-            task_file_obj.related_name = new_name
+            task_file_obj.relative_path = new_name
             task_file_obj.save()
         except Exception, ex:
             msg = 'Error copying file "{filename}": {reason}'.format(
                 filename=task_file_obj.original_name,
                 reason=str(ex),
+            )
+            error_status = UploadedTaskDeployStatus(
+                uploaded_task=uploaded_task,
+                phase=UploadedTaskDeployStatus.PHASE_UNTAR,
             )
             error_status.message = msg
             error_status.save()
@@ -417,16 +421,20 @@ def move_files(uploaded_task):
             new_name = '%s_%s%s' % (
                 original_name,
                 sha1obj.hexdigest(),
-                original_ext
+                original_ext,
             )
             new_path = path.join(settings.UPLOADED_IMAGES_DIR, new_name)
             copyfile(task_image_obj.untarred_path, new_path)
-            task_image_obj.related_name = new_name
+            task_image_obj.relative_path = new_name
             task_image_obj.save()
         except Exception, ex:
             msg = 'Error copying image file "{filename}": {reason}'.format(
                 filename=task_image_obj.original_name,
                 reason=str(ex),
+            )
+            error_status = UploadedTaskDeployStatus(
+                uploaded_task=uploaded_task,
+                phase=UploadedTaskDeployStatus.PHASE_UNTAR,
             )
             error_status.message = msg
             error_status.save()
@@ -443,6 +451,7 @@ def email_docker_deployers(uploaded_task):
 
 @shared_task
 def make_task(uploaded_task):
+
     if not uploaded_task.files_are_deployed():
         return uploaded_task
 
@@ -468,6 +477,8 @@ def make_task(uploaded_task):
     task_params = {
         'title_ru': task_json['title_ru'],
         'title_en': task_json['title_en'],
+        'category': task_json['category'],
+        'cost': task_json['cost'],
         'flag': task_json['flag'],
     }
 
@@ -495,5 +506,8 @@ def make_task(uploaded_task):
 
     task = Task(**task_params)
     task.save()
+
+    uploaded_task.task = task
+    uploaded_task.save()
 
     return uploaded_task
