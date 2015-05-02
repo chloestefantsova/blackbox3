@@ -17,7 +17,7 @@ def splitext_all(filename):
     result = ''
     filename, ext = splitext(filename)
     while ext:
-        if len(ext) < 5 and not match(r'^\.\d+$', ext):
+        if len(ext) < 7 and not match(r'^\.\d+$', ext):
             result = ext + result
             filename, ext = splitext(filename)
         else:
