@@ -30,7 +30,7 @@ var refreshTaskList = function ($root) {
             }
 
             var $task = $('<div>');
-            var $title = $('<h4>').text(task.title);
+            var $title = $('<h3>').text(task.title);
             var $body = $(task.desc);
             $task.append($title).append($body);
 
