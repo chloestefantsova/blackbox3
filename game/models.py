@@ -14,6 +14,8 @@ class Task(models.Model):
 
     title_ru = models.CharField(null=False, blank=False, max_length=256)
     title_en = models.CharField(null=False, blank=False, max_length=256)
+    category = models.CharField(null=False, blank=False, max_length=256)
+    cost = models.IntegerField(null=False, blank=False)
     desc_ru = models.TextField(null=False, blank=False)
     desc_en = models.TextField(null=False, blank=False)
     writeup_ru = models.TextField(null=False, blank=False)
