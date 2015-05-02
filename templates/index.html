@@ -311,7 +311,6 @@
         };
         window.refreshMe = refreshMe;
         refreshMe();
-        var refreshMeInterval = setInterval(refreshMe, 5000);
 
         task_submit_url = '{% url "api-flag" %}';
         var animation = new SlrAnimation('#home');
