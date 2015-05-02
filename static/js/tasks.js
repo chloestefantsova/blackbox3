@@ -21,9 +21,11 @@ var refreshTaskList = function ($root) {
         var $item = $('<li>');
         var $link = $('<a>')
             .addClass('task-link')
-            .attr('href', '#tasks/'+task.pk)
+            .attr('href', '#tasks-ref/'+task.pk)
             .text(text);
         $link.click(function (e) {
+            e.preventDefault();
+            router.navigate($link.attr('href'));
             if ($task_panel === null) {
                 return;
             }
