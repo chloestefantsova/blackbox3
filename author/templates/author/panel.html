@@ -73,7 +73,7 @@ var makeStatusEl = function (status, msgs) {
   } else {
     $el.addClass('bg-danger');
     msgs.forEach(function (msg) {
-      var $msg = $('<p>').text(msg.message);
+      var $msg = $('<p>').text('Timestamp: '+msg.timestamp+'. '+msg.message);
       $el.append($msg);
     });
   }
