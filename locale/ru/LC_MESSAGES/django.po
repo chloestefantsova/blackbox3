@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: slr1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-02 23:53+0600\n"
+"POT-Creation-Date: 2015-05-03 00:29+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -72,11 +72,16 @@ msgctxt "menu bar"
 msgid "Login"
 msgstr "Вход"
 
-#: templates/index.html:70
+#: templates/index.html:57
+msgctxt "menu bar"
+msgid "Logout"
+msgstr "Выход"
+
+#: templates/index.html:74
 msgid "What is School CTF?"
 msgstr "Что такое School CTF?"
 
-#: templates/index.html:71
+#: templates/index.html:75
 msgid ""
 "The computer security competition for school pupils School CTF is hosted by "
 "the SiBears team annually since 2010."
@@ -84,7 +89,7 @@ msgstr ""
 "Соревнования по защите компьютерной информации для школьников School CTF "
 "команда SiBears проводит ежегодно с 2010 года."
 
-#: templates/index.html:72
+#: templates/index.html:76
 msgid ""
 "School CTF traditionally takes place in autumn, but in 2014 School CTF was "
 "postponed to the spring semester."
@@ -92,7 +97,7 @@ msgstr ""
 "School CTF традиционно проводится осенью, но в 2014 году School CTF был "
 "перенесён на весенний семестр."
 
-#: templates/index.html:73
+#: templates/index.html:77
 msgid ""
 "School CTF Spring 2015 takes place at May 3rd, 2015. It starts at 12:00 p."
 "m., Tomsk time (GMT+6), and ends at 5:00 p.m., Tomsk time (GMT+6). You may "
@@ -106,11 +111,11 @@ msgstr ""
 "eid=YTdpOTlqbnZ1cGZqZDFpZ2RzYWNpbGV2MW8gbTRxczJsNDBtNjI3ODhxdnNwMmg2NXBtaHNAZw&ctz=Asia/"
 "Novosibirsk\">добавить его</a> в свой Google-календарь."
 
-#: templates/index.html:74
+#: templates/index.html:78
 msgid "Is School CTF just for school pupils?"
 msgstr "School CTF — только для школьников?"
 
-#: templates/index.html:75
+#: templates/index.html:79
 msgid ""
 "Any team is welcome, not just that comprised of school pupils. The ratings "
 "are calculated separately for school teams and for all teams."
@@ -119,66 +124,66 @@ msgstr ""
 "вычисляется отдельно для школьных команд и отдельно — для всех участвующих "
 "команд."
 
-#: templates/index.html:76
+#: templates/index.html:80
 msgid "What do I need to participate?"
 msgstr "Что нужно для участия?"
 
-#: templates/index.html:77
+#: templates/index.html:81
 msgid ""
 "A team of one to seven persons, internet access and five hours of spare time."
 msgstr ""
 "Команда от одного до семи человек, доступ в интернет и пять часов свободного "
 "времени."
 
-#: templates/index.html:100
+#: templates/index.html:104
 msgid "Team"
 msgstr "Команда"
 
-#: templates/index.html:103
+#: templates/index.html:107
 msgid "Participant"
 msgstr "Участник"
 
-#: templates/index.html:113
+#: templates/index.html:117
 msgid "Team Name"
 msgstr "Название команды"
 
-#: templates/index.html:117
+#: templates/index.html:121
 msgid "Participants are school pupils"
 msgstr "Все участники — школьники"
 
-#: templates/index.html:122
+#: templates/index.html:126
 msgid "Country"
 msgstr "Страна"
 
-#: templates/index.html:123
+#: templates/index.html:127
 msgid "I don't want to provide this information"
 msgstr "Я не хочу указывать эту информацию"
 
-#: templates/index.html:130
+#: templates/index.html:134
 msgid "School Name"
 msgstr "Название школы"
 
-#: templates/index.html:133
+#: templates/index.html:137
 msgid "Teacher Name"
 msgstr "ФИО учителя (тренера)"
 
-#: templates/index.html:136
+#: templates/index.html:140
 msgid "Teacher's E-Mail"
 msgstr "Адрес электронной почты учителя (тренера)"
 
-#: templates/index.html:139
+#: templates/index.html:143
 msgid "Team Leader's E-Mail"
 msgstr "Адрес электронной почты капитана"
 
-#: templates/index.html:142
+#: templates/index.html:146
 msgid "Physical Mail Address for Certificates"
 msgstr "Адрес для отправки бумажной версии сертификатов и дипломов"
 
-#: templates/index.html:144
+#: templates/index.html:148
 msgid "Register Team"
 msgstr "Зарегистрировать команду"
 
-#: templates/index.html:147
+#: templates/index.html:151
 msgid ""
 "You've successfully registered a team. An authentication string has been "
 "sent to the team leader's email and the teacher's email (if any). You should "
@@ -190,31 +195,31 @@ msgstr ""
 "членам команды для завершения регистрации. Капитан команды тоже должен "
 "зарегистрироваться как участник команды."
 
-#: templates/index.html:155
+#: templates/index.html:159
 msgid "Login"
 msgstr "Логин"
 
-#: templates/index.html:158
+#: templates/index.html:162
 msgid "Password"
 msgstr "Пароль"
 
-#: templates/index.html:161
+#: templates/index.html:165
 msgid "Password Again"
 msgstr "Ещё раз пароль"
 
-#: templates/index.html:164
+#: templates/index.html:168
 msgid "Full Name"
 msgstr "ФИО участника"
 
-#: templates/index.html:167
+#: templates/index.html:171
 msgid "Authentication String"
 msgstr "Строка аутентификации"
 
-#: templates/index.html:169
+#: templates/index.html:173
 msgid "Register Participant"
 msgstr "Зарегистрировать участника"
 
-#: templates/index.html:172
+#: templates/index.html:176
 msgid ""
 "You are successfully registered as a School CTF Spring 2015 participant! "
 "Your team leader and teacher (if any) have been notified. Please, don't "
@@ -224,35 +229,45 @@ msgstr ""
 "капитану и учителю (если был указан) выслано сообщение об этом. Пожалуйста, "
 "не забывайте введённый пароль. До встречи на соревновании!"
 
-#: templates/index.html:200
+#: templates/index.html:204
 msgctxt "teams list"
 msgid "School Teams"
 msgstr "Школьные команды"
 
-#: templates/index.html:204 templates/index.html.py:218
+#: templates/index.html:208 templates/index.html.py:222
 msgctxt "teams list"
 msgid "Name"
 msgstr "Название"
 
-#: templates/index.html:205 templates/index.html.py:219
+#: templates/index.html:209 templates/index.html.py:223
 msgctxt "teams list"
 msgid "Country"
 msgstr "Страна"
 
-#: templates/index.html:214
+#: templates/index.html:218
 msgctxt "teams list"
 msgid "Non-School Teams"
 msgstr "Нешкольные команды"
 
-#: templates/index.html:235
+#: templates/index.html:239
 msgid "Task List"
 msgstr "Задания"
 
-#: templates/index.html:252
+#: templates/index.html:256
 msgid "Please, authenticate"
-msgstr ""
+msgstr "Пожалуйста, аутентифицируйтесь"
 
-#: templates/index.html:263
+#: templates/index.html:262
+msgctxt "login modal"
+msgid "Username"
+msgstr "Имя пользователя"
+
+#: templates/index.html:265
+msgctxt "login modal"
+msgid "Password"
+msgstr "Пароль"
+
+#: templates/index.html:267
 msgctxt "login modal"
 msgid "Login"
 msgstr "Войти"
