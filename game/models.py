@@ -1,3 +1,5 @@
+from markdown import markdown
+
 from django.db import models
 from django.utils import timezone
 
@@ -25,6 +27,12 @@ class Task(models.Model):
     is_trimmed_check = models.BooleanField(default=False)
     check = models.CharField(null=False, blank=False, max_length=2, choices=CHECK_CHOICES)
     created_at = models.DateTimeField(null=False, blank=True)
+
+    def get_title(self):
+        return self.title_en
+
+    def get_desc(self):
+        return markdown(self.desc_en)
 
     def save(self, *args, **kwargs):
         if self.pk is None:

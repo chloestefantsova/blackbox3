@@ -17,6 +17,7 @@ from reg.models import Member
 from author.models import TaskUploadProgress
 from author.models import UploadedTask
 from author.models import UploadedTaskDeployStatus
+from game.models import Task
 
 
 class UnixEpochDateTimeField(DateTimeField):
@@ -189,3 +190,20 @@ class UploadedTaskDeployStatusSerializer(ModelSerializer):
         fields = ('pk', 'uploaded_task', 'phase', 'message', 'timestamp')
         read_only_fields = ('pk', 'uploaded_task', 'phase', 'message',
                             'timestamp')
+
+
+class TaskSerializer(ModelSerializer):
+
+    title = SerializerMethodField()
+    desc = SerializerMethodField()
+
+    def get_title(self, obj):
+        return obj.get_title()
+
+    def get_desc(self, obj):
+        return obj.get_desc()
+
+    class Meta:
+        model = Task
+        fields = ('pk', 'title', 'category', 'cost', 'desc')
+        read_only_fields = ('pk', 'title', 'category', 'cost', 'desc')

@@ -16,11 +16,13 @@ from author.models import TaskUploadProgress
 from author.models import UploadedTaskDeployStatus
 from author.tasks import deploy_uploaded_task
 from reg.models import Team, Member
+from game.models import Task
 from api.serializers import TeamSerializer
 from api.serializers import MemberSerializer
 from api.serializers import TaskUploadProgressSerializer
 from api.serializers import UploadedTaskSerializer
 from api.serializers import UploadedTaskDeployStatusSerializer
+from api.serializers import TaskSerializer
 
 
 class TeamAPIView(ListModelMixin,
@@ -130,3 +132,9 @@ class AllUploadedTaskDeployStatusAPIView(ListAPIView):
         return UploadedTaskDeployStatus.objects.filter(
             uploaded_task__author=self.request.user
         )
+
+
+class TaskListAPIView(ListAPIView):
+
+    serializer_class = TaskSerializer
+    queryset = Task.objects.all()
