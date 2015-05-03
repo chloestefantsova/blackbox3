@@ -201,3 +201,30 @@ class MeAPIView(APIView):
                 resp['team'] = ''
 
         return Response(resp, status=HTTP_200_OK)
+
+
+class RatingAPIView(APIView):
+
+    def get(self, req, *args, **kwargs):
+        result = []
+        teams = Team.objects.all()
+        score = {}
+        for team in teams:
+            score[team.pk] = 0
+        tasks = Task.objects.all().select_related('answers').select_related('member')
+        for task in tasks:
+            visited = {}
+            for team in teams:
+                visited[team.pk] = False
+            for answer in task.answers.all():
+                if not visited[answer.member.team.pk] and answer.is_correct():
+                    visited[answer.member.team.pk] = True
+                    score[answer.member.team.pk] += task.cost
+        for team in teams:
+            line = {}
+            line['team_name'] = team.name
+            line['team_flag'] = team.country.flag
+            line['is_school'] = team.is_school
+            line['score'] = score[team.pk]
+            result.append(line)
+        return Response(result, status=HTTP_200_OK)
