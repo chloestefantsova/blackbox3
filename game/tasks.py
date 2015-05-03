@@ -55,7 +55,8 @@ def recalc_rating():
 def recalc_available_tasks():
     queryset = Task.objects.all()
     published_pks = [task.pk for task in queryset if task.is_published()]
-    cache.set('published', published_pks)
+    queryset = Task.objects.filter(pk__in=published_pks)
+    cache.set('published', queryset)
 
 
 @shared_task

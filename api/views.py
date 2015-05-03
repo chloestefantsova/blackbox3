@@ -144,11 +144,14 @@ class TaskListAPIView(ListAPIView):
     serializer_class = TaskSerializer
 
     def get_queryset(self):
-        selected_pks = cache.get('published')
-        if selected_pks is None:
+        selected = cache.get('published')
+        if selected is None:
             queryset = Task.objects.all()
-            selected_pks = [task.pk for task in queryset if task.is_published()]
-        return Task.objects.filter(pk__in=selected_pks)
+            published_pks = [task.pk for task in queryset if task.is_published()]
+            queryset = Task.objects.filter(pk__in=published_pks)
+            cache.set('published', queryset)
+            return queryset
+        return selected
 
 
 class SolvedTaskAPIView(ListAPIView):

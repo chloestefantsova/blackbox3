@@ -454,8 +454,7 @@
         animation.putGeo('#rating', -4, 0);
         $('#rating').css({left: $(window).width() * 4, top: 0});
 
-        $('.menu-button').click(function () {
-          var target = $(this).data('target');
+        var moveToScreenful = function (target) {
           if (target) {
             animation.moveTo(target).then(function () {
               for (var i = 1; i <= 9; ++i) {
@@ -463,9 +462,22 @@
               }
             });
             $('.menu-button').removeClass('active');
-            $(this).addClass('active');
             location.href = target+'-ref';
           }
+        };
+
+        if (location.href && location.href.indexOf('-ref', location.href.length - 4) !== -1) {
+          var target = location.href.substring(0, location.href.length - 4);
+          var target_ar = target.split('/');
+          target = target_ar.pop()
+          console.log(target);
+          moveToScreenful(target);
+        }
+
+        $('.menu-button').click(function () {
+            var target = $(this).data('target');
+            moveToScreenful(target);
+            $(this).addClass('active');
         });
 
 
