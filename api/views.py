@@ -1,8 +1,6 @@
-from ws4redis.publisher import RedisPublisher
-from ws4redis.redis_store import RedisMessage
-
 from django.db.models import Prefetch
 from django.db.models import Q
+from django.core.cache import cache
 
 from rest_framework.generics import GenericAPIView
 from rest_framework.generics import ListAPIView
@@ -23,6 +21,7 @@ from author.tasks import deploy_uploaded_task
 from reg.models import Team, Member
 from game.models import Task
 from game.models import Answer
+from game.tasks import recalc_data
 from api.serializers import TeamSerializer
 from api.serializers import MemberSerializer
 from api.serializers import TaskUploadProgressSerializer
@@ -145,8 +144,10 @@ class TaskListAPIView(ListAPIView):
     serializer_class = TaskSerializer
 
     def get_queryset(self):
-        queryset = Task.objects.all()
-        selected_pks = [task.pk for task in queryset if task.is_published()]
+        selected_pks = cache.get('published')
+        if selected_pks is None:
+            queryset = Task.objects.all()
+            selected_pks = [task.pk for task in queryset if task.is_published()]
         return Task.objects.filter(pk__in=selected_pks)
 
 
@@ -156,11 +157,10 @@ class SolvedTaskAPIView(ListAPIView):
 
     def get_queryset(self):
         if hasattr(self.request.user, 'member'):
-            team = self.request.user.member.team
-            result = []
-            for task in Task.objects.all():
-                if task.is_solved_by(team):
-                    result.append(task.pk)
+            team_pk = self.request.user.member.team.pk
+            result = cache.get('solved%d' % team_pk)
+            if result is None:
+                result = []
             return Task.objects.filter(pk__in=result)
         return Task.objects.filter(pk=-1)
 
@@ -178,9 +178,7 @@ class FlagAPIView(APIView):
         task = tasks[0]
         Answer(task=task, member=req.user.member, flag=flag).save()
         if task.check_answer(flag):
-            redis_publisher = RedisPublisher(facility='tasks', broadcast=True)
-            message = RedisMessage('tasks')
-            redis_publisher.publish_message(message)
+            recalc_data.delay(req.user.member.team.pk)
             return Response({'result': 'Congrats!'},
                             status=HTTP_200_OK)
 
@@ -206,25 +204,7 @@ class MeAPIView(APIView):
 class RatingAPIView(APIView):
 
     def get(self, req, *args, **kwargs):
-        result = []
-        teams = Team.objects.all()
-        score = {}
-        for team in teams:
-            score[team.pk] = 0
-        tasks = Task.objects.all().select_related('answers').select_related('member')
-        for task in tasks:
-            visited = {}
-            for team in teams:
-                visited[team.pk] = False
-            for answer in task.answers.all():
-                if not visited[answer.member.team.pk] and answer.is_correct():
-                    visited[answer.member.team.pk] = True
-                    score[answer.member.team.pk] += task.cost
-        for team in teams:
-            line = {}
-            line['team_name'] = team.name
-            line['team_flag'] = team.country.flag
-            line['is_school'] = team.is_school
-            line['score'] = score[team.pk]
-            result.append(line)
+        result = cache.get('rating')
+        if result is None:
+            result = []
         return Response(result, status=HTTP_200_OK)
