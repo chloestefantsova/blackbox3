@@ -325,7 +325,9 @@
     <script>
     $(document).ready(function () {
 
+        var fetchRatingCounter = 0;
         var fetchRating = function () {
+          ++fetchRatingCounter;
           $('#school-teams-rating').find('tbody').children().remove();
           $('#non-school-teams-rating').find('tbody').children().remove();
           $.ajax({
@@ -333,6 +335,10 @@
             url: '{% url "api-rating" %}',
             dataType: 'json',
             success: function (data, stat, xhr) {
+              --fetchRatingCounter;
+              if (fetchRatingCounter != 0) {
+                return;
+              }
               var teams = JSON.parse(xhr.responseText);
               var schoolTeams = [];
               var nonSchoolTeams = []
@@ -382,8 +388,8 @@
             }
           });
         };
+        window.fetchRating = fetchRating;
 
-        fetchRating();
 
         // receive a message though the websocket from the server
         function receiveMessage(msg) {
@@ -458,6 +464,7 @@
             });
             $('.menu-button').removeClass('active');
             $(this).addClass('active');
+            location.href = target+'-ref';
           }
         });
 
@@ -560,6 +567,7 @@
         };
         window.fetchTasks = fetchTasks;
         fetchTasks();
+        fetchRating();
 
         $('#login-menu-btn').click(function () {
           $('#modal-login').modal();

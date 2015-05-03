@@ -45,6 +45,7 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'django.middleware.cache.UpdateCacheMiddleware',
     'debug_panel.middleware.DebugPanelMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -54,6 +55,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
 
@@ -95,6 +97,9 @@ LOCALE_PATHS = (
 
 WEBSOCKET_URL = '/ws/'
 WS4REDIS_PREFIX = 'ws'
+def get_allowed_channels(request, channels):
+    return set(channels).intersection(['subscribe-broadcast', 'subscribe-group'])
+WS4REDIS_ALLOWED_CHANNELS = get_allowed_channels
 
 
 TEMPLATE_CONTEXT_PROCESSORS = (

@@ -35,6 +35,22 @@ DATABASES = {
     }
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': 'localhost:6379',
+        'OPTIONS': {
+            'DB': 0,
+            'PARSER_CLASS': 'redis.connection.HiredisParser',
+            'CONNECTION_POOL_CLASS': 'redis.BlockingConnectionPool',
+            'CONNECTION_POOL_CLASS_KWARGS': {
+                'max_connections': 50,
+                'timeout': 20,
+            }
+        },
+    },
+}
+
 
 UPLOADED_TASK_DIR = os.path.join(BASE_DIR, 'uploaded_tasks')
 UPLOADED_FILES_DIR = os.path.join(BASE_DIR, 'uploaded_files')
