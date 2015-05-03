@@ -35,6 +35,12 @@ class Task(models.Model):
     check = models.CharField(null=False, blank=False, max_length=2, choices=CHECK_CHOICES)
     created_at = models.DateTimeField(null=False, blank=True)
 
+    def is_solved_by(self, team):
+        for answer in self.answers.filter(member__team=team):
+            if answer.is_correct():
+                return True
+        return False
+
     def is_solved(self):
         for answer in self.answers.all():
             if answer.is_correct():

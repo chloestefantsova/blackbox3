@@ -236,9 +236,17 @@
             <div class="col-md-3">
               <h3>{% trans "Task List" %}</h3>
               <div id="task-list"></div>
+              <p>{% blocktrans %}<span class="bg-success">Green</span> marks the tasks that your team has successfully solved.{% endblocktrans %}</p>
+              <p>{% blocktrans %}<span class="bg-info">Blue</span> marks the last available task in a category. It is either the task that nobody has solved yet or the very last task in the category.{% endblocktrans %}</p>
             </div>
-            <div class="col-md-9">
+            <div class="col-md-5">
               <div id="task-panel"></div>
+            </div>
+            <div class="col-md-4">
+              <h3>{% trans "Hints" %}</h3>
+              <p>{% blocktrans %}You man ask jury a queston via <a href="mailto:jury@school-ctf.org">email</a>, <a href="https://twitter.com/schoolctf">Twitter</a>, or <a href="http://vk.com/schoolctf2015">VK</a>.{% endblocktrans %}</p>
+              <a class="twitter-timeline" href="https://twitter.com/schoolctf" data-widget-id="594658587655409664">Tweets by @schoolctf</a>
+              <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
             </div>
           </div>
         </div>
@@ -438,7 +446,11 @@
 
         setTaskPanel($('#task-panel'));
         var fetchTasks = function () {
-          updateTaskList('{% url "api-tasks" %}', $('#task-list'));
+          updateTaskList(
+              '{% url "api-tasks" %}',
+              '{% url "api-tasks-solved" %}',
+              $('#task-list')
+          );
         };
         window.fetchTasks = fetchTasks;
         fetchTasks();
@@ -459,12 +471,14 @@
                 loginForm.clearFields();
                 refreshCsrfToken();
                 refreshMe();
+                fetchTasks();
                 $('#modal-login').modal('hide');
               },
               error: function (xhr) {
                 var errors = JSON.parse(xhr.responseText);
                 loginForm.showErrors(errors);
                 refreshMe();
+                fetchTasks();
               }
             });
         });
@@ -475,9 +489,11 @@
               url: '{% url "rest_logout" %}',
               success: function (data, stat, xhr) {
                 refreshMe();
+                fetchTasks();
               },
               error: function (xhr) {
                 refreshMe();
+                fetchTasks();
               }
             });
         });

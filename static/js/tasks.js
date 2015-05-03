@@ -13,16 +13,30 @@ var getTaskByPk = function (pk) {
     return null;
 };
 
-var refreshTaskList = function ($root) {
+var refreshTaskList = function ($root, solvedTasks) {
     var $list = $('<ul>').addClass('list-unstyled');
+    var solvedTaskPks = [];
+    solvedTasks.forEach(function (solvedTask) {
+        solvedTaskPks.push(solvedTask.pk);
+    });
 
+    var $prevItem = null;
+    var prevCat = null;
     global_tasks.forEach(function (task) {
         var text = '('+task.category+' '+task.cost+') '+task.title;
         var $item = $('<li>');
         var $link = $('<a>')
             .addClass('task-link')
-            .attr('href', '#tasks-ref/'+task.pk)
+            .attr('href', '')
             .text(text);
+        if ($.inArray(task.pk, solvedTaskPks) != -1) {
+            $item.addClass('bg-success');
+        }
+        if (task.category != prevCat) {
+            if ($prevItem && !$prevItem.hasClass('bg-success')) {
+                $prevItem.addClass('bg-info');
+            }
+        }
         $link.click(function (e) {
             e.preventDefault();
             if ($task_panel === null) {
@@ -38,17 +52,18 @@ var refreshTaskList = function ($root) {
             $submitForm = $('<form>')
 
                 .attr('id', 'flag-submit-form')
+                //.addClass('form-inline')
 
                 .append($('<input>')
                             .attr('type', 'hidden')
                             .attr('name', 'task')
                             .attr('value', task.pk))
 
-                .append($('<input>')
+                .append($('<div>').addClass('form-group').append($('<input>')
                             .addClass('form-control')
                             .attr('type', 'text')
                             .attr('name', 'flag')
-                            .attr('placeholder', 'Flag'))
+                            .attr('placeholder', 'Flag')))
 
                 .append($submitBtn = $('<input>')
                             .attr('id', 'flag-submit-btn')
@@ -62,7 +77,11 @@ var refreshTaskList = function ($root) {
 
             $task_panel.children().remove();
             $task_panel.append($task);
-            $task.append($submitForm);
+            if ($.inArray(task.pk, solvedTaskPks) == -1) {
+                $task.append($submitForm);
+            } else {
+                $task.append($('<h1>').text('You have already solved this task.'));
+            }
 
             var submitForm = new Form($submitForm);
 
@@ -77,7 +96,7 @@ var refreshTaskList = function ($root) {
                         if ('error' in resp) {
                             $('#results').append($('<h1>').text('Error: '+resp['error']));
                         } else {
-                            $('#results').append($('<h1>').text('Result: '+resp['result']));
+                            $('#results').append($('<h1>').text(resp['result']));
                         }
                     },
                     error: function (xhr) {
@@ -89,20 +108,43 @@ var refreshTaskList = function ($root) {
         });
         $item.append($link);
         $list.append($item);
+
+        $prevItem = $item;
+        prevCat = task.category;
     });
+    if ($prevItem && !$prevItem.hasClass('bg-success')) {
+        $prevItem.addClass('bg-info');
+    }
 
     $root.children().remove();
     $root.append($list);
 };
 
-var updateTaskList = function (url, $root) {
+var updateTaskList = function (tasksUrl, tasksSolvedUrl, $root) {
     $.ajax({
         method: 'GET',
-        url: url,
+        url: tasksUrl,
         dataType: 'json',
-        success: function (data, stat, xhr) {
-            global_tasks = JSON.parse(xhr.responseText);
-            refreshTaskList($root);
+        success: function (data, stat, xhr1) {
+            $.ajax({
+                method: 'GET',
+                url: tasksSolvedUrl,
+                dataType: 'json',
+                success: function (data, stat, xhr2) {
+                    global_tasks = JSON.parse(xhr1.responseText);
+                    global_tasks.sort(function (a, b) {
+                        if (a.category < b.category) {
+                            return -1;
+                        }
+                        if (a.category > b.category) {
+                            return 1;
+                        }
+                        return a.cost - b.cost;
+                    });
+                    var solvedTasks = JSON.parse(xhr2.responseText);
+                    refreshTaskList($root, solvedTasks);
+                }
+            });
         }
     });
 };

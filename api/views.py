@@ -150,6 +150,21 @@ class TaskListAPIView(ListAPIView):
         return Task.objects.filter(pk__in=selected_pks)
 
 
+class SolvedTaskAPIView(ListAPIView):
+
+    serializer_class = TaskSerializer
+
+    def get_queryset(self):
+        if hasattr(self.request.user, 'member'):
+            team = self.request.user.member.team
+            result = []
+            for task in Task.objects.all():
+                if task.is_solved_by(team):
+                    result.append(task.pk)
+            return Task.objects.filter(pk__in=result)
+        return Task.objects.filter(pk=-1)
+
+
 class FlagAPIView(APIView):
 
     def post(self, req, *args, **kwargs):
