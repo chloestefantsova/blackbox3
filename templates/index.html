@@ -325,65 +325,71 @@
     <script>
     $(document).ready(function () {
 
-        $.ajax({
-          method: 'GET',
-          url: '{% url "api-rating" %}',
-          dataType: 'json',
-          success: function (data, stat, xhr) {
-            var teams = JSON.parse(xhr.responseText);
-            var schoolTeams = [];
-            var nonSchoolTeams = []
-            teams.forEach(function (team) {
-              if (team.is_school) {
-                schoolTeams.push(team);
-              } else {
-                nonSchoolTeams.push(team);
-              }
-            });
-            var cmpTeams = function (a, b) { return b.score - a.score; };
-            schoolTeams.sort(cmpTeams);
-            nonSchoolTeams.sort(cmpTeams);
-            var placeTeams = function (teams) {
-              if (teams.length == 0) {
-                return;
-              }
-              teams[0].place = 1;
-              for (var i = 1; i < teams.length; ++i) {
-                if (teams[i].score == teams[i - 1].score) {
-                  teams[i].place = teams[i - 1].place;
+        var fetchRating = function () {
+          $('#school-teams-rating').find('tbody').children().remove();
+          $('#non-school-teams-rating').find('tbody').children().remove();
+          $.ajax({
+            method: 'GET',
+            url: '{% url "api-rating" %}',
+            dataType: 'json',
+            success: function (data, stat, xhr) {
+              var teams = JSON.parse(xhr.responseText);
+              var schoolTeams = [];
+              var nonSchoolTeams = []
+              teams.forEach(function (team) {
+                if (team.is_school) {
+                  schoolTeams.push(team);
                 } else {
-                  teams[i].place = i + 1;
+                  nonSchoolTeams.push(team);
+                }
+              });
+              var cmpTeams = function (a, b) { return b.score - a.score; };
+              schoolTeams.sort(cmpTeams);
+              nonSchoolTeams.sort(cmpTeams);
+              var placeTeams = function (teams) {
+                if (teams.length == 0) {
+                  return;
+                }
+                teams[0].place = 1;
+                for (var i = 1; i < teams.length; ++i) {
+                  if (teams[i].score == teams[i - 1].score) {
+                    teams[i].place = teams[i - 1].place;
+                  } else {
+                    teams[i].place = i + 1;
+                  }
                 }
               }
+              placeTeams(schoolTeams);
+              placeTeams(nonSchoolTeams);
+              var fillRating = function ($root, teams) {
+                teams.forEach(function (team) {
+                    var $row = $('<tr>');
+                    $row.append($('<td>').text(team.place));
+                    $row.append($('<td>').text(team.team_name));
+                    if (team.team_flag) {
+                      $row.append($('<td>').append(
+                          $('<img>').attr('src', team.team_flag).attr('title', team.country)
+                      ));
+                    } else {
+                      $row.append($('<td>').text('N/A'));
+                    }
+                    $row.append($('<td>').text(team.score));
+                    $root.append($row);
+                  });
+                };
+                fillRating($('#school-teams-rating').find('tbody'), schoolTeams);
+                fillRating($('#non-school-teams-rating').find('tbody'), nonSchoolTeams);
             }
-            placeTeams(schoolTeams);
-            placeTeams(nonSchoolTeams);
-            var fillRating = function ($root, teams) {
-              teams.forEach(function (team) {
-                  var $row = $('<tr>');
-                  $row.append($('<td>').text(team.place));
-                  $row.append($('<td>').text(team.team_name));
-                  if (team.team_flag) {
-                    $row.append($('<td>').append(
-                        $('<img>').attr('src', team.team_flag).attr('title', team.country)
-                    ));
-                  } else {
-                    $row.append($('<td>').text('N/A'));
-                  }
-                  $row.append($('<td>').text(team.score));
-                  $root.append($row);
-                });
-              };
-              fillRating($('#school-teams-rating').find('tbody'), schoolTeams);
-              fillRating($('#non-school-teams-rating').find('tbody'), nonSchoolTeams);
-          }
-        });
+          });
+        };
+
+        fetchRating();
 
         // receive a message though the websocket from the server
         function receiveMessage(msg) {
           if (msg == 'tasks') {
             fetchTasks();
-          } else if (msg == 'rating') {
+            fetchRating();
           }
         }
 
