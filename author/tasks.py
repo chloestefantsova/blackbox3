@@ -4,7 +4,6 @@ from os import path
 from celery import shared_task
 from celery import group
 from celery import chain
-from lzma import LZMAFile
 from tarfile import open as tar_open
 from json import loads as json_loads
 from jsonschema import validate as json_validate
@@ -44,7 +43,7 @@ def format_checks(uploaded_task):
         phase=UploadedTaskDeployStatus.PHASE_FORMAT_CHECK
     )
     untarred_path, ext = splitext_all(uploaded_task.path)
-    supported_exts = ['.tar.gz', '.tar.bz2', '.tar.xz', '.tar']
+    supported_exts = ['.tar.gz', '.tar.bz2', '.tar']
     if ext not in supported_exts:
         msg = 'Unsupported format "{ext}". Should be one of {supported}.'
         msg = msg.format(ext=ext, supported=', '.join(supported_exts))
@@ -52,21 +51,12 @@ def format_checks(uploaded_task):
         error_status.save()
         return uploaded_task
     tar_file = None
-    if ext == '.tar.xz':
-        try:
-            compressed = LZMAFile(uploaded_task.path)
-            tar_file = tar_open(fileobj=compressed)
-        except Exception, ex:
-            error_status.message = 'Error opening tar file: %s' % str(ex)
-            error_status.save()
-            return uploaded_task
-    else:
-        try:
-            tar_file = tar_open(uploaded_task.path)
-        except Exception, ex:
-            error_status.message = 'Error opening tar file: %s' % str(ex)
-            error_status.save()
-            return uploaded_task
+    try:
+        tar_file = tar_open(uploaded_task.path)
+    except Exception, ex:
+        error_status.message = 'Error opening tar file: %s' % str(ex)
+        error_status.save()
+        return uploaded_task
     for name in tar_file.getnames():
         if not name.startswith('task'):
             msg = ('There is a file "{filename}" that is not within "task" '
@@ -286,21 +276,12 @@ def untar_task(uploaded_task):
     uploaded_path = uploaded_task.path
     untarred_path, ext = splitext_all(uploaded_path)
 
-    if ext == '.tar.xz':
-        try:
-            compressed = LZMAFile(uploaded_task.path)
-            tar_file = tar_open(fileobj=compressed)
-        except Exception, ex:
-            error_status.message = 'Error opening tar file: %s' % str(ex)
-            error_status.save()
-            return uploaded_task
-    else:
-        try:
-            tar_file = tar_open(uploaded_task.path)
-        except Exception, ex:
-            error_status.message = 'Error opening tar file: %s' % str(ex)
-            error_status.save()
-            return uploaded_task
+    try:
+        tar_file = tar_open(uploaded_task.path)
+    except Exception, ex:
+        error_status.message = 'Error opening tar file: %s' % str(ex)
+        error_status.save()
+        return uploaded_task
 
     try:
         tar_file.extractall(path=untarred_path)
