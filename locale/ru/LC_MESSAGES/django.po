@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: slr1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-03 07:31+0600\n"
+"POT-Creation-Date: 2015-05-05 12:12+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,11 +42,11 @@ msgstr "Добро пожаловать в School CTF Spring 2015, {team_name}!"
 msgid "Participant {full_name} joined team {team_name}"
 msgstr "Участник {full_name} присоединился к {team_name}"
 
-#: settings/base.py:87
+#: settings/base.py:89
 msgid "Russian"
 msgstr "Русский"
 
-#: settings/base.py:88
+#: settings/base.py:90
 msgid "English"
 msgstr "Английский"
 
@@ -233,24 +233,24 @@ msgstr ""
 "капитану и учителю (если был указан) выслано сообщение об этом. Пожалуйста, "
 "не забывайте введённый пароль. До встречи на соревновании!"
 
-#: templates/index.html:206 templates/index.html.py:264
+#: templates/index.html:206 templates/index.html.py:269
 msgctxt "teams list"
 msgid "School Teams"
 msgstr "Школьные команды"
 
 #: templates/index.html:210 templates/index.html.py:224
-#: templates/index.html:269 templates/index.html.py:285
+#: templates/index.html:274 templates/index.html.py:290
 msgctxt "teams list"
 msgid "Name"
 msgstr "Название"
 
 #: templates/index.html:211 templates/index.html.py:225
-#: templates/index.html:270 templates/index.html.py:286
+#: templates/index.html:275 templates/index.html.py:291
 msgctxt "teams list"
 msgid "Country"
 msgstr "Страна"
 
-#: templates/index.html:220 templates/index.html.py:280
+#: templates/index.html:220 templates/index.html.py:285
 msgctxt "teams list"
 msgid "Non-School Teams"
 msgstr "Нешкольные команды"
@@ -291,26 +291,35 @@ msgstr ""
 "\">почте</a>, через <a href=\"https://twitter.com/schoolctf\">Твиттер</a> "
 "или <a href=\"http://vk.com/schoolctf2015\">ВК</a>."
 
-#: templates/index.html:271 templates/index.html.py:287
+#: templates/index.html:263
+msgid ""
+"Final standings could be found <a href=\"/files/"
+"school_ctf_spring_2015_a34eb1dd3a80a2f4036edbffebf464f52217a67b.png\">here</"
+"a>."
+msgstr "Окончательные результаты находятся <a href=\"/files/"
+"school_ctf_spring_2015_a34eb1dd3a80a2f4036edbffebf464f52217a67b.png\">здесь</"
+"a>."
+
+#: templates/index.html:276 templates/index.html.py:292
 msgctxt "teams list"
 msgid "Score"
 msgstr "Баллы"
 
-#: templates/index.html:306
+#: templates/index.html:311
 msgid "Please, authenticate"
 msgstr "Пожалуйста, аутентифицируйтесь"
 
-#: templates/index.html:312
+#: templates/index.html:317
 msgctxt "login modal"
 msgid "Username"
 msgstr "Имя пользователя"
 
-#: templates/index.html:315
+#: templates/index.html:320
 msgctxt "login modal"
 msgid "Password"
 msgstr "Пароль"
 
-#: templates/index.html:317
+#: templates/index.html:322
 msgctxt "login modal"
 msgid "Login"
 msgstr "Войти"
