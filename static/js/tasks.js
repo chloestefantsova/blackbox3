@@ -143,6 +143,19 @@ var updateTaskList = function (tasksUrl, tasksSolvedUrl, $root) {
                     });
                     var solvedTasks = JSON.parse(xhr2.responseText);
                     refreshTaskList($root, solvedTasks);
+                },
+                error: function (xhr2) {
+                    global_tasks = JSON.parse(xhr1.responseText);
+                    global_tasks.sort(function (a, b) {
+                        if (a.category < b.category) {
+                            return -1;
+                        }
+                        if (a.category > b.category) {
+                            return 1;
+                        }
+                        return a.cost - b.cost;
+                    });
+                    refreshTaskList($root, []);
                 }
             });
         }
