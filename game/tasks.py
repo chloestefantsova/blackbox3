@@ -42,6 +42,8 @@ def recalc_rating():
                 visited[answer.member.team.pk] = True
                 score[answer.member.team.pk] += task.cost
     for team in teams:
+        if team.is_hidden:
+            continue
         line = {}
         line['team_name'] = team.name
         line['team_flag'] = team.country.flag
