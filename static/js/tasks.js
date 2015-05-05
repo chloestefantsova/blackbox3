@@ -43,10 +43,45 @@ var refreshTaskList = function ($root, solvedTasks) {
                 return;
             }
 
-            var $task = $('<div>');
+            var $taskLink = null;
+            var $writeupLink = null;
+            var $task = $('<div>')
+                .attr('role', 'tabpanel')
+                .append($('<ul>')
+                        .addClass('nav')
+                        .addClass('nav-tabs')
+                        .attr('role', 'tablist')
+                        .append($('<li>')
+                                .attr('role', 'presentation')
+                                .addClass('active')
+                                .append($taskLink = $('<a>')
+                                        .attr('href', '#task-text')
+                                        .attr('aria-controls', 'task-text')
+                                        .attr('role', 'tab')
+                                        .data('toggle', 'tab')
+                                        .text('Text')))
+                        .append($('<li>')
+                                .attr('role', 'presentation')
+                                .append($writeupLink = $('<a>')
+                                        .attr('href', '#task-writeup')
+                                        .attr('aria-controls', 'task-writeup')
+                                        .attr('role', 'tab')
+                                        .data('toggle', 'tab')
+                                        .text('Writeup'))));
+
+            [$taskLink, $writeupLink].forEach(function ($link) {
+                if ($link) {
+                    $link.click(function (e) {
+                        e.preventDefault();
+                        $(this).tab('show');
+                    });
+                }
+            });
+
+            var $taskTab = $('<div>');
             var $title = $('<h3>').text(task.title);
             var $body = $(task.desc);
-            $task.append($title).append($body);
+            $taskTab.append($title).append($body);
 
             var $submitBtn = null;
             $submitForm = $('<form>')
@@ -75,12 +110,30 @@ var refreshTaskList = function ($root, solvedTasks) {
                 .append($('<div>')
                             .attr('id', 'results'));
 
+            var $writeupTab = $('<div>')
+                                .append($title.clone())
+                                .append($(task.writeup));
+
+            $task.append($('<div>')
+                            .addClass('tab-content')
+                            .append($('<div>')
+                                    .attr('role', 'tabpanel')
+                                    .addClass('tab-pane')
+                                    .addClass('active')
+                                    .attr('id', 'task-text')
+                                    .append($taskTab))
+                            .append($('<div>')
+                                    .attr('role', 'tabpanel')
+                                    .addClass('tab-pane')
+                                    .attr('id', 'task-writeup')
+                                    .append($writeupTab)));
+
             $task_panel.children().remove();
             $task_panel.append($task);
             if ($.inArray(task.pk, solvedTaskPks) == -1) {
-                $task.append($submitForm);
+                $taskTab.append($submitForm);
             } else {
-                $task.append($('<h1>').text('You have already solved this task.'));
+                $taskTab.append($('<h1>').text('You have already solved this task.'));
             }
 
             var submitForm = new Form($submitForm);

@@ -196,6 +196,7 @@ class TaskSerializer(ModelSerializer):
 
     title = SerializerMethodField()
     desc = SerializerMethodField()
+    writeup = SerializerMethodField()
 
     def get_title(self, obj):
         return obj.get_title()
@@ -203,7 +204,10 @@ class TaskSerializer(ModelSerializer):
     def get_desc(self, obj):
         return obj.get_desc()
 
+    def get_writeup(self, obj):
+        return obj.get_writeup()
+
     class Meta:
         model = Task
-        fields = ('pk', 'title', 'category', 'cost', 'desc')
-        read_only_fields = ('pk', 'title', 'category', 'cost', 'desc')
+        fields = ('pk', 'title', 'category', 'cost', 'desc', 'writeup')
+        read_only_fields = ('pk', 'title', 'category', 'cost', 'desc', 'writeup')
