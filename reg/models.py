@@ -22,7 +22,7 @@ class Team(models.Model):
     country = CountryField(null=False, blank=True)
     teacher_name = models.CharField(max_length=256, null=False, blank=True)
     teacher_email = models.EmailField(null=True, blank=True)
-    leader_email = models.EmailField(null=False, blank=False)
+    leader_email = models.EmailField(null=False, blank=True)
     address = models.TextField(null=False, blank=True)
     auth_string = models.CharField(max_length=32, null=False, blank=True)
     created_at = models.DateTimeField(null=False, blank=True)

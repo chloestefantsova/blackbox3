@@ -22,7 +22,8 @@ from reg.models import Team, Member
 from game.models import Task
 from game.models import Answer
 from game.tasks import recalc_data
-from api.serializers import TeamSerializer
+from api.serializers import TeamListSerializer
+from api.serializers import TeamCreateSerializer
 from api.serializers import MemberSerializer
 from api.serializers import TaskUploadProgressSerializer
 from api.serializers import UploadedTaskSerializer
@@ -34,7 +35,10 @@ class TeamAPIView(ListModelMixin,
                   CreateModelMixin,
                   GenericAPIView):
 
-    serializer_class = TeamSerializer
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return TeamCreateSerializer
+        return TeamListSerializer
 
     def get_queryset(self):
         queryset = Team.objects.all()

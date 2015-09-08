@@ -18,6 +18,7 @@ from author.models import TaskUploadProgress
 from author.models import UploadedTask
 from author.models import UploadedTaskDeployStatus
 from game.models import Task
+from game.utils import get_game
 
 
 class UnixEpochDateTimeField(DateTimeField):
@@ -40,7 +41,7 @@ class EmptyCountryField(CharField):
         return unicode(value.name)
 
 
-class TeamSerializer(ModelSerializer):
+class TeamCreateSerializer(ModelSerializer):
 
     created_at = UnixEpochDateTimeField(read_only=True)
     flag = SerializerMethodField()
@@ -50,19 +51,45 @@ class TeamSerializer(ModelSerializer):
         return obj.country.flag
 
     def validate(self, data):
+        game = get_game()
         error_dict = {}
+
         if 'is_school' in data and data['is_school']:
             if 'school_name' not in data or not data['school_name'].strip():
                 error_dict['school_name'] = [_('The field is required for school teams')]
             if 'teacher_name' not in data or not data['teacher_name'].strip():
                 error_dict['teacher_name'] = [_('The field is required for school teams')]
-            if 'teacher_email' not in data or not data['teacher_email'].strip():
+            if game.send_emails \
+                    and ('teacher_email' not in data \
+                         or not data['teacher_email'].strip()):
                 error_dict['teacher_email'] = [_('The field is required for school teams')]
             if 'address' not in data or not data['address'].strip():
                 error_dict['address'] = [_('The field is required for school teams')]
+
+        if game.send_emails \
+                and ('leader_email' not in data \
+                     or not data['leader_email'].strip()):
+            error_dict['leader_email'] = [_('The field is required for the game')]
+
         if len(error_dict) > 0:
             raise ValidationError(error_dict)
         return data
+
+    class Meta:
+        model = Team
+        exclude = ('id',)
+        read_only_fields = ('created_at', 'auth_string')
+        write_only_fields = ('teacher_name', 'teacher_email', 'leader_email', 'address')
+
+
+class TeamListSerializer(ModelSerializer):
+
+    created_at = UnixEpochDateTimeField(read_only=True)
+    flag = SerializerMethodField()
+    country = EmptyCountryField()
+
+    def get_flag(self, obj):
+        return obj.country.flag
 
     class Meta:
         model = Team

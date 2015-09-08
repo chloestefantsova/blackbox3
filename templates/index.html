@@ -74,7 +74,7 @@
         <div class="container">
           <div class="row">
             <div class="col-md-6">
-              {{ game_desc | markdown }}
+              {{ game.get_desc | markdown }}
             </div>
           </div>
         </div>
@@ -97,18 +97,25 @@
                 </ul>
 
                 <div class="well">
+
                   <div class="tab-content">
+
                     <div role="tabpanel" class="tab-pane active" id="teamRegForm">
 
+                      {% if not member %}
                       <form id="regTeamForm" role="form">
                         <div class="form-group">
                           <input name="name" type="text" class="form-control" placeholder="{% trans "Team Name" %}"/>
                         </div>
+
+                        {% if game.is_school %}
                         <div class="checkbox">
                           <label>
                             <input name="is_school" type="checkbox"/> {% trans "Participants are school pupils" %}
                           </label>
                         </div>
+                        {% endif %}
+
                         <div class="form-group">
                           <select name="country" class="form-control">
                             <option disabled selected>{% trans "Country" %}<option>
@@ -118,30 +125,57 @@
                             {% endfor %}
                           </select>
                         </div>
+
+                        {% if game.is_school %}
                         <div class="form-group">
                           <input name="school_name" type="text" class="form-control" placeholder="{% trans "School Name" %}"/>
                         </div>
                         <div class="form-group">
                           <input name="teacher_name" type="text" class="form-control" placeholder="{% trans "Teacher Name" %}"/>
                         </div>
+                        {% if game.send_emails %}
                         <div class="form-group">
                           <input name="teacher_email" type="email" class="form-control" placeholder="{% trans "Teacher's E-Mail" %}"/>
                         </div>
+                        {% endif %}
+                        {% endif %}
+
+                        {% if game.send_emails %}
                         <div class="form-group">
                           <input name="leader_email" type="email" class="form-control" placeholder="{% trans "Team Leader's E-Mail" %}"/>
                         </div>
+                        {% endif %}
+
+                        {% if game.is_school %}
                         <div class="form-group">
                           <textarea name="address" class="form-control" rows="3" placeholder="{% trans "Physical Mail Address for Certificates" %}"></textarea>
                         </div>
+                        {% endif %}
+
                         <button id="regTeamSubmitBtn" type="submit" class="btn btn-primary btn-lg">{% trans "Register Team" %}</button>
                       </form>
                       <div id="afterTeamRegMsg" class="in0-fade overlapping">
-                        <p>{% trans "You've successfully registered a team. An authentication string has been sent to the team leader's email and the teacher's email (if any). You should pass this string to the participants you want to register as your team members. Note that team leader should also register as a team member." %}
+                        {% if game.is_school %}
+                        <p>{% trans "You've successfully registered a team. An authentication string has been sent to the team leader's email and the teacher's email (if any). You should pass this string to the participants you want to register as your team members. Note that team leader should also register as a team member." %}</p>
+                        {% else %}
+                        <p>{% trans "You've successfully registered a team. Here is the authentication string:" %}</p>
+                        <p><strong><span id="teamAuthString"></span></strong></p>
+                        <p>{% trans "You should pass this string to the participants you want to register as your team members. Note that the leader should also register as a team member." %}</p>
+                        {% endif %}
                       </div>
+                      {% else %}
+                      <div id="afterTeamRegMsg" class="in0-fade">
+                        <p>{% trans "You've successfully registered a team. Here is the authentication string:" %}</p>
+                        <p><strong>{{ member.team.auth_string }}</strong></p>
+                        <p>{% trans "You should pass this string to the participants you want to register as your team members. Note that the leader should also register as a team member." %}</p>
+                      </div>
+                      {% endif %}
 
                     </div>
+
                     <div role="tabpanel" class="tab-pane" id="participantRegForm">
 
+                      {% if game.send_emails or not request.user.is_authenticated %}
                       <form id="regParticipantForm" role="form">
                         <div class="form-group">
                           <input name="username" type="text" class="form-control" placeholder="{% trans "Login" %}"/>
@@ -156,30 +190,37 @@
                           <input name="first_name" type="text" class="form-control" placeholder="{% trans "Full Name" %}"/>
                         </div>
                         <div class="form-group">
-                          <input name="team" type="text" class="form-control" placeholder="{% trans "Authentication String" %}"/>
+                          <input name="team" type="text" class="form-control" placeholder="{% trans "Authentication String (ask your team leader)" %}"/>
                         </div>
                         <button id="regParticipantSubmitBtn" type="submit" class="btn btn-primary btn-lg">{% trans "Register Participant" %}</button>
                       </form>
                       <div id="afterParticipantRegMsg" class="in0-fade overlapping">
+                        {% if game.is_school %}
                         <p>{% trans "You are successfully registered as a School CTF Spring 2015 participant! Your team leader and teacher (if any) have been notified. Please, don't forget your password. See you later at the competition." %}
+                        {% else %}
+                        <p>{% trans "You are successfully registered as a School CTF Spring 2015 participant! Your team leader have been notified. Please, don't forget your password. See you later at the competition." %}
+                        {% endif %}
                       </div>
+                      {% else %}
+                      <div id="afterParticipantRegMsg" class="in0-fade">
+                      </div>
+                        {% if game.is_school %}
+                        <p>{% trans "You are successfully registered as a School CTF Spring 2015 participant! Your team leader and teacher (if any) have been notified. Please, don't forget your password. See you later at the competition." %}
+                        {% else %}
+                        <p>{% trans "You are successfully registered as a School CTF Spring 2015 participant! Your team leader have been notified. Please, don't forget your password. See you later at the competition." %}
+                        {% endif %}
+                      {% endif %}
 
                     </div>
+
                   </div>
+
                 </div>
 
               </div>
 
             </div>
 
-            <div class="col-md-6">
-              <div class="in2-fade">
-                <img class="visible-xs-inline" src="{% static "img/bear-reg-xs.png" %}"/>
-                <img class="visible-sm-inline" src="{% static "img/bear-reg-sm.png" %}"/>
-                <img class="visible-md-inline" src="{% static "img/bear-reg-md.png" %}"/>
-                <img class="visible-lg-inline" src="{% static "img/bear-reg-lg.png" %}"/>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -481,10 +522,11 @@
             url: '{% url "teams" %}',
             dataType: 'json',
             data: regTeamForm.getJson(),
-            success: function () {
+            success: function (data, status, xhr) {
               regTeamForm.hideErrors();
               animation.fadeElementOut('#regTeamForm').then(function () {
                 $('#afterTeamRegMsg').css('display', 'inline-block');
+                $('#teamAuthString').text(data['auth_string']);
                 animation.fadeElementIn('#afterTeamRegMsg');
               });
             },
