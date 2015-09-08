@@ -12,6 +12,11 @@ from django.contrib.auth.models import User
 from django.utils.translation import get_language
 
 
+class Game(models.Model):
+
+    ends_at = models.DateTimeField(null=True, blank=True)
+
+
 class Task(models.Model):
 
     EQUALS_CHECK = 'EQ'
@@ -83,10 +88,17 @@ class Task(models.Model):
             return self.title_ru
         return self.title_en
 
+    def get_game(self):
+        games = Game.objects.all()
+        if len(games) != 1:
+            return None
+        return games[0]
+
     def get_desc(self):
         if get_language() in ['ru', 'ru-ru']:
             desc = self.desc_ru
-        desc = self.desc_en
+        else:
+            desc = self.desc_en
         template_vars = {}
         for file_obj in self.uploadedtask_set.all()[0].files.all():
             template_vars[file_obj.original_name.replace('.', '_')] = file_obj.get_link()
@@ -116,9 +128,13 @@ class Task(models.Model):
         return markdown(desc)
 
     def get_writeup(self):
+        game = self.get_game()
+        if game is None or game.ends_at <= timezone.now():
+            return ''
         if get_language() in ['ru', 'ru-ru']:
             writeup = self.writeup_ru
-        writeup = self.writeup_en
+        else:
+            writeup = self.writeup_en
         template_vars = {}
         for file_obj in self.uploadedtask_set.all()[0].files.all():
             template_vars[file_obj.original_name.replace('.', '_')] = file_obj.get_link()

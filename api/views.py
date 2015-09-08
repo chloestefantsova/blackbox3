@@ -179,6 +179,12 @@ class FlagAPIView(APIView):
             return Response({'error': 'No such task.'},
                             status=HTTP_400_BAD_REQUEST)
         task = tasks[0]
+
+        game = task.get_game()
+        if game is None or game.ends_at <= timezone.now():
+            return Respone({'result': 'Game over!'},
+                           status=HTTP_400_BAD_REQUEST)
+
         Answer(task=task, member=req.user.member, flag=flag).save()
         if task.check_answer(flag):
             recalc_data.delay(req.user.member.team.pk)
