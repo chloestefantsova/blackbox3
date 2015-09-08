@@ -30,8 +30,10 @@ class Team(models.Model):
 
     def save(self, *args, **kwargs):
         if self.pk is None:
+            game = get_game()
+            length = game.auth_string_length
             alphabet = string.lowercase + string.digits
-            random_letters = [random.choice(alphabet) for _ in xrange(32)]
+            random_letters = [random.choice(alphabet) for _ in xrange(length)]
             self.auth_string = ''.join(random_letters)
             self.created_at = timezone.now()
         return super(Team, self).save(*args, **kwargs)
