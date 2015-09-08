@@ -45,7 +45,7 @@ class TeamCreateSerializer(ModelSerializer):
 
     created_at = UnixEpochDateTimeField(read_only=True)
     flag = SerializerMethodField()
-    country = EmptyCountryField()
+    country = EmptyCountryField(allow_blank=True)
 
     def get_flag(self, obj):
         return obj.country.flag

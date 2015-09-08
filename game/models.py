@@ -18,6 +18,7 @@ class Game(models.Model):
     desc_ru = models.TextField(null=False, blank=False)
     is_school = models.BooleanField(null=False, blank=True, default=False)
     send_emails = models.BooleanField(null=False, blank=True, default=False)
+    country_required = models.BooleanField(null=False, blank=True, default=True)
     auth_string_length = models.PositiveIntegerField(blank=True, default=32)
     ends_at = models.DateTimeField(null=True, blank=True)
 

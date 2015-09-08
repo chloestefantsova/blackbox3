@@ -116,6 +116,7 @@
                         </div>
                         {% endif %}
 
+                        {% if game.country_required %}
                         <div class="form-group">
                           <select name="country" class="form-control">
                             <option disabled selected>{% trans "Country" %}<option>
@@ -125,6 +126,9 @@
                             {% endfor %}
                           </select>
                         </div>
+                        {% else %}
+                        <input type="hidden" name="country" value=""/>
+                        {% endif %}
 
                         {% if game.is_school %}
                         <div class="form-group">
