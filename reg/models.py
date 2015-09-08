@@ -12,6 +12,8 @@ from django.conf import settings
 
 from django_countries.fields import CountryField
 
+from game.utils import get_game
+
 
 class Team(models.Model):
     name = models.CharField(max_length=256, unique=True, blank=False)
@@ -47,6 +49,9 @@ class Member(models.Model):
 
 
 def welcome_team(sender, instance, **kwargs):
+    game = get_game(raise_exception=False)
+    if game is None or not game.send_emails:
+        return
     if kwargs['created']:
         recipients = [instance.leader_email]
         if instance.teacher_email:
@@ -63,6 +68,9 @@ post_save.connect(welcome_team, sender=Team)
 
 
 def welcome_participant(sender, instance, **kwargs):
+    game = get_game(raise_exception=False)
+    if game is None or not game.send_emails:
+        return
     if kwargs['created']:
         recipients = [instance.team.leader_email]
         if instance.team.teacher_email:
