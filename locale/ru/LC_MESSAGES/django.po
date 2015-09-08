@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: slr1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-09 00:37+0600\n"
+"POT-Creation-Date: 2015-09-09 00:44+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,7 +25,6 @@ msgid "The field is required for school teams"
 msgstr "Это поле должно быть заполнено школьными командами"
 
 #: api/serializers.py:72
-#, fuzzy
 msgid "The field is required for the game"
 msgstr "Это поле должно быть заполнено"
 
@@ -157,7 +156,8 @@ msgid ""
 "team members. Note that the leader should also register as a team member."
 msgstr ""
 "Вы должны передать эту строку участникам своей команды для регистрации. "
-"Обратите внимание, что капитан должен зарегистрироваться как обычный участник."
+"Обратите внимание, что капитан должен зарегистрироваться как обычный "
+"участник."
 
 #: templates/index.html:185
 msgid "Login"
@@ -185,23 +185,22 @@ msgstr "Зарегистрировать участника"
 
 #: templates/index.html:203 templates/index.html.py:211
 msgid ""
-"You are successfully registered as a School CTF Spring 2015 participant! "
-"Your team leader and teacher (if any) have been notified. Please, don't "
-"forget your password. See you later at the competition."
+"You are successfully registered! Your team leader and teacher (if any) have "
+"been notified. Please, don't forget your password. See you later at the "
+"competition."
 msgstr ""
-"Вы зарегистрированы в качестве участника School CTF Spring 2015. Вашему "
+"Вы зарегистрированы. Вашему "
 "капитану и учителю (если был указан) выслано сообщение об этом. Пожалуйста, "
 "не забывайте введённый пароль. До встречи на соревновании!"
 
 #: templates/index.html:205 templates/index.html.py:213
 msgid ""
-"You are successfully registered as a School CTF Spring 2015 participant! "
-"Your team leader have been notified. Please, don't forget your password. See "
-"you later at the competition."
+"You are successfully registered! Your team leader have been notified. "
+"Please, don't forget your password. See you later at the competition."
 msgstr ""
-"Вы зарегистрированы в качестве участника School CTF Spring 2015. Вашему "
-"капитану выслано сообщение об этом. Пожалуйста, "
-"не забывайте введённый пароль. До встречи на соревновании!"
+"Вы зарегистрированы. Вашему "
+"капитану выслано сообщение об этом. Пожалуйста, не забывайте введённый "
+"пароль. До встречи на соревновании!"
 
 #: templates/index.html:238 templates/index.html.py:300
 msgctxt "teams list"
