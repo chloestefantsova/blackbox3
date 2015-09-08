@@ -14,6 +14,9 @@ from django.utils.translation import get_language
 
 class Game(models.Model):
 
+    desc_en = models.TextField(null=False, blank=False)
+    desc_ru = models.TextField(null=False, blank=False)
+    is_school = models.BooleanField(null=False, blank=True, default=False)
     ends_at = models.DateTimeField(null=True, blank=True)
 
 
