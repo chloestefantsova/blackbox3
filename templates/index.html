@@ -1,6 +1,7 @@
 {% load staticfiles %}
 {% load i18n %}
 {% load compress %}
+{% load markdown_deux_tags %}
 <!DOCTYPE html>
 <html>
   <head>
@@ -73,22 +74,7 @@
         <div class="container">
           <div class="row">
             <div class="col-md-6">
-              <h3 class="in1-fade">{% trans "What is School CTF?" %}</h3>
-              <p class="in1-fade">{% trans "The computer security competition for school pupils School CTF is hosted by the SiBears team annually since 2010." %}</p>
-              <p class="in1-fade">{% trans "School CTF traditionally takes place in autumn, but in 2014 School CTF was postponed to the spring semester." %}</p>
-              <p class="in1-fade">{% blocktrans %}School CTF Spring 2015 takes place at May 3rd, 2015. It starts at 12:00 p.m., Tomsk time (GMT+6), and ends at 5:00 p.m., Tomsk time (GMT+6). You may <a href="https://www.google.com/calendar/event?eid=YTdpOTlqbnZ1cGZqZDFpZ2RzYWNpbGV2MW8gbTRxczJsNDBtNjI3ODhxdnNwMmg2NXBtaHNAZw&ctz=Asia/Novosibirsk">add the event</a> to your Google calendar not to forget it.{% endblocktrans %}</p>
-              <h3 class="in2-fade">{% trans "Is School CTF just for school pupils?" %}</h3>
-              <p class="in2-fade">{% trans "Any team is welcome, not just that comprised of school pupils. The ratings are calculated separately for school teams and for all teams." %}</p>
-              <h3 class="in3-fade">{% trans "What do I need to participate?" %}</h3>
-              <p class="in3-fade">{% trans "A team of one to seven persons, internet access and five hours of spare time." %}</p>
-            </div>
-            <div class="col-md-6">
-              <div class="in4-fade">
-                <img class="visible-xs-inline" src="{% static "img/bear-xs.png" %}"/>
-                <img class="visible-sm-inline" src="{% static "img/bear-sm.png" %}"/>
-                <img class="visible-md-inline" src="{% static "img/bear-md.png" %}"/>
-                <img class="visible-lg-inline" src="{% static "img/bear-lg.png" %}"/>
-              </div>
+              {{ game_desc | markdown }}
             </div>
           </div>
         </div>

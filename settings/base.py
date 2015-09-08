@@ -35,6 +35,7 @@ INSTALLED_APPS = (
     'django_countries',
     'compressor',
     'ws4redis',
+    'markdown_deux',
     'debug_toolbar',
     'debug_panel',
 

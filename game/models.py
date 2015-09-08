@@ -19,6 +19,11 @@ class Game(models.Model):
     is_school = models.BooleanField(null=False, blank=True, default=False)
     ends_at = models.DateTimeField(null=True, blank=True)
 
+    def get_desc(self):
+        if get_language().lower().startswith('ru'):
+            return self.desc_ru
+        return self.desc_en
+
 
 class Task(models.Model):
 
