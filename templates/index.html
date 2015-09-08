@@ -164,7 +164,7 @@
                         {% endif %}
                       </div>
                       {% else %}
-                      <div id="afterTeamRegMsg" class="in0-fade">
+                      <div id="afterTeamRegMsg">
                         <p>{% trans "You've successfully registered a team. Here is the authentication string:" %}</p>
                         <p><strong>{{ member.team.auth_string }}</strong></p>
                         <p>{% trans "You should pass this string to the participants you want to register as your team members. Note that the leader should also register as a team member." %}</p>
@@ -175,7 +175,7 @@
 
                     <div role="tabpanel" class="tab-pane" id="participantRegForm">
 
-                      {% if game.send_emails or not request.user.is_authenticated %}
+                      {% if request.user.is_authenticated %}
                       <form id="regParticipantForm" role="form">
                         <div class="form-group">
                           <input name="username" type="text" class="form-control" placeholder="{% trans "Login" %}"/>
@@ -202,13 +202,13 @@
                         {% endif %}
                       </div>
                       {% else %}
-                      <div id="afterParticipantRegMsg" class="in0-fade">
-                      </div>
+                      <div id="afterParticipantRegMsg">
                         {% if game.is_school %}
                         <p>{% trans "You are successfully registered as a School CTF Spring 2015 participant! Your team leader and teacher (if any) have been notified. Please, don't forget your password. See you later at the competition." %}
                         {% else %}
                         <p>{% trans "You are successfully registered as a School CTF Spring 2015 participant! Your team leader have been notified. Please, don't forget your password. See you later at the competition." %}
                         {% endif %}
+                      </div>
                       {% endif %}
 
                     </div>
