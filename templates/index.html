@@ -233,6 +233,7 @@
         <div class="container">
           <div class="row">
 
+            {% if game.is_school %}
             <div class="col-md-6">
               <h3 class="in1-fade">{% trans "School Teams" context "teams list" %}</h3>
               <table id="school-teams" class="table table-condensed in1-fade">
@@ -246,9 +247,12 @@
                 </tbody>
               </table>
             </div>
+            {% endif %}
 
             <div class="col-md-6">
+              {% if game.is_school %}
               <h3 class="in2-fade">{% trans "Non-School Teams" context "teams list" %}</h3>
+              {% endif %}
               <table id="non-school-teams" class="table table-condensed in2-fade">
                 <thead>
                   <tr>
@@ -290,12 +294,8 @@
       <div id="rating" class="screenful">
         <div class="container">
           <div class="row">
-            <div class="col-md-12">
-              <p>{% blocktrans %}Final standings could be found <a href="/files/school_ctf_spring_2015_a34eb1dd3a80a2f4036edbffebf464f52217a67b.png">here</a>.{% endblocktrans %}</p>
-            </div>
-          </div>
-          <div class="row">
 
+            {% if game.is_school %}
             <div class="col-md-6">
               <h3 class="in1-fade">{% trans "School Teams" context "teams list" %}</h3>
               <table id="school-teams-rating" class="table table-condensed in1-fade">
@@ -311,9 +311,12 @@
                 </tbody>
               </table>
             </div>
+            {% endif %}
 
             <div class="col-md-6">
+              {% if game.is_school %}
               <h3 class="in2-fade">{% trans "Non-School Teams" context "teams list" %}</h3>
+              {% endif %}
               <table id="non-school-teams-rating" class="table table-condensed in2-fade">
                 <thead>
                   <tr>
