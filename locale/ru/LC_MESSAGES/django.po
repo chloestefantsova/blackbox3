@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: slr1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-09 00:44+0600\n"
+"POT-Creation-Date: 2015-09-09 11:00+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -35,6 +35,22 @@ msgstr "Введённые пароли не совпадают."
 #: api/serializers.py:146
 msgid "Authentication string is unknown or is incorrectly entered."
 msgstr "Строка аутентификации не известна системе или неправильно введена."
+
+#: api/views.py:184
+msgid "No such task."
+msgstr "Такого задания не существует."
+
+#: api/views.py:190
+msgid "Game over!"
+msgstr "Игра окончена!"
+
+#: api/views.py:196
+msgid "Congrats!"
+msgstr "Поздравляем! Вы правильно решили задание."
+
+#: api/views.py:199
+msgid "Wrong flag."
+msgstr "Неправильный ответ."
 
 #: reg/models.py:61
 #, python-brace-format
@@ -189,18 +205,17 @@ msgid ""
 "been notified. Please, don't forget your password. See you later at the "
 "competition."
 msgstr ""
-"Вы зарегистрированы. Вашему "
-"капитану и учителю (если был указан) выслано сообщение об этом. Пожалуйста, "
-"не забывайте введённый пароль. До встречи на соревновании!"
+"Вы зарегистрированы. Вашему капитану и учителю (если был указан) выслано "
+"сообщение об этом. Пожалуйста, не забывайте введённый пароль. До встречи на "
+"соревновании!"
 
 #: templates/index.html:205 templates/index.html.py:213
 msgid ""
 "You are successfully registered! Your team leader have been notified. "
 "Please, don't forget your password. See you later at the competition."
 msgstr ""
-"Вы зарегистрированы. Вашему "
-"капитану выслано сообщение об этом. Пожалуйста, не забывайте введённый "
-"пароль. До встречи на соревновании!"
+"Вы зарегистрированы. Вашему капитану выслано сообщение об этом. Пожалуйста, "
+"не забывайте введённый пароль. До встречи на соревновании!"
 
 #: templates/index.html:238 templates/index.html.py:300
 msgctxt "teams list"

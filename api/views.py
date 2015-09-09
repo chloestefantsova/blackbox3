@@ -2,6 +2,7 @@ from django.db.models import Prefetch
 from django.db.models import Q
 from django.core.cache import cache
 from django.utils import timezone
+from django.utils.translation import ugettext as _
 
 from rest_framework.generics import GenericAPIView
 from rest_framework.generics import ListAPIView
@@ -181,22 +182,22 @@ class FlagAPIView(APIView):
 
         tasks = Task.objects.filter(pk=task_pk)
         if not tasks:
-            return Response({'error': 'No such task.'},
+            return Response({'error': _('No such task.')},
                             status=HTTP_400_BAD_REQUEST)
         task = tasks[0]
 
         game = task.get_game()
         if game is None or game.ends_at <= timezone.now():
-            return Respone({'result': 'Game over!'},
+            return Respone({'result': _('Game over!')},
                            status=HTTP_400_BAD_REQUEST)
 
         Answer(task=task, member=req.user.member, flag=flag).save()
         if task.check_answer(flag):
             recalc_data.delay(req.user.member.team.pk)
-            return Response({'result': 'Congrats!'},
+            return Response({'result': _('Congrats!')},
                             status=HTTP_200_OK)
 
-        return Response({'result': 'Wrong flag.'},
+        return Response({'result': _('Wrong flag.')},
                         status=HTTP_200_OK)
 
 

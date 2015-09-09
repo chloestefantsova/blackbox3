@@ -133,7 +133,16 @@ var refreshTaskList = function ($root, solvedTasks) {
             if ($.inArray(task.pk, solvedTaskPks) == -1) {
                 $taskTab.append($submitForm);
             } else {
-                $taskTab.append($('<h1>').text('You have already solved this task.'));
+                var lang = 'en';
+                if (navigator.languages.length > 1 && navigator.languages[0].toLowerCase().startsWith('ru')) {
+                    lang = 'ru';
+                }
+
+                if (lang === 'ru') {
+                    $taskTab.append($('<h1>').text('Ваша команда уже решила это задание.'));
+                } else {
+                    $taskTab.append($('<h1>').text('You have already solved this task.'));
+                }
             }
 
             var submitForm = new Form($submitForm);
