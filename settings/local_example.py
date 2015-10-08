@@ -69,4 +69,5 @@ EMAIL_HOST_USER = 'jury@school-ctf.org'
 EMAIL_HOST_PASSWORD = 'XXX'
 EMAIL_USE_TLS = True
 
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # Recommended for development.
 # WSGI_APPLICATION = 'ws4redis.django_runserver.application' # Development only.
