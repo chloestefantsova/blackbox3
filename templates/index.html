@@ -152,7 +152,7 @@
 
                         {% if game.is_school %}
                         <div class="form-group">
-                          <textarea name="address" class="form-control" rows="3" placeholder="{% trans "Physical Mail Address for Certificates" %}"></textarea>
+                          <textarea name="address" class="form-control" rows="3" placeholder="{% trans "Physical Mail Address for Certificates (*)" %}"></textarea>
                         </div>
                         {% endif %}
 
@@ -223,6 +223,23 @@
 
               </div>
 
+            </div>
+
+            <div class="col-md-6 in2-fade">
+                {% if game.is_school %}
+                {% blocktrans %}
+                <p>(*) If you wish you may leave your physical mailing address, so we can send you the hardcopies of Certificates of Participation. Please, provide the information according to your country Post Office rules. The recommended data includes the following.</p>
+                <ol>
+                  <li>(required) Receiver name</li>
+                  <li>(required) Street, house number, apartment number or postbox number</li>
+                  <li>(optional) Additional address information, like area name or part of the town</li>
+                  <li>(required) City (or another location)</li>
+                  <li>(optional) Zip code</li>
+                  <li>(optional) Region (state, canton, etc.)</li>
+                  <li>(required) Country of destination</li>
+                </ol>
+                {% endblocktrans %}
+                {% endif %}
             </div>
 
           </div>

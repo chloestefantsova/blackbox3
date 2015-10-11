@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: slr1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-09 11:00+0600\n"
+"POT-Creation-Date: 2015-10-11 13:10+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,19 +36,19 @@ msgstr "Введённые пароли не совпадают."
 msgid "Authentication string is unknown or is incorrectly entered."
 msgstr "Строка аутентификации не известна системе или неправильно введена."
 
-#: api/views.py:184
+#: api/views.py:185
 msgid "No such task."
 msgstr "Такого задания не существует."
 
-#: api/views.py:190
+#: api/views.py:191
 msgid "Game over!"
 msgstr "Игра окончена!"
 
-#: api/views.py:196
+#: api/views.py:197
 msgid "Congrats!"
 msgstr "Поздравляем! Вы правильно решили задание."
 
-#: api/views.py:199
+#: api/views.py:200
 msgid "Wrong flag."
 msgstr "Неправильный ответ."
 
@@ -142,8 +142,8 @@ msgid "Team Leader's E-Mail"
 msgstr "Адрес электронной почты капитана"
 
 #: templates/index.html:155
-msgid "Physical Mail Address for Certificates"
-msgstr "Адрес для отправки бумажной версии сертификатов и дипломов"
+msgid "Physical Mail Address for Certificates (*)"
+msgstr "Адрес для отправки бумажной версии сертификатов и дипломов (*)"
 
 #: templates/index.html:159
 msgid "Register Team"
@@ -217,33 +217,65 @@ msgstr ""
 "Вы зарегистрированы. Вашему капитану выслано сообщение об этом. Пожалуйста, "
 "не забывайте введённый пароль. До встречи на соревновании!"
 
-#: templates/index.html:238 templates/index.html.py:300
+#: templates/index.html:230
+msgid ""
+"\n"
+"                <p>(*) If you wish you may leave your physical mailing "
+"address, so we can send you the hardcopies of Certificates of Participation. "
+"Please, provide the information according to your country Post Office rules. "
+"The recommended data includes the following.</p>\n"
+"                <ol>\n"
+"                  <li>(required) Receiver name</li>\n"
+"                  <li>(required) Street, house number, apartment number or "
+"postbox number</li>\n"
+"                  <li>(optional) Additional address information, like area "
+"name or part of the town</li>\n"
+"                  <li>(required) City (or another location)</li>\n"
+"                  <li>(optional) Zip code</li>\n"
+"                  <li>(optional) Region (state, canton, etc.)</li>\n"
+"                  <li>(required) Country of destination</li>\n"
+"                </ol>\n"
+"                "
+msgstr ""
+"\n"
+"                <p>(*) Если вы хотите получить физические копии сетрификатов об участии, оставьте свой почтовый адрес. Ниже приведены рекомендуемые составляющие адреса.</p>\n"
+"                <ol>\n"
+"                  <li>Имя получателя</li>\n"
+"                  <li>Улица, номер дома, номер квартиры</li>\n"
+"                  <li>Город (или иной населённый пункт)</li>\n"
+"                  <li>Почтовый индекс</li>\n"
+"                  <li>Область или иной регон</li>\n"
+"                  <li>Страна, если отличается от России</li>\n"
+"                </ol>\n"
+"                "
+
+#: templates/index.html:255 templates/index.html.py:317
 msgctxt "teams list"
 msgid "School Teams"
 msgstr "Школьные команды"
 
-#: templates/index.html:242 templates/index.html.py:259
-#: templates/index.html:305 templates/index.html.py:324
+#: templates/index.html:259 templates/index.html.py:276
+#: templates/index.html:322 templates/index.html.py:341
 msgctxt "teams list"
 msgid "Name"
 msgstr "Название"
 
-#: templates/index.html:243 templates/index.html.py:260
-#: templates/index.html:306 templates/index.html.py:325
+#: templates/index.html:260 templates/index.html.py:277
+#: templates/index.html:323 templates/index.html.py:342
 msgctxt "teams list"
 msgid "Country"
 msgstr "Страна"
 
-#: templates/index.html:254 templates/index.html.py:318
+#: templates/index.html:271 templates/index.html.py:335
 msgctxt "teams list"
 msgid "Non-School Teams"
 msgstr "Нешкольные команды"
 
-#: templates/index.html:276
+#: templates/index.html:293
 msgid "Task List"
 msgstr "Задания"
 
-#: templates/index.html:278
+#: templates/index.html:295
 msgid ""
 "<span class=\"bg-success\">Green</span> marks the tasks that your team has "
 "successfully solved."
@@ -251,7 +283,7 @@ msgstr ""
 "<span class=\"bg-success\">Зелёный</span> обозначает задания, которые ваша "
 "команда уже решила."
 
-#: templates/index.html:279
+#: templates/index.html:296
 msgid ""
 "<span class=\"bg-info\">Blue</span> marks the last available task in a "
 "category. It is either the task that nobody has solved yet or the very last "
@@ -261,11 +293,11 @@ msgstr ""
 "в своей категории. Это либо задание, которое пока никто не решил, либо самое "
 "последнее задание в категории."
 
-#: templates/index.html:285
+#: templates/index.html:302
 msgid "Hints"
 msgstr "Подсказки"
 
-#: templates/index.html:286
+#: templates/index.html:303
 msgid ""
 "You man ask jury a queston via <a href=\"mailto:jury@school-ctf.org\">email</"
 "a>, <a href=\"https://twitter.com/schoolctf\">Twitter</a>, or <a href="
@@ -275,26 +307,26 @@ msgstr ""
 "\">почте</a>, через <a href=\"https://twitter.com/schoolctf\">Твиттер</a> "
 "или <a href=\"http://vk.com/schoolctf2015\">ВК</a>."
 
-#: templates/index.html:307 templates/index.html.py:326
+#: templates/index.html:324 templates/index.html.py:343
 msgctxt "teams list"
 msgid "Score"
 msgstr "Баллы"
 
-#: templates/index.html:345
+#: templates/index.html:362
 msgid "Please, authenticate"
 msgstr "Пожалуйста, аутентифицируйтесь"
 
-#: templates/index.html:351
+#: templates/index.html:368
 msgctxt "login modal"
 msgid "Username"
 msgstr "Имя пользователя"
 
-#: templates/index.html:354
+#: templates/index.html:371
 msgctxt "login modal"
 msgid "Password"
 msgstr "Пароль"
 
-#: templates/index.html:356
+#: templates/index.html:373
 msgctxt "login modal"
 msgid "Login"
 msgstr "Войти"
