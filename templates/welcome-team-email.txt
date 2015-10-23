@@ -1,7 +1,7 @@
 (Прокрутите вниз, чтобы прочитать письмо на русском. Scroll down for the letter in Russian.)
 
 
-Dear School CTF Spring 2015 participant,
+Dear School CTF 2015 participant,
 
 We're gladly welcome you at our competitoin. Please, pass this authentication string to your teammates: {{ auth_string }}. They should use it for individual registration to confirm their affilation with the team. Don't forget that team leaders should register themselves just like other team members.
 
@@ -9,7 +9,7 @@ Regards,
 School CTF Jury
 
 
-Добро пожаловать в School CTF Spring 2015!
+Добро пожаловать в School CTF 2015!
 
 Пожалуйста, передайте строку аутентификации членам своей команды: {{ auth_string }}. Эту строку нужно использовать в процессе регистрации участников для подтверждения принадлежности к команде. Не забудьте, что капитаны команд должны регистрироваться так же, как и другие участники.
 
