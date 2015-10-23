@@ -50,7 +50,7 @@ def recalc_rating():
         line['is_school'] = team.is_school
         line['score'] = score[team.pk]
         result.append(line)
-    cache.set('rating', result)
+    cache.set('rating', result, timeout=None)
 
 
 @shared_task
@@ -58,7 +58,7 @@ def recalc_available_tasks():
     queryset = Task.objects.all()
     published_pks = [task.pk for task in queryset if task.is_published()]
     queryset = Task.objects.filter(pk__in=published_pks)
-    cache.set('published', queryset)
+    cache.set('published', queryset, timeout=None)
 
 
 @shared_task
@@ -68,7 +68,7 @@ def recalc_team(team_pk):
     for task in Task.objects.all():
         if task.is_solved_by(team):
             result.append(task.pk)
-    cache.set('solved%d' % team_pk, result)
+    cache.set('solved%d' % team_pk, result, timeout=None)
 
 
 @shared_task

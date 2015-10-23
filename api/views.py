@@ -155,7 +155,7 @@ class TaskListAPIView(ListAPIView):
             queryset = Task.objects.all()
             published_pks = [task.pk for task in queryset if task.is_published()]
             queryset = Task.objects.filter(pk__in=published_pks)
-            cache.set('published', queryset)
+            cache.set('published', queryset, timeout=None)
             return queryset
         return selected
 
