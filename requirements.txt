@@ -22,3 +22,4 @@ django-redis-cache==0.13.1
 hiredis==0.2.0
 django-markdown-deux==1.0.5
 markdown2==2.3.0
+Werkzeug==0.10.4
