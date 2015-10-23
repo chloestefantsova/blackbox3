@@ -223,3 +223,25 @@ class RatingAPIView(APIView):
         if result is None:
             result = []
         return Response(result, status=HTTP_200_OK)
+
+
+class StandingsAPIView(APIView):
+
+    def get(self, req, *args, **kwargs):
+        result = cache.get('rating')
+        if result is None:
+            result = []
+        result.sort(lambda x, y: y['score'] - x['score'])
+        standings = {'standings': []}
+        pos = 0
+        prev_score = -1
+        for entry in result:
+            if entry['score'] != prev_score:
+                pos += 1
+                prev_score = entry['score']
+            standings_entry = {}
+            standings_entry['team'] = entry['team_name']
+            standings_entry['score'] = entry['score']
+            standings_entry['pos'] = pos
+            standings['standings'].append(standings_entry)
+        return Response(standings, status=HTTP_200_OK)
