@@ -1,3 +1,5 @@
+import bisect
+
 from django.db.models import Prefetch
 from django.db.models import Q
 from django.core.cache import cache
@@ -245,3 +247,16 @@ class StandingsAPIView(APIView):
             standings_entry['pos'] = pos
             standings['standings'].append(standings_entry)
         return Response(standings, status=HTTP_200_OK)
+
+
+class EventsAPIView(APIView):
+
+    def get(self, req, *args, **kwargs):
+        result = cache.get('events')
+        if result is None:
+            result = []
+        last_id = req.query_params.get('lastId', 0)
+        ids = [entry['id'] for entry in result]
+        idx = bisect.bisect_right(ids, last_id)
+        result = result[idx:]
+        return Response(result, status=HTTP_200_OK)

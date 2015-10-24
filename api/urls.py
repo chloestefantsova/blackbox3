@@ -15,6 +15,7 @@ from api.views import MeAPIView
 from api.views import SolvedTaskAPIView
 from api.views import RatingAPIView
 from api.views import StandingsAPIView
+from api.views import EventsAPIView
 
 
 urlpatterns = patterns(
@@ -42,5 +43,6 @@ urlpatterns = patterns(
         name='api-tasks-solved'),
     url(r'^flag/$', login_required(FlagAPIView.as_view()), name='api-flag'),
     url(r'^rating/$', RatingAPIView.as_view(), name='api-rating'),
-    url(r'^standings/$', StandingsAPIView.as_view(), name='api-rating'),
+    url(r'^standings/$', StandingsAPIView.as_view(), name='api-standings'),
+    url(r'^events/$', EventsAPIView.as_view(), name='api-events'),
 )

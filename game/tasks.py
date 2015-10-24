@@ -1,5 +1,7 @@
 from __future__ import absolute_import
 
+import time
+
 from ws4redis.publisher import RedisPublisher
 from ws4redis.redis_store import RedisMessage
 
@@ -11,6 +13,7 @@ from django.core.cache import cache
 
 from reg.models import Team
 from game.models import Task
+from game.models import Answer
 
 
 @shared_task
@@ -18,6 +21,7 @@ def recalc_data(team_pk):
     workflow = chord(
         group(recalc_rating.s(),
               recalc_available_tasks.s(),
+              recalc_events.s(),
               recalc_team.s(team_pk)),
         notify_users.si()
     )
@@ -76,3 +80,21 @@ def notify_users():
     redis_publisher = RedisPublisher(facility='tasks', broadcast=True)
     message = RedisMessage('tasks')
     redis_publisher.publish_message(message)
+
+
+@shared_task
+def recalc_events():
+    answers = Answer.objects.all().select_related('task', 'member__team').order_by('pk')
+    events = []
+    for answer in answers:
+        event = {}
+        event['id'] = answer.pk
+        event['time'] = int(time.mktime(answer.created_at.timetuple()))
+        event['type'] = 'taskWrong'
+        if answer.is_correct():
+            event['type'] = 'taskCorrect'
+        event['team'] = answer.member.team.name
+        event['task'] = answer.task.title_en
+        event['pointsDelta'] = answer.task.cost
+        events.append(event)
+    cache.set('events', events, timeout=None)
