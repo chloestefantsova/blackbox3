@@ -256,6 +256,13 @@ class EventsAPIView(APIView):
         if result is None:
             result = []
         last_id = req.query_params.get('lastId', 0)
+        try:
+            last_id = int(last_id)
+        except ValueError:
+            return Response(
+                'lastId parameter value should be an integer',
+                status=HTTP_400_BAD_REQUEST,
+            )
         ids = [entry['id'] for entry in result]
         idx = bisect.bisect_right(ids, last_id)
         result = result[idx:]
