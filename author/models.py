@@ -92,6 +92,9 @@ class UploadedTaskImage(models.Model):
     untarred_path = models.CharField(null=False, blank=True, max_length=1024)
     relative_path = models.CharField(null=False, blank=False, max_length=1024)
 
+    def __str__(self):
+        return self.original_name
+
     def is_deployed(self):
         return bool(self.relative_path)
 
