@@ -190,7 +190,7 @@ class FlagAPIView(APIView):
 
         game = task.get_game()
         if game is None or game.ends_at <= timezone.now():
-            return Respone({'result': _('Game over!')},
+            return Response({'error': _('Game over!')},
                            status=HTTP_400_BAD_REQUEST)
 
         Answer(task=task, member=req.user.member, flag=flag).save()
