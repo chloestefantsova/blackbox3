@@ -25,6 +25,7 @@ from author.tasks import deploy_uploaded_task
 from reg.models import Team, Member
 from game.models import Task
 from game.models import Answer
+from game.models import Game
 from game.tasks import recalc_data
 from api.serializers import TeamListSerializer
 from api.serializers import TeamCreateSerializer
@@ -152,14 +153,20 @@ class TaskListAPIView(ListAPIView):
     serializer_class = TaskSerializer
 
     def get_queryset(self):
-        selected = cache.get('published')
-        if selected is None:
-            queryset = Task.objects.all()
-            published_pks = [task.pk for task in queryset if task.is_published()]
-            queryset = Task.objects.filter(pk__in=published_pks)
-            cache.set('published', queryset, timeout=None)
-            return queryset
-        return selected
+        game = Game.objects.all()[0]
+
+        if 'game.add_task' in self.request.user.get_all_permissions() or \
+                game.starts_at is None or timezone.now() >= game.starts_at:
+            selected = cache.get('published')
+            if selected is None:
+                queryset = Task.objects.all()
+                published_pks = [task.pk for task in queryset if task.is_published()]
+                queryset = Task.objects.filter(pk__in=published_pks)
+                cache.set('published', queryset, timeout=None)
+                return queryset
+            return selected
+        else:
+            return Task.objects.none()
 
 
 class SolvedTaskAPIView(ListAPIView):
