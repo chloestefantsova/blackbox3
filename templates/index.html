@@ -515,13 +515,14 @@
 
         var moveToScreenful = function (target) {
           if (target) {
-            animation.moveTo(target).then(function () {
+            animation.moveToPromise = promiseBind(animation.moveTo(target), function () {
               for (var i = 1; i <= 9; ++i) {
                 $(target).find('.in'+i+'-fade').removeClass('in'+i+'-fade');
               }
+              $('.menu-button').removeClass('active');
+              location.href = target+'-ref';
+              return promiseUnit();
             });
-            $('.menu-button').removeClass('active');
-            location.href = target+'-ref';
           }
         };
 

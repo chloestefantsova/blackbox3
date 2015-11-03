@@ -4,6 +4,7 @@ var SlrAnimation = function (homeName) {
     this.geo = {};
     this.name = homeName;
     this.putGeo(homeName, 0, 0);
+    this.moveToPromise = promiseUnit();
 };
 
 SlrAnimation.prototype = {
@@ -101,20 +102,27 @@ SlrAnimation.prototype = {
     moveTo: function (name) {
         var self = this;
         if (this.geo.hasOwnProperty(name)) {
-            var screensX = this.geo[name][0];
-            var screensY = this.geo[name][1];
-            var destX = screensX * $(window).width();
-            var destY = screensY * $(window).height();
-            var deltaX = destX - this.x;
-            var deltaY = destY - this.y;
-            return promisePipe(this.animateOut($(this.name)), [
+            self.moveToPromise = promisePipe(self.moveToPromise, [
                     function () {
+                        return self.animateOut($(self.name));
+                    },
+                    function () {
+                        var screensX = self.geo[name][0];
+                        var screensY = self.geo[name][1];
+                        var destX = screensX * $(window).width();
+                        var destY = screensY * $(window).height();
+                        var deltaX = destX - self.x;
+                        var deltaY = destY - self.y;
                         return $('.screenful').animate({
                             left: '+='+deltaX,
                             top: '+='+deltaY
                         }, 'slow').promise();
                     },
                     function () {
+                        var screensX = self.geo[name][0];
+                        var screensY = self.geo[name][1];
+                        var destX = screensX * $(window).width();
+                        var destY = screensY * $(window).height();
                         self.name = name;
                         self.x = destX;
                         self.y = destY;
@@ -122,7 +130,7 @@ SlrAnimation.prototype = {
                     }
             ]);
         }
-        return promiseUnit();
+        return self.moveToPromise;
     },
 
     fadeElementIn: function (selector) {
