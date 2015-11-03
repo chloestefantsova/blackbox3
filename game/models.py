@@ -116,8 +116,9 @@ class Task(models.Model):
         template_vars = {}
         for file_obj in self.uploadedtask_set.all()[0].files.all():
             template_vars[file_obj.original_name.replace('.', '_')] = file_obj.get_link()
-        for deployed_image in self.deployed_images.all():
-            template_vars.update(deployed_image.template_var())
+        for image in self.uploadedtask_set.all()[0].images.all():
+            for connection in image.connections.all():
+                template_vars.update(connection.template_var())
         desc = Template(desc).render(Context(template_vars))
         return markdown(desc)
 
@@ -132,8 +133,9 @@ class Task(models.Model):
         template_vars = {}
         for file_obj in self.uploadedtask_set.all()[0].files.all():
             template_vars[file_obj.original_name.replace('.', '_')] = file_obj.get_link()
-        for deployed_image in self.deployed_images.all():
-            template_vars.update(deployed_image.template_var())
+        for image in self.uploadedtask_set.all()[0].images.all():
+            for connection in image.connections.all():
+                template_vars.update(connection.template_var())
         writeup = Template(writeup).render(Context(template_vars))
         return markdown(writeup)
 
@@ -141,22 +143,6 @@ class Task(models.Model):
         if self.pk is None:
             self.created_at = timezone.now()
         return super(Task, self).save(*args, **kwargs)
-
-class DeployedTaskImage(models.Model):
-    task = models.ForeignKey(Task, related_name='deployed_images')
-    uploaded_image = models.ForeignKey('author.UploadedTaskImage', related_name='deployed_images')
-    suffix = models.CharField(max_length=1024)
-    host = models.CharField(null=False, blank=False, max_length=1024)
-    port = models.CharField(null=False, blank=False, max_length=5)
-
-    def __str__(self):
-        return self.uploaded_image.original_name.replace(".", "_") + "_" + self.suffix
-
-    def template_var(self):
-        return {self.uploaded_image.original_name.replace('.', '_') + "_" + self.suffix:
-                    {'host': self.host, "port": self.port}}
-
-
 
 class Answer(models.Model):
 
