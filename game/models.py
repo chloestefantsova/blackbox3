@@ -124,7 +124,7 @@ class Task(models.Model):
 
     def get_writeup(self):
         game = self.get_game()
-        if game is None or game.ends_at <= timezone.now():
+        if game is None or game.ends_at >= timezone.now():
             return ''
         if get_language() in ['ru', 'ru-ru']:
             writeup = self.writeup_ru
