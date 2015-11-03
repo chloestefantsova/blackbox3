@@ -7,7 +7,7 @@ from ws4redis.redis_store import RedisMessage
 
 from celery import shared_task
 from celery import group
-from celery import chord
+from celery import chain
 
 from django.core.cache import cache
 
@@ -17,8 +17,8 @@ from game.models import Answer
 
 
 @shared_task
-def recalc_data(team_pk):
-    workflow = chord(
+def recalc_data(team_pk, *args, **kwargs):
+    workflow = chain(
         group(recalc_rating.s(),
               recalc_available_tasks.s(),
               recalc_events.s(),
@@ -28,9 +28,21 @@ def recalc_data(team_pk):
     workflow.delay()
 
 
+@shared_task
+def recalc_all(*args, **kwargs):
+    team_pks = [team.pk for team in Team.objects.all()]
+    workflow = chain(
+        group(recalc_rating.s(),
+              recalc_available_tasks.s(),
+              recalc_events.s(),
+              *[recalc_team.s(pk) for pk in team_pks]),
+        notify_users.si()
+    )
+    workflow.delay()
+
 
 @shared_task
-def recalc_rating():
+def recalc_rating(*args, **kwargs):
     result = []
     teams = Team.objects.all()
     score = {}
@@ -58,7 +70,7 @@ def recalc_rating():
 
 
 @shared_task
-def recalc_available_tasks():
+def recalc_available_tasks(*args, **kwargs):
     queryset = Task.objects.all()
     published_pks = [task.pk for task in queryset if task.is_published()]
     queryset = Task.objects.filter(pk__in=published_pks)
@@ -66,7 +78,7 @@ def recalc_available_tasks():
 
 
 @shared_task
-def recalc_team(team_pk):
+def recalc_team(team_pk, *args, **kwargs):
     result = []
     team = Team.objects.get(pk=team_pk)
     for task in Task.objects.all():
@@ -76,14 +88,14 @@ def recalc_team(team_pk):
 
 
 @shared_task
-def notify_users():
+def notify_users(*args, **kwargs):
     redis_publisher = RedisPublisher(facility='tasks', broadcast=True)
     message = RedisMessage('tasks')
     redis_publisher.publish_message(message)
 
 
 @shared_task
-def recalc_events():
+def recalc_events(*args, **kwargs):
     answers = Answer.objects.all().select_related('task', 'member__team').order_by('pk')
     events = []
     for answer in answers:
