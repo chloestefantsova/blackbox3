@@ -17,7 +17,6 @@ from api.views import RatingAPIView
 from api.views import StandingsAPIView
 from api.views import EventsAPIView
 
-
 urlpatterns = patterns(
     '',
 

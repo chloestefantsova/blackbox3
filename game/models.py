@@ -20,6 +20,7 @@ class Game(models.Model):
     send_emails = models.BooleanField(null=False, blank=True, default=False)
     country_required = models.BooleanField(null=False, blank=True, default=True)
     auth_string_length = models.PositiveIntegerField(blank=True, default=32)
+    starts_at = models.DateTimeField(null=True, blank=True)
     ends_at = models.DateTimeField(null=True, blank=True)
 
     def get_desc(self):
