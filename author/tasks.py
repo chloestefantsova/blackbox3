@@ -21,6 +21,7 @@ from author.utils import splitext_all
 from author.models import UploadedTaskDeployStatus
 from author.models import UploadedTaskFile
 from author.models import UploadedTaskImage
+from author.models import Connection
 from game.models import Task
 
 
@@ -333,6 +334,22 @@ def untar_task(uploaded_task):
                 untarred_path=path.join(untarred_path, filename),
             )
             uti.save()
+            for tcp_port in tcp_ports_map[base_filename].split(","):
+                if tcp_port != "":
+                    conn = Connection(
+                        uploaded_image=uti,
+                        protocol="tcp",
+                        sport=tcp_port,
+                    )
+                    conn.save()
+            for udp_port in udp_ports_map[base_filename].split(","):
+                if udp_port != "":
+                    conn = Connection(
+                        uploaded_image=uti,
+                        protocol="udp",
+                        sport=udp_port,
+                    )
+                    conn.save()
         else:
             utf = UploadedTaskFile(
                 uploaded_task=uploaded_task,

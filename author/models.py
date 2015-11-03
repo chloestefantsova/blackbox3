@@ -104,6 +104,20 @@ class UploadedTaskImage(models.Model):
     def get_full_path(self):
         return path.join(settings.UPLOADED_IMAGES_DIR, self.relative_path)
 
+class Connection(models.Model):
+    uploaded_image = models.ForeignKey('UploadedTaskImage', related_name='connections')
+    dhost = models.CharField(null=False, blank=False, max_length=1024)
+    dport = models.CharField(null=False, blank=False, max_length=5)
+    sport = models.CharField(max_length=5)
+    protocol = models.CharField(max_length=3)
+
+    def __str__(self):
+        return self.uploaded_image.original_name.replace(".", "_") + "_" + self.protocol + self.sport
+
+    def template_var(self):
+        return {self.uploaded_image.original_name.replace('.', '_') + "_" + self.protocol + self.sport:
+                    {'host': self.dhost, "port": self.dport}}
+
 
 class UploadedTaskDeployStatus(models.Model):
 
