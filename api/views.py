@@ -165,6 +165,8 @@ class TaskListAPIView(ListAPIView):
                 cache.set('published', queryset, timeout=None)
                 return queryset
             return selected
+        else:
+            return Task.objects.none()
 
 
 class SolvedTaskAPIView(ListAPIView):
