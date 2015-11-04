@@ -40,9 +40,13 @@ msgstr "Строка аутентификации не известна сист
 msgid "No such task."
 msgstr "Такого задания не существует."
 
-#: api/views.py:191
-msgid "Game over!"
-msgstr "Игра окончена!"
+#: api/views.py:201
+msgid "Game over but your flag is correct!"
+msgstr "Игра окончена, но ваш ответ верен!"
+
+#: api/views.py:205
+msgid "Game over and your flag is wrong!"
+msgstr "Игра окончена, и ваш ответ неверен!"
 
 #: api/views.py:197
 msgid "Congrats!"
